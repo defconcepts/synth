@@ -1,0 +1,32 @@
+/* CSS declarations go here */
+
+@blue :#2fa1d6;
+@background: #333;
+
+svg {
+    background: @background;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.beat  {
+    pointer-events: none
+}
+
+.selected {
+    stroke: white;
+}
+
+.extent {
+    fill-opacity: .5;
+    stroke: @blue;
+    fill: @blue;
+    shape-rendering: crispEdges;
+}
+
+.link {
+    stroke: aliceblue;
+}
