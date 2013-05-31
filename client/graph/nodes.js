@@ -69,7 +69,7 @@ nodes = function (el) {
     function keydown() {
       return d3.event.which === 27 ?
         zoom_out(el, d).each('start', worlds.destruct) :
-        this.once('keydown', keydown)
+        d3.select(this).once('keydown', keydown)
     }
   }
 
