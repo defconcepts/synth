@@ -1,19 +1,10 @@
 bounce = function(el) {
   console.log(el)
-  var GRAVITY = [0, 9.81]
-  var VERT_FRIC = 0.7
-  var HORIZ_FRIC = 0.85
-  var bounds, scale, axis
-
-  bounds = { x: [0, innerWidth], y: [0, innerHeight - 60] }
-
-  scale = d3.scale.ordinal()
-          .domain('abcdef'.split(''))
-          .rangePoints([0, innerWidth])
-
-  axis = d3.svg.axis()
-         .scale(scale)
-         .orient('bottom')
+  var gravity = [0, 9.81]
+    , bounds = { x: [0, innerWidth], y: [0, innerHeight - 60] }
+    , scale = d3.scale.ordinal()
+              .domain('abcdef'.split('')).rangePoints([0, innerWidth])
+    , axis = d3.svg.axis().scale(scale).orient('bottom')
 
   el.append("g")
   .attr("class", "axis")
