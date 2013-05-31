@@ -16,7 +16,7 @@ edges = function (el) {
 
   function add(doc) {
     doc.edges.forEach(function (target) {
-      if (! (target = norm(target))) return;
+      if (! (target = norm(target))) return
       el.insert('line', '.node')
       .datum({ source: doc, target: target })
       .attr({ class: 'edge'
@@ -34,7 +34,6 @@ edges = function (el) {
 
   function nudge() {
     el.selectAll('.edge')
-    .transition().duration(500).ease('elastic')
     .attr({ x1: pluckWith('source.x')
           , y1: pluckWith('source.y')
           , x2: pluckWith('target.x')
@@ -42,24 +41,23 @@ edges = function (el) {
           })
   }
 
+  function clear() { this.attr('class', null).attr('stroke-width', 0).remove() }
+
   function removed(doc) {
-    function swap(d) {
-      var swap = d.target
-      d.target = d.source
-      return d.source = swap
-    }
+    var exit = el.selectAll('.edge')
+                .attr('stroke-width', 1)
+                .transition().duration(2000).ease('cubic')
 
-    function filter(d){
-      return d.target === doc || d.source === doc && swap(d)
-    }
-
-    el.selectAll('line').filter(filter)
-    .attr('stroke-width', 1)
-    .transition().duration(2000)
+    exit.filter(function (d){ return d.target === doc })
     .attr('x2', pluckWith('source.x'))
     .attr('y2', pluckWith('source.y'))
-    .attr('stroke-width', 0)
-    .remove()
+    .call(clear)
+
+    exit.filter(function (d){ return d.source === doc })
+    .attr('x1', pluckWith('target.x'))
+    .attr('y1', pluckWith('target.y'))
+    .call(clear)
+
   }
 
 }

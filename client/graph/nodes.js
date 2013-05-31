@@ -47,7 +47,7 @@ nodes = function (el) {
                   .on('dragend', dragend)
 
   function drag(d) {
-    var dx = d3.event.dx, dy = d3.event.dy;
+    var dx = d3.event.dx, dy = d3.event.dy
 
     self().filter(pluckWith('selected'))
     .attr('cx', function(d) { return d.x += dx })
@@ -62,7 +62,7 @@ nodes = function (el) {
 
   function dblclick(d) {
     d3.event.preventDefault()
-    
+
     zoom_in(el, d).each('end', worlds.construct)
     return d3.select(window).once('keydown', keydown)
 
@@ -91,11 +91,11 @@ nodes = function (el) {
   }
 
   function mouseout(d) {
-    d3.select(this).transition().attr('fill', pluckWith('fill'))
+    d3.transition(d3.select(this)).attr('fill', pluckWith('fill'))
   }
 
   function mouseover(d) {
-    d3.select(this).transition().attr('fill', d3.rgb(d.fill).brighter())
+    d3.transition(d3.select(this)).attr('fill', d3.rgb(d.fill).brighter())
   }
 
   function update() {

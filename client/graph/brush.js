@@ -1,5 +1,5 @@
 brush = function (el) {
-  var self = this;
+  var self = this
 
   function brushstart(d) {
     self().each(function(d) { d.previouslySelected = shiftKey && d.selected })

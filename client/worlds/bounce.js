@@ -1,4 +1,5 @@
 bounce = function(svg) {
+  console.log('hello')
   var id = 0
 
   svg.append('circle')
