@@ -1,7 +1,7 @@
 center = [innerWidth >> 1, innerHeight >> 1]
 
 default_zoom = function () {
-  return center.concat(innerHeight) // make dynamic
+  return center.concat(innerHeight) 
 }
 
 zoom_in = function (el, d) {

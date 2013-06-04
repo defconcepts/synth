@@ -59,5 +59,4 @@ edges = function (el) {
     .call(clear)
 
   }
-
 }

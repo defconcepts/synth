@@ -63,6 +63,7 @@ nodes = function (el) {
   function dblclick(d) {
     d3.event.preventDefault()
 
+    //move to worlds
     zoom_in(el, d).each('end', worlds.construct)
     return d3.select(window).once('keydown', keydown)
 

@@ -31,7 +31,7 @@ pluckWith = function (name){
     return n.length ? get(o[n.shift()]) : o
   }
 
-  return function (obj) {
+  return function (obj) {//this
     n = name.split('.')
     return _.isArray(obj) ? obj.map(get) : get(obj)
   }

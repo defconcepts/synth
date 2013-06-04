@@ -1,9 +1,6 @@
-//DEPS
 as_events = events()
 
 function events() {
-  var id = 0
-
   function before ( ) {}
   function after ( ) {}
 
@@ -13,15 +10,10 @@ function events() {
       root.next = fn
   }
 
-  function m(){
-    return  function () {}
-  }
-
   function on(name, fn, ctx) {
     if (! fn) return this._events[name]
-    fn.id = ++id
     fn.ctx = ctx || {}
-    next(fn, this._events[name] || (this._events[name] = new m))
+    next(fn, this._events[name] || (this._events[name] = function () {}))
     return this
   }
 
@@ -38,11 +30,9 @@ function events() {
   }
 
   function emit(name) {
-    var args = [].slice.call(arguments, 1)
-      , fn = this._events[name]
+    var args = [].slice.call(arguments, 1), fn
 
-    do fn.apply(fn.ctx, args)
-    while (fn = fn.next)
+    for (fn = this._events[name]; fn = fn.next;) fn.apply(fn.ctx, args)
 
     return this
   }

@@ -10,3 +10,8 @@ worlds.destruct = function () {
   d3.selectAll('.graph ,.brush')
   .style('display', 'block')
 }
+
+setTimeout(function () {
+  var test = _.find(worlds, function (w) { return location.href.match(w.name) })
+  window.location.hostname == 'localhost' && test && worlds.construct(test)
+}, 250)
