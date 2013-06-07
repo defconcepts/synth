@@ -1,8 +1,8 @@
 as_events = events()
 
 function events() {
-  function before ( ) {}
-  function after ( ) {}
+  function before () {}
+  function after () {}
 
   function next(fn, root) {
     return root.next ?
@@ -23,6 +23,7 @@ function events() {
 
   function off(event, fn) {
     var root = this.events[event]
+
     while(root = root.next)
       if (root.next === fn) root.next = root.next.next
 

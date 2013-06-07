@@ -1,22 +1,22 @@
 bounce = function bounce(el) {
-  var gravity = [0, 9.81]
+  var gravity = [0, .5]
     , bounds = { x: [0, innerWidth], y: [0, innerHeight - 60] }
     , xscale = d3.scale.quantize()
-              .domain([0, innerWidth])
-              .range('abcdef'.split(''))
+               .domain([0, innerWidth])
+               .range([0, 6])
 
-    , axis = d3.svg.axis().scale(xscale)
+    , axis = d3.svg.axis().scale(xscale).orient('bottom')
+
+  el.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(25, " + (innerHeight - 50) + ")")
+  //.call(axis)
 
 	d3.timer(function () {
     var inflate = el.select('.inflate')
     inflate.empty() || inflate.attr('r', function (d) { return d.r += 2 })
     el.selectAll('.ball').each(step)
   })
-
-  el.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(25, " + (innerHeight - 50) + ")")
-  //.call(xaxis)
 
   d3.select(document)
   .on('mousedown', mousedown)
@@ -25,7 +25,9 @@ bounce = function bounce(el) {
   function mouseup(){
     el.select('.inflate')
     .attr('class', 'ball')
+    .attr('stroke-width', 1)
     .transition().duration(500)
+    .attr('stroke-width', 0)
     .attr('fill', "hsl(" + Math.random() * 360 + ", 100%, 50%)")
   }
 
@@ -38,12 +40,12 @@ bounce = function bounce(el) {
 
   function spawn_ball(point, velocity) {
     var node = el.append('circle')
-    .datum({ position: point, velocity: velocity, r: 5 })
+
+    node.datum({ position: point, velocity: velocity, r: 5, node: node })
     .attr('class', 'inflate')
     .attr('r', pluckWith('r'))
+    .attr('stroke', 'white')
     .attr('transform', translate)
-
-    node.datum()['node'] = node
   }
 
   function step(d) {
@@ -56,28 +58,37 @@ bounce = function bounce(el) {
 
   function collide(d){
 
-	  if (d.position[1] < bounds.y[0]) {
-      d.node.attr('fill', "hsl(" + Math.random() * 360 + ",100%,50%)")
+	  if (d.position[1] < bounds.y[0] - d.r) {
+      d.node.transition().attr('fill'
+                              ,"hsl(" + Math.random() * 360 + ", 100%, 50%)" )
 
-		  d.velocity[1] = - d.velocity[1]
+      d.velocity[0] = horizontal_friction(d.velocity)
+		  d.velocity[1] *= -1.01
+      d.velocity[1] = vertical_friction(d.velocity[1])
 		  d.position[1] = bounds.y[0]
 	  }
 
-    if (d.position[1] > bounds.y[1]) {
+    if (d.position[1] > bounds.y[1] + d.r) {
       play_sound(d.position[0])
 
-		  d.velocity[1] = - d.velocity[1]
+      d.velocity[0] = horizontal_friction(d.velocity)
+		  d.velocity[1] *= -1.01
+      d.velocity[1] = vertical_friction(d.velocity[1])
 		  d.position[1] = bounds.y[1]
 	  }
 
 	  d.position[0] =
       d.position[0] < bounds.x[0] ? bounds.x[1] :
       d.position[0] > bounds.x[1] ? bounds.x[0] : d.position[0]
-  }
+ }
 
   function play_sound(x) {
-    setSoundUrl('node' + xscale.range().indexOf(xscale(x)))
+    sound_test()
+    setSoundUrl('node' + xscale(x))
   }
+
+  function vertical_friction (x) { return Math.abs(x) > 100 ? 1 : x * 1 }
+  function horizontal_friction (c) { return c[0] *= Math.random() * 2 * (Math.random > .5 ? -1 : 1) }
 
   function scale(vec, coef) { return [coef * vec[0], coef * vec[1]] }
   function sum(arr) { return arr.reduce(function (a, b) { return a + b }) }
