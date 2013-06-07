@@ -57,12 +57,10 @@ bounce = function bounce(el) {
   }
 
   function collide(d){
-
 	  if (d.position[1] < bounds.y[0] - d.r) {
       d.node.transition().attr('fill'
                               ,"hsl(" + Math.random() * 360 + ", 100%, 50%)" )
-
-      d.velocity[0] = horizontal_friction(d.velocity)
+      horizontal_friction(d.velocity)
 		  d.velocity[1] *= -1.01
       d.velocity[1] = vertical_friction(d.velocity[1])
 		  d.position[1] = bounds.y[0]
@@ -71,7 +69,7 @@ bounce = function bounce(el) {
     if (d.position[1] > bounds.y[1] + d.r) {
       play_sound(d.position[0])
 
-      d.velocity[0] = horizontal_friction(d.velocity)
+      horizontal_friction(d.velocity)
 		  d.velocity[1] *= -1.01
       d.velocity[1] = vertical_friction(d.velocity[1])
 		  d.position[1] = bounds.y[1]
@@ -83,12 +81,12 @@ bounce = function bounce(el) {
  }
 
   function play_sound(x) {
-    sound_test()
-    setSoundUrl('node' + xscale(x))
+    sound_test(x)
+    //setSoundUrl('node' + xscale(x))
   }
 
   function vertical_friction (x) { return Math.abs(x) > 100 ? 1 : x * 1 }
-  function horizontal_friction (c) { return c[0] *= Math.random() * 2 * (Math.random > .5 ? -1 : 1) }
+  function horizontal_friction (c) { c[0] *= Math.random() * 2 * (Math.random > .5 ? -1 : 1) }
 
   function scale(vec, coef) { return [coef * vec[0], coef * vec[1]] }
   function sum(arr) { return arr.reduce(function (a, b) { return a + b }) }
