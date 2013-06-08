@@ -7,7 +7,7 @@ nodes = function (el) {
                   , mousedown
                   , mouseup
                   ]
-  self
+  vent
   .on('added', added)
   .on('changed', changed)
   .on('removed', removed)

@@ -1,6 +1,3 @@
-
-
-
 _.extend(d3.selection.prototype, {
 
   listen_for: function (fn){

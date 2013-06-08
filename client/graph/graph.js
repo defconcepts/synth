@@ -7,12 +7,10 @@ graph = function () {
     return el.selectAll('circle')
   }
 
-  as_events(self)
-
   Graph.find()
-  .observe({ changed: self.later('changed')
-           , added: self.later('added')
-           , removed: self.later('removed')
+  .observe({ changed: vent.later('changed')
+           , added: vent.later('added')
+           , removed: vent.later('removed')
            })
 
   body.call(self, d3.select(document.body))

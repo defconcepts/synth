@@ -1,16 +1,18 @@
 bounce = function bounce(el) {
   var gravity = [0, .5]
-    , bounds = { x: [0, innerWidth], y: [0, innerHeight - 60] }
-    , xscale = d3.scale.quantize()
-               .domain([0, innerWidth])
-               .range([0, 6])
+    , bounds = { x: [0, innerWidth], y: [0, innerHeight - 50] }
 
-    , axis = d3.svg.axis().scale(xscale).orient('bottom')
+    , xscale = d3.scale.linear()
+               .range([0, innerWidth - 50])
+               .domain([0, 6])
+
+    , axis = d3.svg.axis().scale(xscale).orient('bottom').ticks(6)
+             .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
 
   el.append("g")
   .attr("class", "x axis")
-  .attr("transform", "translate(25, " + (innerHeight - 50) + ")")
-  //.call(axis)
+  .attr("transform", "translate(25, " + bounds.y[1] + ")")
+  .call(axis)
 
 	d3.timer(function () {
     var inflate = el.select('.inflate')
@@ -28,7 +30,7 @@ bounce = function bounce(el) {
     .attr('stroke-width', 1)
     .transition().duration(500)
     .attr('stroke-width', 0)
-    .attr('fill', "hsl(" + Math.random() * 360 + ", 100%, 50%)")
+    .attr('fill', rand_color())
   }
 
   function mousedown() {
@@ -51,42 +53,38 @@ bounce = function bounce(el) {
   function step(d) {
 	  d.velocity = merge(d.velocity, scale(gravity, .0000001))
 
-    collide(d)
+    force(d)
 
 	  d3.select(this).attr('transform', translate)
   }
 
-  function collide(d){
-	  if (d.position[1] < bounds.y[0] - d.r) {
-      d.node.transition().attr('fill'
-                              ,"hsl(" + Math.random() * 360 + ", 100%, 50%)" )
-      horizontal_friction(d.velocity)
-		  d.velocity[1] *= -1.01
-      d.velocity[1] = vertical_friction(d.velocity[1])
-		  d.position[1] = bounds.y[0]
-	  }
+  function force(d) {
+    var bot = d.position[1] + d.r > bounds.y[1]
+      , top = d.position[1] - d.r < bounds.y[0]
 
-    if (d.position[1] > bounds.y[1] + d.r) {
-      play_sound(d.position[0])
-
-      horizontal_friction(d.velocity)
-		  d.velocity[1] *= -1.01
-      d.velocity[1] = vertical_friction(d.velocity[1])
-		  d.position[1] = bounds.y[1]
-	  }
+    if (top || bot) apply_friction(d)
+    if (bot) play_sound(d.position[0])
 
 	  d.position[0] =
       d.position[0] < bounds.x[0] ? bounds.x[1] :
       d.position[0] > bounds.x[1] ? bounds.x[0] : d.position[0]
  }
 
-  function play_sound(x) {
-    sound_test(x)
-    //setSoundUrl('node' + xscale(x))
+  function apply_friction(d) {
+    horizontal_friction(d.velocity)
+    vertical_friction(d.velocity)
   }
 
-  function vertical_friction (x) { return Math.abs(x) > 100 ? 1 : x * 1 }
-  function horizontal_friction (c) { c[0] *= Math.random() * 2 * (Math.random > .5 ? -1 : 1) }
+  function play_sound(x) {
+    sound_test(~~ xscale.invert(x))
+  }
+
+  function rand_color() { return "hsl(" + Math.random() * 360 + ", 100%, 50%)" }
+
+  function vertical_friction (v) { v[1] = Math.abs(v[1]) > 100 ? 1 : v[1] *= -1.01 }
+  function horizontal_friction (v) { v[0] *= Math.random() * 2 * r_invert() }
+
+  function r_invert() { return Math.random > .5 ? -1 : 1 }
 
   function scale(vec, coef) { return [coef * vec[0], coef * vec[1]] }
   function sum(arr) { return arr.reduce(function (a, b) { return a + b }) }
@@ -94,4 +92,11 @@ bounce = function bounce(el) {
   function translate(d) {
     return 'translate(' + (d.position = merge(d.position, d.velocity)).toString()  + ')'
   }
-};
+}
+
+
+function x() {
+  return someCondition ? thing1 :
+    someOtherCondition ? thing2 :
+    thing1;
+}

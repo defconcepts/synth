@@ -1,19 +1,34 @@
+exports(exports, sine, clear_db, mirror, pluckWith)
+
 log = console.log.bind(console)
 
-destroy = function () {
+function exports() {
+  var i = arguments.length
+  while (i--) window[arguments[i].name] = arguments[i]
+}
+
+function exportTo (src) {
+  for(var i = 0; i++ < arguments.length;)
+    src[arguments[i].name] = arguments[i]
+}
+
+function sine(n){
+  return  0.5 * (1 - Math.sin(n))
+}
+
+function clear_db() {
   Graph.find().forEach(function (model) {
     Graph.remove({_id: model._id})
   })
 }
-
-dist = function(a, b) {
+function dist(a, b) {
   var xd = a[0] - b[0]
     , yd = a[1] - b[1]
 
   return Math.sqrt(xd * xd + yd * yd)
 }
 
-mirror = function(f) {
+function mirror(f) {
   if ("function" !== typeof f) f = d3.ease.apply(d3, arguments)
 
   return function(t) {
@@ -21,41 +36,13 @@ mirror = function(f) {
   }
 }
 
-random_color = function() {
+function random_color() {
   return COLORS[~~(Math.random() * COLORS.length)]
 }
 
-pluckWith = function (name){
-  var n
-  function get(o) {
-    return n.length ? get(o[n.shift()]) : o
-  }
-
-  return function (obj) {//this
-    n = name.split('.')
-    return _.isArray(obj) ? obj.map(get) : get(obj)
-  }
-}
-
-k = function (name){
-  function get(o) {
-    function reduce (_, item) { return o = o[item] || null }
-    return name.split('.').reduce(reduce, o)
-  }
-
+function pluckWith(name){
   return function (obj) {
-    return _.isArray(obj) ? obj.map(get) : get(obj)
+    function red(_, item) { return obj = obj[item] || null }
+    return name.split('.').reduce(red, obj)
   }
-}
-
-pluck = function (name) {
-  return function get(obj) {
-    var str = name.split('.'), i = 0, ret
-    while(i < str.length) obj = obj[str[i++]] || null
-    return obj
-  }
-}
-
-function module() {
-  return module;
 }

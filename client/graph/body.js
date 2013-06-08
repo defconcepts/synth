@@ -1,4 +1,6 @@
-body = function (el) {
+exports(body)
+
+function body(el) {
   var self = this
 
   function contextmenu() {

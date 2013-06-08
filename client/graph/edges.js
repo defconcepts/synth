@@ -1,11 +1,13 @@
 edges = function (el) {
   var self = this
 
-  self
+  vent
   .on('add', add)
   .on('nudge', nudge)
   .on('removed', removed)
-  .call()
+
+
+  self()
   .data()
   .forEach(add)
 
