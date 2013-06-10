@@ -7,10 +7,8 @@ nodes = function (el) {
                   , mousedown
                   , mouseup
                   ]
-  vent
-  .on('added', added)
-  .on('changed', changed)
-  .on('removed', removed)
+
+  vent.listen([added, changed, removed])
 
   function changed (doc) {
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
@@ -26,7 +24,7 @@ nodes = function (el) {
   }
 
   function added (doc) {
-    self.emit('add', doc)
+    emit('add', doc)
 
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
@@ -53,7 +51,7 @@ nodes = function (el) {
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
 
-    self.emit('nudge')
+    emit('nudge')
   }
 
   function dragend(d) {
@@ -106,7 +104,7 @@ nodes = function (el) {
     .ease('elastic')
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
-    .each('start', self.later('nudge'))
+    .each('start', emit_later('nudge'))
   }
 
 }

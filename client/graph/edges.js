@@ -1,11 +1,7 @@
 edges = function (el) {
   var self = this
 
-  vent
-  .on('add', add)
-  .on('nudge', nudge)
-  .on('removed', removed)
-
+  vent.listen([add, nudge, removed])
 
   self()
   .data()

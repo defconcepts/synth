@@ -7,11 +7,6 @@ function exports() {
   while (i--) window[arguments[i].name] = arguments[i]
 }
 
-function exportTo (src) {
-  for(var i = 0; i++ < arguments.length;)
-    src[arguments[i].name] = arguments[i]
-}
-
 function sine(n){
   return  0.5 * (1 - Math.sin(n))
 }

@@ -8,9 +8,9 @@ graph = function () {
   }
 
   Graph.find()
-  .observe({ changed: vent.later('changed')
-           , added: vent.later('added')
-           , removed: vent.later('removed')
+  .observe({ changed: emit_later('changed')
+           , added: emit_later('added')
+           , removed: emit_later('removed')
            })
 
   body.call(self, d3.select(document.body))

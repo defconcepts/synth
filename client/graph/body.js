@@ -1,3 +1,5 @@
+//convert to d3 later????
+// try both and see which one works better
 exports(body)
 
 function body(el) {
@@ -43,6 +45,7 @@ function body(el) {
   function keyup() {
     shiftKey = d3.event.shiftKey || d3.event.metaKey
   }
+
 
   el.on('keydown', keydown)
   .on('keyup', keyup)
