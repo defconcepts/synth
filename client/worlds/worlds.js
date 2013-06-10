@@ -11,7 +11,7 @@ worlds.destruct = function () {
   .style('display', 'block')
 }
 
-setTimeout(function () {
-  var test = _.find(worlds, function (w) { return location.href.match(w.name) })
-  window.location.hostname == 'localhost' && test && worlds.construct(test)
-}, 250)
+Meteor.startup(function () {
+  _.find(worlds, function (w) { return location.href.match(w.name) }) &&
+    worlds.construct()
+})
