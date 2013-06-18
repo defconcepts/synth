@@ -8,7 +8,12 @@ nodes = function (el) {
                   , mouseup
                   ]
 
-  vent.listen([added, changed, removed])
+
+  Graph.find()
+  .observe({ changed: changed
+           , added: added
+           , removed: removed
+           })
 
   function changed (doc) {
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })

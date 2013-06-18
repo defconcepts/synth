@@ -1,2 +1,2 @@
 Graph = new Meteor.Collection('graph');
-//TODO add transform
+Music = new Meteor.Collection('music');

@@ -1,18 +1,21 @@
 edges = function (el) {
   var self = this
 
-  vent.listen([add, nudge, removed])
+  self().data().forEach(added)
 
-  self()
-  .data()
-  .forEach(add)
+  Graph.find()
+  .observe({ changed: changed
+           , added: added
+           , removed: removed
+           })
+
 
   function norm(id) {
     var node = self().filter(function (d) { return d._id === id })
     return ! node.empty() && node.datum()
   }
 
-  function add(doc) {
+  function added(doc) {
     doc.edges.forEach(function (target) {
       if (! (target = norm(target))) return
       el.insert('line', '.node')
@@ -30,7 +33,7 @@ edges = function (el) {
     })
   }
 
-  function nudge() {
+  function changed() {
     el.selectAll('.edge')
     .attr({ x1: pluckWith('source.x')
           , y1: pluckWith('source.y')
