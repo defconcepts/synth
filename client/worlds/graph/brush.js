@@ -2,7 +2,9 @@ brush = function (el) {
   var self = this
 
   function brushstart(d) {
-    self().each(function(d) { d.previouslySelected = shiftKey && d.selected })
+    self().each(function(d) {
+      d.previouslySelected = d3.event.shiftKey && d.selected
+    })
   }
 
   function brush(){

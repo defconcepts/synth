@@ -20,8 +20,6 @@ function body(el) {
   }
 
   function keydown() {
-    shiftKey = d3.event.shiftKey || d3.event.metaKey
-
      var i = 100
       , $set = { 38: [0, -i]
                , 37: [-i, 0]
@@ -34,17 +32,12 @@ function body(el) {
       if (d3.event.keyCode === 8)
         d3.event.preventDefault(), Graph.remove({_id: d._id })
 
-      if ($set) Graph.update({ _id: d._id }
-                            , { $set: { x: d.x += $set[0], y: d.y += $set[1] } })
+      if ($set) Graph.update({ _id: d._id },
+                             { $set: { x: d.x += $set[0], y: d.y += $set[1] } })
       })
 
   }
 
-  function keyup() {
-    shiftKey = d3.event.shiftKey || d3.event.metaKey
-  }
-
   el.on('keydown', keydown)
-  .on('keyup', keyup)
   .on('contextmenu', contextmenu)
 }

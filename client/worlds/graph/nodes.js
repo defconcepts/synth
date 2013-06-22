@@ -78,13 +78,13 @@ nodes = function (el) {
   }
 
   function mousedown(d) {
-    d.selected && shiftKey ?
+    d.selected && d3.event.shiftKey ?
       d3.select(this).classed('selected', d.selected = true) :
       self().classed('selected', function(p) { return p.selected = d === p })
   }
 
   function mouseup(d) {
-    d.selected && shiftKey &&
+    d.selected && d3.event.shiftKey &&
       d3.select(this).classed('selected', d.selected = false)
   }
 
