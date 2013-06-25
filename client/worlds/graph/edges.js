@@ -15,20 +15,19 @@ edges = function (el) {
   }
 
   function build_routes(doc, target) {
-    log(doc, target)
-    target && (target.lines || (target.lines = [])).push(
-    el.insert('line', '.node')
-    .datum({ source: doc, target: target })
-    .attr({ class: 'edge'
-          , stroke: pluckWith('source.fill')
-          , x1: doc.x
-          , y1: doc.y
-          , x2: target.x
-          , y2: target.y
-          })
-    .transition().duration(500)
-    .ease('circle')
-    .attr({ x2: target.x, y2: target.y }))
+    target &&
+      el.insert('line', '.node')
+      .datum({ source: doc, target: target })
+      .attr({ class: 'edge'
+            , stroke: pluckWith('source.fill')
+            , x1: doc.x
+            , y1: doc.y
+            , x2: target.x
+            , y2: target.y
+            })
+      .transition().duration(500)
+      .ease('circle')
+      .attr({ x2: target.x, y2: target.y })
   }
 
   function added(doc) {
@@ -37,34 +36,32 @@ edges = function (el) {
   }
 
   function changed(doc) {
-    // norm(doc).lines.forEach(function (line) {
-    //   log(line)
-    // });
+    el.selectAll('.edge')
+    .filter(function (d){ return doc._id === d.target._id })
+    .attr('x2', doc.x)
+    .attr('y2', doc.y)
+
+    el.selectAll('.edge')
+    .filter(function (d){ return d.source === doc })
+    .attr('x1', doc.x)
+    .attr('y1', doc.y)
   }
 
-  function clear() { this.attr('class', null).attr('stroke-width', 0).remove() }
+  function clear() { this.attr('class', null).remove() }
 
   function removed(doc) {
-    doc = norm(doc)
-
-    doc.lines.forEach(function (d) {
-      log(d)
-      d.remove()
-    })
-
     var exit = el.selectAll('.edge')
-                .attr('stroke-width', 1)
-                .transition().duration(2000).ease('cubic')
+               .attr('stroke-width', 1)
+               .transition().duration(2000).ease('cubic')
 
-     // exit.filter(function (d){ return d.target === doc })
-    // .attr('x2', pluckWith('source.x'))
-    // .attr('y2', pluckWith('source.y'))
-    // .call(clear)
+    exit.filter(function (d){ return d.target._id === doc._id })
+    .attr('x1', pluckWith('target.x'))
+    .attr('y1', pluckWith('target.y'))
+    .call(clear)
 
-    // exit.filter(function (d){ return d.source === doc })
-    // .attr('x1', pluckWith('target.x'))
-    // .attr('y1', pluckWith('target.y'))
-    // .call(clear)
-
+    exit.filter(function (d){ return d.source === doc })
+    .attr('x2', pluckWith('source.x'))
+    .attr('y2', pluckWith('source.y'))
+    .call(clear)
   }
 }

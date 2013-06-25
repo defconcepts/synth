@@ -14,7 +14,7 @@ var i
                      , 1000
                      ])
 
-function  sound_test(i) {
+function sound_test(i) {
   var frequency = scale[~~(scale.length * sine(i * 3.172 * Math.sin(i * 0.2)))]
   voices.push(audioLib.generators.Voice(sink.sampleRate, frequency, sine(i * 4.23)))
 }
@@ -30,21 +30,20 @@ function audioprocess(buffer, channelCount) {
   }
 }
 
-function Voice (sampleRate, frequency, pan, length) {
-  var one = { sampleRate: sampleRate
-            , frequency:  frequency
-            , pan: pan
-            , plength:  length || this.length
-            }
+function Voice (sampleRate, frequency, pan) {
+  _.extend(this,
+           { sampleRate: sampleRate
+           , frequency:  frequency
+           , pan: pan
+           , length:  this.length
+           },
+           { samplesLeft: this.length * sampleRate
+           , osc:  audioLib.Oscillator(sampleRate, frequency * 2)
+           , lfo: _.extend(audioLib.Oscillator(sampleRate, frequency * 2.8), { waveShape: 'triangle' })
+           , envelope: audioLib.ADSREnvelope(sampleRate, 10, 300, 0.6, 4000, 20, this.length * 1000)
+           }
+          )
 
-  var two = { samplesLeft: this.length * this.sampleRate
-            , osc:  audioLib.Oscillator(this.sampleRate, this.frequency * 2)
-            , lfo: audioLib.Oscillator(this.sampleRate, this.frequency * 2.8)
-            , envelope: audioLib.ADSREnvelope(this.sampleRate, 10, 300, 0.6, 4000, 20, this.length * 1000)
-            }
-
-  _.extend(this, one, two)
-  this.lfo.waveShape = 'square'
   this.envelope.triggerGate()
 }
 
