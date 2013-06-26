@@ -1,4 +1,4 @@
-bounce = function bounce(el) {
+bounce = function bounce(el, data) {
   var gravity = [0, .5]
     , bounds = { x: [0, innerWidth], y: [0, innerHeight - 50] }
 
@@ -8,6 +8,15 @@ bounce = function bounce(el) {
 
     , axis = d3.svg.axis().scale(xscale).orient('bottom').ticks(6)
              .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
+    , done = false
+
+  data && data.forEach(function(d) {
+            log(d)
+    el.append('circle').datum(d)
+    .attr('fill', rand_color)
+    .attr('class', 'ball')
+    .attr('r', pluckWith('r'))
+  })
 
   el.append("g")
   .attr("class", "x axis")
@@ -18,11 +27,29 @@ bounce = function bounce(el) {
     var inflate = el.select('.inflate')
     inflate.empty() || inflate.attr('r', function (d) { return d.r += 2 })
     el.selectAll('.ball').each(step)
+    return done
   })
 
   d3.select(document)
   .on('mousedown', mousedown)
   .on('mouseup', mouseup)
+
+  return function () {
+    done = true
+    var state = _.map(el.selectAll('.ball').data(), omit)
+    Graph.update({ _id: Session.get('world')._id },
+                 { $set: { state: state } }
+                )
+
+    function omit (d) {
+      return _.omit(d, 'node')
+    }
+
+    d3.select(document)
+    .on('mousedown', null)
+    .on('mouseup', null)
+  }
+
 
   function mouseup(){
     el.select('.inflate')
@@ -92,11 +119,4 @@ bounce = function bounce(el) {
   function translate(d) {
     return 'translate(' + (d.position = merge(d.position, d.velocity)).toString()  + ')'
   }
-}
-
-
-function x() {
-  return someCondition ? thing1 :
-    someOtherCondition ? thing2 :
-    thing1;
 }

@@ -19,22 +19,22 @@ function body(el) {
                  })
   }
 
+  function nudge (d) {
+    var i = 100, $inc =
+      { 38: [0, -i]
+      , 37: [-i, 0]
+      , 40: [0, +i]
+      , 39: [+i, 0]
+      }[d3.event.keyCode]
+
+    if (d3.event.keyCode === 8)
+      d3.event.preventDefault(), Graph.remove({_id: d._id })
+
+    $inc && Graph.update({ _id: d._id }, { $inc: toCoord($inc) })
+  }
+
   function keydown() {
-     var i = 100
-      , $set = { 38: [0, -i]
-               , 37: [-i, 0]
-               , 40: [0, i]
-               , 39: [i, 0]
-               }[d3.event.keyCode]
-
-    el.selectAll('.selected').each(function(d) {
-
-      if (d3.event.keyCode === 8)
-        d3.event.preventDefault(), Graph.remove({_id: d._id })
-
-      if ($set) Graph.update({ _id: d._id },
-                             { $set: { x: d.x += $set[0], y: d.y += $set[1] } })
-      })
+    el.selectAll('.selected').each(nudge)
 
   }
 

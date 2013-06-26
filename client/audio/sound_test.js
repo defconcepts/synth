@@ -3,7 +3,7 @@ exports(sound_test)
 var i
   , sink = Sink()
   , voices = []
-  , reverb = audioLib.Reverb(sink.sampleRate, sink.channelCount, 1.0, 0.2, 0.999)
+  , reverb = audioLib.Reverb(sink.sampleRate, sink.channelCount, 1.0, 0.2, .999)
   , scale =
     new Float32Array([ 130.82
                      , 220
@@ -50,7 +50,7 @@ function Voice (sampleRate, frequency, pan) {
 _.extend(Voice.prototype,
          { sample: 0
          , length: 12
-         , mix:0.5
+         , mix: 0.5
          , generate: function () {
              this.lfo.generate()
              this.osc.fm = this.lfo.getMix()

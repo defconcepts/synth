@@ -3,10 +3,12 @@ worlds = [bounce]
 worlds.construct = function () {
   d3.selectAll('.graph ,.brush')
   .style('display', 'none')
-  worlds[0](d3.select('.worlds'))
+  this.current = worlds[0](d3.select('.worlds'), Session.get('world').state)
 }
 
 worlds.destruct = function () {
+  this.current()
+  d3.selectAll('.worlds *').remove()
   d3.selectAll('.graph ,.brush')
   .style('display', 'block')
 }
@@ -16,8 +18,6 @@ Meteor.startup(function () {
     worlds.construct()
 })
 
-
-//simple view framework
 function View() {
   var el  = DomUtils.htmlToFragment('<g>')
   var events = {}
@@ -26,7 +26,6 @@ function View() {
     return hash
   }, {});
 }
-
 
 View.prototype = {
   construct: function () {

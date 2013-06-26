@@ -41,3 +41,7 @@ function pluckWith(name){
     return name.split('.').reduce(red, obj)
   }
 }
+
+function toCoord(arr) {
+  return { x: arr[0], y: arr[1] }
+}

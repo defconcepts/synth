@@ -67,6 +67,7 @@ nodes = function (el) {
     d3.event.preventDefault()
 
     //move to worlds
+    Session.set('world', d)
     zoom_in(el, d).each('end', worlds.construct)
     return d3.select(window).once('keydown', keydown)
 
