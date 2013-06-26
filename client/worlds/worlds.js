@@ -28,8 +28,6 @@ function View() {
 }
 
 
-//explain
-//()()()()()()()()()()()()()()()()()()()()()()()
 View.prototype = {
   construct: function () {
     listen(this.events)
