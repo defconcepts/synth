@@ -35,7 +35,6 @@ function body(el) {
 
   function keydown() {
     el.selectAll('.selected').each(nudge)
-
   }
 
   el.on('keydown', keydown)

@@ -8,7 +8,6 @@ nodes = function (el) {
                   , mouseup
                   ]
 
-
   Graph.find()
   .observe({ changed: changed
            , added: added
@@ -29,7 +28,7 @@ nodes = function (el) {
   }
 
   function added (doc) {
-    emit('add', doc)
+    //emit add
 
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
@@ -52,12 +51,51 @@ nodes = function (el) {
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
 
+    el.on('nudge')(d)
+
+
+    add_link(d)
+
     self().filter(pluckWith('selected'))
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
 
-    emit('nudge')
+    //nudge
   }
+
+  function add_link(d) {
+    var nodes = self().data()
+    nodes.forEach(function (o) {
+      if (o._id === d._id ) return
+      var distance = dist([d.x, d.y], [o.x, o.y])
+
+      if (! _.contains(d.edges, o._id) && distance < 450) {
+        d.edges.push(o._id)
+        el.on('add')(d)
+      }
+
+      if (_.contains(d.edges, o._id) && distance > 450){
+        log('remove')
+
+        var k = d3.select('.edge').filter(function (doc) {
+          if (d._id === doc.source._id) {
+            var swap
+            swap = doc.source
+            doc.source = doc.target
+            doc.target = swap
+            return true;
+          }
+
+        })
+
+        d.edges = _.without(d.edges, o._id)
+        k.on('remove')(d)
+      }
+
+      Graph.update({_id: d._id}, d)
+    })
+  }
+
 
   function dragend(d) {
     Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
@@ -106,11 +144,10 @@ nodes = function (el) {
   function update() {
     self()
     .transition()
-    .duration(500)
-    .ease('elastic')
+    .duration(250)
+    .ease('cubic-in-out')
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
-    .each('start', emit_later('nudge'))
   }
 
 }

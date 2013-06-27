@@ -44,12 +44,22 @@ svg {
 
 
 .tooltip {
-    background: pink;
+    background: #666;
     position: absolute;
     height: 150px;
     width: 150px;
     opacity: .5;
+    padding: 5px;
 
+    li {
+        border-top: 1px #333 solid;
+        background: #ccc;
+    }
+
+
+    ul {
+        list-style: none;
+    }
 
     li:hover {
         background: blue;
@@ -58,6 +68,3 @@ svg {
 }
 
 
-    li {
-        text-decoration: none;
-    }
