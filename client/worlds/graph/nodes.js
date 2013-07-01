@@ -28,8 +28,6 @@ nodes = function (el) {
   }
 
   function added (doc) {
-    //emit add
-
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
           , cy: Math.random() * innerHeight + (innerHeight * .25)
@@ -39,7 +37,6 @@ nodes = function (el) {
           })
     .listen_for(listeners)
     .call(draggable)
-
     update()
   }
 
@@ -51,45 +48,30 @@ nodes = function (el) {
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
 
-    el.on('nudge')(d)
-
-
-    add_link(d)
-
     self().filter(pluckWith('selected'))
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
 
-    //nudge
+    console.log(123);
+    add_link(d)
+    el.on('nudge')(d)
   }
 
   function add_link(d) {
     var nodes = self().data()
     nodes.forEach(function (o) {
-      if (o._id === d._id ) return
       var distance = dist([d.x, d.y], [o.x, o.y])
+      if (o._id === d._id ) return
+      if (! _.contains(d.edges, o._id) && distance < 250)
+        d.edges.push(o._id), el.on('add')(d), log('add')
 
-      if (! _.contains(d.edges, o._id) && distance < 450) {
-        d.edges.push(o._id)
-        el.on('add')(d)
-      }
-
-      if (_.contains(d.edges, o._id) && distance > 450){
+      if (_.contains(d.edges, o._id) && distance > 250) {
+        d.edges.remove(o._id)
+        var e = el.select('.edge')
+                .filter(function (doc) { return d._id === doc.source._id })
+        e.size() || log('why', d3.selectAll('.edge').size())
+        e.size() && e.on('remove')(d)
         log('remove')
-
-        var k = d3.select('.edge').filter(function (doc) {
-          if (d._id === doc.source._id) {
-            var swap
-            swap = doc.source
-            doc.source = doc.target
-            doc.target = swap
-            return true;
-          }
-
-        })
-
-        d.edges = _.without(d.edges, o._id)
-        k.on('remove')(d)
       }
 
       Graph.update({_id: d._id}, d)
@@ -117,14 +99,13 @@ nodes = function (el) {
   }
 
   function mousedown(d) {
-    d.selected && d3.event.shiftKey ?
-      d3.select(this).classed('selected', d.selected = true) :
-      self().classed('selected', function(p) { return p.selected = d === p })
+    d3.select(this).classed('selected', d.selected = true)
   }
 
   function mouseup(d) {
-    d.selected && d3.event.shiftKey &&
-      d3.select(this).classed('selected', d.selected = false)
+    d.selected && d3.event.shiftKey ?
+      d3.select(this).classed('selected', d.selected = true) :
+      self().classed('selected', function(p) { return p.selected = d === p })
   }
 
   function contextmenu(d) {

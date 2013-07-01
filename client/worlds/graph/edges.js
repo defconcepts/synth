@@ -37,33 +37,42 @@ edges = function (el) {
     .forEach(_.partial(build_routes, doc))
   }
 
+
+  var thickness = d3.scale.linear()
+  .domain([0, innerWidth / 5])
+  .range([10, 0]);
+
+  function strokeWidth(d) {
+    return ~~ thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
+                          _.values(_.pick(d.target, 'x', 'y'))))
+  }
+
+
   function changed(doc) {
     el.selectAll('.edge')
-    .filter(function (d){ return doc._id === d.target._id })
+    .attr('opacity', '.5')
+    .filter(function (d) { return doc._id === d.target._id })
+    .attr('stroke-width', strokeWidth)
+    .attr('stroke-color', 'white')
     .attr('x2', doc.x)
     .attr('y2', doc.y)
 
     el.selectAll('.edge')
-    .filter(function (d){ return d.source._id === doc._id })
+    .attr('opacity', '.5')
+    .filter(function (d) { return d.source._id === doc._id })
+    .attr('stroke-width', strokeWidth)
     .attr('x1', doc.x)
     .attr('y1', doc.y)
   }
 
-  function clear() { this.attr('class', null).remove() }
-
   function removed(doc) {
-    var exit = el.selectAll('.edge')
-               .attr('stroke-width', 1)
-               .transition().duration(500).ease('cubic')
-
-    exit.filter(function (d){ return d.target._id === doc._id })
+    el.selectAll('.edge').filter(filter)
+    .attr('stroke-width', 1)
+    .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))
     .attr('y1', pluckWith('target.y'))
-    .call(clear)
+    .attr('class', '').remove()
 
-    exit.filter(function (d){ return d.source === doc })
-    .attr('x2', pluckWith('source.x'))
-    .attr('y2', pluckWith('source.y'))
-    .call(clear)
+    function filter (d) { return d.target._id === doc._id || d.source === doc }
   }
 }

@@ -1,4 +1,4 @@
-exports(exports, sine, clear_db, mirror, pluckWith)
+exports(exports, sine, clear_db, mirror, pluckWith, matchWith, swap)
 
 log = console.log.bind(console)
 
@@ -44,4 +44,19 @@ function pluckWith(name){
 
 function toCoord(arr) {
   return { x: arr[0], y: arr[1] }
+}
+
+
+function matchWith(obj, prop) {
+  return function (ect) {
+    return obj[prop] === ect[prop]
+  }
+}
+
+
+function swap (obj, prop1, prop2) {
+  var swap = obj[prop1]
+  obj[prop1] = obj[prop2]
+  obj[prop2] =  swap
+  return obj
 }

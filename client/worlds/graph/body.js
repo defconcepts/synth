@@ -3,6 +3,18 @@ exports(body)
 function body(el) {
   var self = this
 
+
+  el.on('keydown', keydown)
+  .on('contextmenu', contextmenu)
+  .on('click', click)
+
+  setTimeout(click(), 100)
+
+  function click () {
+    self().each(function (d) { d.selected = false })
+  }
+
+
   function contextmenu() {
     d3.event.preventDefault()
 
@@ -37,6 +49,4 @@ function body(el) {
     el.selectAll('.selected').each(nudge)
   }
 
-  el.on('keydown', keydown)
-  .on('contextmenu', contextmenu)
 }
