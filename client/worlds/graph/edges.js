@@ -1,5 +1,8 @@
 edges = function (el) {
   var self = this
+    , thickness = d3.scale.linear()
+                  .domain([1, innerWidth / 4])
+                  .range([10, 0])
 
   el.on('nudge', changed).on('add', added)
 
@@ -22,52 +25,47 @@ edges = function (el) {
       .on('remove', removed)
       .datum({ source: doc, target: target })
       .attr({ class: 'edge'
-            , stroke: pluckWith('source.fill')
             , x1: doc.x
             , y1: doc.y
             , x2: doc.x
             , y2: doc.y
+            , opacity: '.5'
+            , stroke: pluckWith('source.fill')
+            , 'stroke-width': stroke_width
             })
-      .transition().duration(200).ease('cubic-in-out')
+      .transition().duration(500).ease('cubic-in-out')
       .attr({ x2: target.x, y2: target.y })
   }
 
   function added(doc) {
-    doc.edges.map(norm)
+    doc.edges.map(norm).filter(_.identity)
     .forEach(_.partial(build_routes, doc))
   }
 
-
-  var thickness = d3.scale.linear()
-  .domain([0, innerWidth / 5])
-  .range([10, 0]);
-
-  function strokeWidth(d) {
-    return ~~ thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
+  function stroke_width(d) {
+    return thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
                           _.values(_.pick(d.target, 'x', 'y'))))
   }
-
-
   function changed(doc) {
     el.selectAll('.edge')
-    .attr('opacity', '.5')
     .filter(function (d) { return doc._id === d.target._id })
-    .attr('stroke-width', strokeWidth)
-    .attr('stroke-color', 'white')
+    .attr('stroke-width', stroke_width)
     .attr('x2', doc.x)
     .attr('y2', doc.y)
+    .attr('x1', pluckWith('source.x'))
+    .attr('y1', pluckWith('source.y'))
 
     el.selectAll('.edge')
-    .attr('opacity', '.5')
     .filter(function (d) { return d.source._id === doc._id })
-    .attr('stroke-width', strokeWidth)
+    .attr('stroke-width', stroke_width)
     .attr('x1', doc.x)
     .attr('y1', doc.y)
+    .attr('x2', pluckWith('target.x'))
+    .attr('y2', pluckWith('target.y'))
   }
 
   function removed(doc) {
     el.selectAll('.edge').filter(filter)
-    .attr('stroke-width', 1)
     .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))
     .attr('y1', pluckWith('target.y'))

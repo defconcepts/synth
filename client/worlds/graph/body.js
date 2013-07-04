@@ -3,17 +3,15 @@ exports(body)
 function body(el) {
   var self = this
 
-
   el.on('keydown', keydown)
   .on('contextmenu', contextmenu)
   .on('click', click)
 
-  setTimeout(click(), 100)
+  setTimeout(click, 100)
 
   function click () {
     self().each(function (d) { d.selected = false })
   }
-
 
   function contextmenu() {
     d3.event.preventDefault()

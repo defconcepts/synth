@@ -32,7 +32,7 @@ nodes = function (el) {
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
           , cy: Math.random() * innerHeight + (innerHeight * .25)
           , fill: pluckWith('fill')
-          , r: 25
+          , r: 20
           , class: 'node'
           })
     .listen_for(listeners)
@@ -52,29 +52,28 @@ nodes = function (el) {
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
 
-    console.log(123);
     add_link(d)
     el.on('nudge')(d)
   }
 
-  function add_link(d) {
+  function add_link(source) {
+    //todo add queue for inflight links so they can rejoin
     var nodes = self().data()
-    nodes.forEach(function (o) {
-      var distance = dist([d.x, d.y], [o.x, o.y])
-      if (o._id === d._id ) return
-      if (! _.contains(d.edges, o._id) && distance < 250)
-        d.edges.push(o._id), el.on('add')(d), log('add')
+    nodes.forEach(function (target) {
+      var distance = dist([source.x, source.y], [target.x, target.y])
+      if (source._id === target._id ) return
+      if (! _.contains(source.edges, target._id)
+        && distance < 250
+        && ! _.contains(target.edges, source._id))
+        source.edges.push(target._id), el.on('add')(source)
 
-      if (_.contains(d.edges, o._id) && distance > 250) {
-        d.edges.remove(o._id)
+      if (_.contains(source.edges, target._id) && distance > 250) {
+        source.edges.remove(target._id)
         var e = el.select('.edge')
-                .filter(function (doc) { return d._id === doc.source._id })
-        e.size() || log('why', d3.selectAll('.edge').size())
-        e.size() && e.on('remove')(d)
-        log('remove')
+                .filter(function (doc) { return source._id === doc.source._id })
+        e.size() && e.on('remove')(source)
       }
-
-      Graph.update({_id: d._id}, d)
+      source.save()
     })
   }
 
