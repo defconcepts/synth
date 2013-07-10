@@ -1,28 +1,7 @@
 brush = function (el) {
   var self = this
 
-  function brushstart(d) {
-    self().each(function(d) {
-      d.previouslySelected = d3.event.shiftKey && d.selected
-    })
-  }
-
-  function brush(){
-    var extent = d3.event.target.extent()
-    self().classed('selected', function(d) {
-      return d.selected = d.previouslySelected ^
-        (extent[0][0] <= d.x &&
-         d.x < extent[1][0] &&
-         extent[0][1] <= d.y &&
-         d.y < extent[1][1])
-    })
-  }
-
-  function brushend() {
-    d3.event.target.clear()
-    d3.select(this).call(d3.event.target)
-    //d3.event.stopPropagation()
-  }
+ // If the META key is down, you’d rotate and scale the nodes around the selected node’s centroid,
 
   el.datum({ selected: false , previouslySelected: false })
   .call(d3.svg.brush()
@@ -31,4 +10,48 @@ brush = function (el) {
         .on('brushstart', brushstart)
         .on('brush', brush)
         .on('brushend', brushend))
+
+  var shifted = []
+
+  function selected (d) {
+    shifted.push(d._id)
+    d3.select(this).classed('selected', d.selected =
+                            d3.event.sourceEvent.shiftKey ? ! d.selected : true)
+  }
+
+
+  function brushstart(d) {
+    d3.event.sourceEvent.shiftKey &&
+      self().filter(function (d) { return d.selected })
+      .each(function (d) { shifted.push(d._id) })  }
+
+
+  function brush() {
+    var extent = d3.event.target.extent()
+    self().classed('selected', function (d) {
+      return d.selected = _.contains(shifted, d._id) ^ d.within(extent)
+    })
+
+  }
+
+  function brushend() {
+    shifted = []
+    d3.event.target.clear()
+    d3.select(this).call(d3.event.target)
+  }
+
+  function isNotNode(e) {
+    e = e && e.sourceEvent && e.event && e.event.sourceEvent || {}
+    return e.target && e.target.classList.match(/node/)
+  }
+
+  function never_dragged(extent) {
+    return extent[0].toString() === extent[1].toString()
+  }
+
+  function reverse_selected(extent) {
+    return never_dragged(extent) &&
+      d3.selectAll('.node').each(selected)
+  }
+
 }

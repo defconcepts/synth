@@ -1,22 +1,25 @@
 nodes = function (el) {
-  var self = this,
-      listeners = [ mouseover
+  var self = this
+    , listeners = [ mouseover
                   , mouseout
                   , contextmenu
                   , dblclick
+                  , mousedown
                   , mouseup
                   ]
+
+  var draggable =
+    d3.behavior.drag()
+    .origin(Object)
+    .on('dragstart', dragstart)
+    .on('drag', drag)
+    .on('dragend', dragend)
 
   Graph.find()
   .observe({ changed: changed
            , added: added
            , removed: removed
            })
-
-  var draggable = d3.behavior.drag()
-                  .origin(Object)
-                  .on('drag', drag)
-                  .on('dragend', dragend)
 
   function changed (doc) {
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
@@ -40,10 +43,13 @@ nodes = function (el) {
           , class: 'node'
           })
     .listen_for(listeners)
-    //.call(draggable)
-    update()
+    .call(draggable)
+    .call(update)
   }
 
+  function dragstart(d) {
+    d3.select(this).classed('selected', d.selected = 1)
+  }
 
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
@@ -100,12 +106,18 @@ nodes = function (el) {
     }
   }
 
-  function mouseup (d) {
-    d3.event.stopPropagation()
-    d.selected && d3.event.shiftKey ?
-      d3.select(this).classed('selected', d.selected) :
-      self().classed('selected', function(p) { return p.selected = d === p })
+  function mousedown (d) {
+    d3.select(this)
+    .classed('selected', d.selected = d3.event.shiftKey ? ! d.selected : 1)
   }
+
+  function mouseup(d){
+    if (! d3.event.shiftKey) {
+      self().filter(function (p) { return d._id !== p._id })
+      .classed('selected', function(d) { return d.selected = false })
+    }
+  }
+
 
   function contextmenu(d) {
     d3.event.preventDefault()
@@ -131,9 +143,3 @@ nodes = function (el) {
   }
 
 }
-
-
-// fastidous
-// driven
-// consumed by details
-// lonley

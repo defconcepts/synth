@@ -5,17 +5,6 @@ function body(el) {
 
   el.on('keydown', keydown)
   .on('contextmenu', contextmenu)
-  .on('mouseup', mouseup)
-
-  setTimeout(mouseup, 100)
-
-  function mouseup () {
-    var e = d3.event || {}
-    el.selectAll('.node').each(function (d) {
-      d3.select(this).classed('selected',
-                              d.selected = e.shiftKey && ! d.selected)
-    })
-  }
 
   function contextmenu() {
     d3.event.preventDefault()
