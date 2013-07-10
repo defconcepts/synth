@@ -1,7 +1,7 @@
 _.extend(Array.prototype, {
   remove: function () {
     var args = _.toArray(arguments), i = 0
-    while (i < args.length) this.splice(this.indexOf(args[i++]))
+    while (i < args.length) this.splice(this.indexOf(args[i++]), 1)
     return this
   }
 })

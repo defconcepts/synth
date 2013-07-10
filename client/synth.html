@@ -1,5 +1,87 @@
 <body>
+
+
   <svg>
+
+    <filter xmlns="http://www.w3.org/2000/svg" id="b2" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="10 0.1"/>
+    </filter>
+
+<defs xmlns="http://www.w3.org/2000/svg">
+    <desc>
+      /* ============================================================================
+       * Author: Erik Dahlström
+       * License terms: see svg-wow.org
+       * CC0 http://creativecommons.org/publicdomain/zero/1.0/
+       * =========================================================================== */
+    </desc>
+    <radialGradient id="fade">
+      <stop stop-opacity="1" offset="0.7">
+        <animate attributeName="stop-opacity" to="0" dur="3s" begin="animripple.begin"/>
+      </stop>
+      <stop stop-opacity="0" offset="1"/>
+    </radialGradient>
+    <filter id="ripple" color-interpolation-filters="linearRGB" filterUnits="userSpaceOnUse" y="27.6882%" width="50%" x="32.3118%" height="50%">
+      <!-- mask rect edges -->
+      <feImage xlink:href="#mask" xmlns:xlink="http://www.w3.org/1999/xlink" result="mask"/>
+      <!-- generate ripple displacement map -->
+      <feImage xlink:href="#dispmap" xmlns:xlink="http://www.w3.org/1999/xlink" result="dmap"/>
+      <!-- displace input image -->
+      <feDisplacementMap in="SourceGraphic" in2="dmap" scale="32" xChannelSelector="R" yChannelSelector="G" result="dist"/>
+      <!-- apply mask -->
+      <feComposite operator="in" in2="mask" in="dist"/>
+    </filter>
+    <circle id="mask" r="200" fill="url(#fade)" transform="translate(200 200)">
+      <animate attributeName="r" values="0;200" dur="3s" begin="animripple.begin" onend="running=false" fill="freeze"/>
+    </circle>
+    <image id="dispmap" xlink:href="../res/1.0/images/displacementMap.jpg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400">
+      <animateTransform id="at1" type="translate" attributeName="transform" values="200 200" dur="1ms" fill="freeze" additive="sum" begin="animripple.begin"/>
+      <animateTransform id="animripple" type="scale" attributeName="transform" values="0;1" dur="3s" additive="sum" begin="indefinite" fill="freeze"/>
+      <animateTransform id="at2" type="translate" attributeName="transform" values="-200 -200" dur="1ms" fill="freeze" additive="sum" begin="animripple.begin"/>
+    </image>
+
+    <script><![CDATA[
+      var running = false;
+      function $(id) { return document.getElementById(id); }
+      
+      function clientToUserSpace(p)
+      {
+        var sctm = document.documentElement.getScreenCTM();
+        sctm = sctm.inverse();
+        return p.matrixTransform(sctm);
+      }
+
+      function doRip]]><![CDATA[ple(evt)
+      {
+        if(running)
+          return;
+          
+        var m = document.documentElement.createSVGPoint();
+        m.x = evt.clientX;
+        m.y = evt.clientY;
+        m = clientToUserSpace(m);
+
+        var radius = 200;
+
+        var ripple = $('ripple');
+        var dispmap = $('dispmap');
+        var mask = $('mask');
+        var target = $('overlay');
+        var animripple = $('animripple');
+
+        ripple.x.baseVal.value = m.x-radius;
+        ripple.y.baseVal.value = m.y-radius;
+        ripple.width.baseVal.value = radius*2;
+        ripple.height.baseVal.value = radius*2;
+
+        $('mask').setAttribute("transform", "translate(" + radius + " " + radius + ")");
+
+        running = true;
+        animripple.beginElement();
+      }
+    ]]></script>
+  </defs>
+
     <g class="worlds"></g>
     <g class="brush"></g>
     <g class="graph"></g>

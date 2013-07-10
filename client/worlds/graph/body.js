@@ -5,12 +5,16 @@ function body(el) {
 
   el.on('keydown', keydown)
   .on('contextmenu', contextmenu)
-  .on('click', click)
+  .on('mouseup', mouseup)
 
-  setTimeout(click, 100)
+  setTimeout(mouseup, 100)
 
-  function click () {
-    self().each(function (d) { d.selected = false })
+  function mouseup () {
+    var e = d3.event || {}
+    el.selectAll('.node').each(function (d) {
+      d3.select(this).classed('selected',
+                              d.selected = e.shiftKey && ! d.selected)
+    })
   }
 
   function contextmenu() {

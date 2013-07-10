@@ -21,6 +21,7 @@ brush = function (el) {
   function brushend() {
     d3.event.target.clear()
     d3.select(this).call(d3.event.target)
+    //d3.event.stopPropagation()
   }
 
   el.datum({ selected: false , previouslySelected: false })
