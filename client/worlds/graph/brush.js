@@ -1,7 +1,7 @@
 brush = function (el) {
   var self = this
 
- // If the META key is down, you’d rotate and scale the nodes around the selected node’s centroid,
+ // add rotation
 
   el.datum({ selected: false , previouslySelected: false })
   .call(d3.svg.brush()

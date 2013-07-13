@@ -60,30 +60,35 @@ nodes = function (el) {
     .each(el.on('nudge'))
 
     update_link(d)
-
   }
 
   function update_link(source) {
     //todo add queue for inflight links so they can rejoin
-    self().data()
-    .forEach(function (target) {
+    self().data().forEach(function (target) {
+      var max = 350
       var distance = dist([source.x, source.y], [target.x, target.y])
-      if (source._id === target._id ) return
+      var connected = source.connected(target)
+      if (source._id === target._id) return
 
-      if (! _.contains(source.edges, target._id)
-        && distance < 250
-        && ! _.contains(target.edges, source._id)) {
+      if (connected === -1) {
+        if (distance < 350) return log('ret')
+        //source.edges contains target and distance is greater than 350
+        log('remove target from source')
+        target.edges.remove(source._id)
+        el.on('remove')(target)
+      }
+
+      if (connected === 0 && distance < 350) {
+        log('add target to source')
         source.edges.push(target._id)
         el.on('add')(source)
       }
 
-      if (_.contains(source.edges, target._id) && distance > 250) {
+      if (connected === 1 && distance > 250) {
+        log('remove source from target')
         source.edges.remove(target._id)
-        el.select('.edge')
-        .filter(function (doc) { return source._id === doc.source._id })
-        .size() && (el.on('remove')(source), log('remove'))
+        el.on('remove')(source)
       }
-
     })
   }
 

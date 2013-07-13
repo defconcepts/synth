@@ -16,6 +16,11 @@ var Node =
          extent[0][1] <= this.y &&
          this.y < extent[1][1]
       }
+    , connected: function (doc) {
+        return _.contains(this.edges, doc._id) ? 1 :
+          _.contains(doc.edges, this._id) ? -1 :
+          0;
+      }
     }
 
 

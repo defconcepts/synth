@@ -14,24 +14,24 @@ edges = function (el) {
            , removed: removed
            })
 
+  setInterval(function () {
+    d3.selectAll('line').each(function (d) {
+      el.insert('circle', '.node').attr('class', 'pulse')
+      .attr('cx', d.source.x)
+      .attr('cy', d.source.y)
+      .attr('r', 5)
+      .attr('fill', 'blue')
+      .transition().duration(499)
+      .attr('cx', d.target.x)
+      .attr('cy', d.target.y)
+      .remove()
+    })
+  }, 500)
+
   function norm(doc) {
     var node = self().filter(function (d) { return d._id === (doc._id || doc) })
     if (! node.empty()) return node.datum()
   }
-
-  // var plonklock = {}
-  // function plonk (line, duration) {
-  //   var datum = line.datum()
-  //   d3.select(plonklock).transition().duration(duration)
-  //   .tween(':' + datum.source._id + datum.target._id, function () {
-  //     var i = d3.interpolateNumber(datum.source.x, datum.target.x)
-  //     return function (t) { line.attr('x2', i(t)) }
-  //   })
-  //   .tween('' + datum.source._id + datum.target._id, function () {
-  //     var i = d3.interpolateNumber(datum.source.y , datum.target.y)
-  //     return function (t) { line.attr('y2', i(t)) }
-  //   })
-  // }
 
   function build_routes(doc, target) {
     el.on('remove', removed)
@@ -42,7 +42,7 @@ edges = function (el) {
           , y1: doc.y
           , x2: doc.x
           , y2: doc.y
-          , opacity: '.5'
+          , opacity: .75
           , stroke: doc.fill
           , 'stroke-width': stroke_width
           })
@@ -75,6 +75,7 @@ edges = function (el) {
   }
 
   function removed(doc) {
+    log('hello')
     el.selectAll('.edge').filter(filter)
     .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))
