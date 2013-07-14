@@ -1,3 +1,9 @@
-var modules = [graph, worlds]
+[resize, graph]
+.forEach(Meteor.startup)
 
-Meteor.startup.apply(null, modules)
+//debounce if this gets slow
+$(window).on('resize', resize)
+function resize() {
+  Session.set('width', innerWidth)
+  Session.set('height', innerHeight)
+}

@@ -1,10 +1,13 @@
-edges = function (el) {
+this.edges = function (el) {
   var self = this
     , thickness = d3.scale.linear()
                   .domain([1, innerWidth / 4])
                   .range([10, 0])
 
-  el.on('nudge', changed).on('add', added)
+  el
+  .on('nudge', changed)
+  .on('add', added)
+  .on('remove', removed)
 
   self().data().forEach(added)
 
@@ -14,19 +17,29 @@ edges = function (el) {
            , removed: removed
            })
 
-  setInterval(function () {
-    d3.selectAll('line').each(function (d) {
-      el.insert('circle', '.node').attr('class', 'pulse')
-      .attr('cx', d.source.x)
-      .attr('cy', d.source.y)
-      .attr('r', 5)
-      .attr('fill', 'blue')
-      .transition().duration(499)
-      .attr('cx', d.target.x)
-      .attr('cy', d.target.y)
-      .remove()
-    })
-  }, 500)
+  var pulse = _.throttle(function () {
+                d3.selectAll('line').each(function (d, i) {
+                  var dx = d.target.x - d.source.x
+                    , dy = d.target.y - d.source.y
+                    , theta = Math.atan2(dy, dx)
+                    , r = d.source.radius * 1.6
+                  el.insert('circle', '.node').attr('class', 'pulse')
+                  .datum(d)
+                  .attr('cx', d.source.x)
+                  .attr('cy', d.source.y)
+                  .attr('r', 5)
+                  .attr('fill', 'aliceblue')
+                  .attr('stroke', 'steelblue')
+                  .transition().duration(1000).ease('ease-out')
+                  .delay(function () { return Math.random() * (i * 10) })
+                  .attr('cx', d.target.x - r * Math.cos(theta))
+                  .attr('cy', d.target.y - r * Math.sin(theta))
+                  .each('end', function () { d.target.getNode().emit('pulse') })
+                  .remove()
+                })
+              }, 1500)
+
+  d3.timer(pulse)
 
   function norm(doc) {
     var node = self().filter(function (d) { return d._id === (doc._id || doc) })
@@ -34,8 +47,7 @@ edges = function (el) {
   }
 
   function build_routes(doc, target) {
-    el.on('remove', removed)
-    .insert('line', '.node')
+    el.insert('line', '*')
     .datum({ source: doc, target: target })
     .attr({ class: 'edge'
           , x1: doc.x
@@ -75,7 +87,6 @@ edges = function (el) {
   }
 
   function removed(doc) {
-    log('hello')
     el.selectAll('.edge').filter(filter)
     .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))

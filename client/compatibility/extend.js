@@ -1,3 +1,12 @@
+_.extend(Number.prototype,
+         { toRad: function () {
+             return this * Math.PI / 180
+           }
+         , toDeg: function () {
+             return this * 180 / Math.PI
+           }
+         })
+
 _.extend(Array.prototype,
          { append: function () {
              this.push.apply(this, arguments)
@@ -12,8 +21,10 @@ _.extend(Array.prototype,
 
 _.extend(d3.selection.prototype, {
   emit: function (event) {
-    var args = [].slice.call(arguments, 1)
-    return this.on(event).apply(this, args)
+    //make safe
+
+    var args = [].slice.call(arguments, 1), fn = this.node() && this.on(event)
+    return fn && fn.apply(this, args)
   },
 
   invoke: function (method) {

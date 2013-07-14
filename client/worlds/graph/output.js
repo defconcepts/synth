@@ -1,42 +1,50 @@
 output = function (el) {
   var self = this
 
-  var x = innerWidth / 2
-    , y  = innerHeight / 2
+  var datum = _.extend(Object.create(Node)
+                      , { radius: 35
+                        , class: 'center'
+                        , _id: 'output'
+                        , edges: []
+                        , getNode: function ( ){
+                            return output
+                          }
+                        }
+                      )
+
+  Deps.autorun(function () {
+    datum.x = Session.get('width') / 2
+    datum.y  = Session.get('height') / 2
+    el.selectAll('.center')
+    .attr('cx', pluckWith('x'))
+    .attr('cy', pluckWith('y'))
+  })
 
   var output = el.append('circle')
-               .attr('r', 35)
-               .attr('cx', x)
-               .attr('cy', y)
-               .attr('cy', y)
+               .call(circle, datum)
                .attr('fill', 'url(#ocean_fill)')
-               .attr('class', 'output')
+               .classed('output', true)
+               .on('pulse', pulse)
 
   el.append('circle')
-  .attr('r', 35)
-  .attr('cx', x)
-  .attr('cy', y)
+  .call(circle, datum)
   .attr('fill', 'url(#globe_highlight)')
 
   el.append('circle')
-  .attr('r', 35)
-  .attr('cx', x)
-  .attr('cy', y)
+  .call(circle, datum)
   .attr('fill', 'url(#globe_shading)')
 
   // setInterval(pulse, 500)
 
   function pulse () {
-    el.insert('circle', '.output')
-    .attr('cx', x)
-    .attr('cy', y)
-    .attr('r', 0)
+    el.insert('circle', '.pulse')
+    .call(circle, datum)
+    .attr('r', 35)
     .attr('opacity', 1)
-    .attr('fill', 'url(#globe_highlight)')
-
-    .transition().duration(5000).ease('cubic')
-    .attr('r', 100)
+    .attr('fill', 'url(#globe_shading)')
+    .transition().duration(3000).ease('ease-out')
     .attr('opacity', 0)
+    .attr('r', 100)
     .remove()
   }
 

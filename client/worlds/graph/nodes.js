@@ -1,4 +1,4 @@
-nodes = function (el) {
+this.nodes = function (el) {
   var self = this
     , listeners = [ mouseover
                   , mouseout
@@ -10,7 +10,7 @@ nodes = function (el) {
 
   var draggable =
     d3.behavior.drag()
-    .origin(Object)
+    .origin(_.identity)
     .on('dragstart', dragstart)
     .on('drag', drag)
     .on('dragend', dragend)
@@ -66,7 +66,7 @@ nodes = function (el) {
     //todo add queue for inflight links so they can rejoin
     self().data().forEach(function (target) {
       var max = 350
-      var distance = dist([source.x, source.y], [target.x, target.y])
+      var distance = dist(source, target)
       var connected = source.connected(target)
       if (source._id === target._id) return
 
@@ -91,7 +91,6 @@ nodes = function (el) {
       }
     })
   }
-
 
   function dragend(d) {
     Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
@@ -122,7 +121,6 @@ nodes = function (el) {
       .classed('selected', function(d) { return d.selected = false })
     }
   }
-
 
   function contextmenu(d) {
     d3.event.preventDefault()

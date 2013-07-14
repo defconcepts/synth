@@ -1,17 +1,24 @@
-brush = function (el) {
+this.brush = function (el) {
   var self = this
+    , shifted = []
 
  // add rotation
 
-  el.datum({ selected: false , previouslySelected: false })
-  .call(d3.svg.brush()
-        .x(d3.scale.identity().domain([0, innerWidth]))
-        .y(d3.scale.identity().domain([0, innerHeight]))
-        .on('brushstart', brushstart)
-        .on('brush', brush)
-        .on('brushend', brushend))
+  var brushable =
+    d3.svg.brush()
+    .on('brushstart', brushstart)
+    .on('brush', brush)
+    .on('brushend', brushend)
 
-  var shifted = []
+  Deps.autorun(function () {
+    brushable
+    .x(d3.scale.identity().domain([0, Session.get('width')]))
+    .y(d3.scale.identity().domain([0, Session.get('height')]))
+  })
+
+  el.datum({ selected: false , previouslySelected: false })
+  .call(brushable)
+
 
   function selected (d) {
     shifted.push(d._id)

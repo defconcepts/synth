@@ -1,4 +1,4 @@
-exports(exports, sine, clear_db, mirror, pluckWith, matchWith, swap)
+exports(exports, sine, clear_db, mirror, pluckWith, matchWith, swap, circle)
 
 log = console.log.bind(console)
 
@@ -11,14 +11,17 @@ function sine(n){
   return  0.5 * (1 - Math.sin(n))
 }
 
+
 function clear_db() {
   Graph.find().forEach(function (model) {
     Graph.remove({_id: model._id})
   })
 }
 function dist(a, b) {
-  var xd = a[0] - b[0]
-    , yd = a[1] - b[1]
+  a = _.isArray(a) ? toCoord(a) : a
+  b = _.isArray(b) ? toCoord(b) : b
+  var xd = a.x - b.x
+    , yd = a.y - b.y
 
   return Math.sqrt(xd * xd + yd * yd)
 }
@@ -46,13 +49,21 @@ function toCoord(arr) {
   return { x: arr[0], y: arr[1] }
 }
 
-
 function matchWith(obj, prop) {
   return function (ect) {
     return obj[prop] === ect[prop]
   }
 }
 
+
+function circle(selection, data) {
+  (data ? selection.data(_.isArray(data) ? data : [data]) : selection )
+  .attr('cx', pluckWith('x'))
+  .attr('cy', pluckWith('y'))
+  .attr('fill', pluckWith('fill'))
+  .attr('r', pluckWith('radius'))
+  .attr('class', pluckWith('class'))
+}
 
 function swap (obj, prop1, prop2) {
   var swap = obj[prop1]
