@@ -10,13 +10,14 @@ bounce = function bounce(el, data) {
              .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
     , done = false
 
-  data && data.forEach(function(d) {
-            log(d)
-    el.append('circle').datum(d)
-    .attr('fill', rand_color)
-    .attr('class', 'ball')
-    .attr('r', pluckWith('r'))
-  })
+  data &&
+    data.forEach(function(d) {
+      log(d)
+      el.append('circle').datum(d)
+      .attr('fill', rand_color)
+      .attr('class', 'ball')
+      .attr('r', pluckWith('r'))
+    })
 
   el.append("g")
   .attr("class", "x axis")
@@ -27,7 +28,7 @@ bounce = function bounce(el, data) {
     var inflate = el.select('.inflate')
     inflate.empty() || inflate.attr('r', function (d) { return d.r += 2 })
     el.selectAll('.ball').each(step)
-    return done
+      return done
   })
 
   d3.select(document)
@@ -49,7 +50,6 @@ bounce = function bounce(el, data) {
     .on('mousedown', null)
     .on('mouseup', null)
   }
-
 
   function mouseup(){
     el.select('.inflate')
@@ -95,7 +95,7 @@ bounce = function bounce(el, data) {
 	  d.position[0] =
       d.position[0] < bounds.x[0] ? bounds.x[1] :
       d.position[0] > bounds.x[1] ? bounds.x[0] : d.position[0]
- }
+  }
 
   function apply_friction(d) {
     horizontal_friction(d.velocity)

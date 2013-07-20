@@ -17,29 +17,31 @@ this.edges = function (el) {
            , removed: removed
            })
 
-  var pulse = _.throttle(function () {
-                d3.selectAll('line').each(function (d, i) {
-                  var dx = d.target.x - d.source.x
-                    , dy = d.target.y - d.source.y
-                    , theta = Math.atan2(dy, dx)
-                    , r = d.source.radius * 1.6
-                  el.insert('circle', '.node').attr('class', 'pulse')
-                  .datum(d)
-                  .attr('cx', d.source.x)
-                  .attr('cy', d.source.y)
-                  .attr('r', 5)
-                  .attr('fill', 'aliceblue')
-                  .attr('stroke', 'steelblue')
-                  .transition().duration(1000).ease('ease-out')
-                  .delay(function () { return Math.random() * (i * 10) })
-                  .attr('cx', d.target.x - r * Math.cos(theta))
-                  .attr('cy', d.target.y - r * Math.sin(theta))
-                  .each('end', function () { d.target.getNode().emit('pulse') })
-                  .remove()
-                })
-              }, 1500)
+  d3.timer(_.throttle(pulse, 1500))
 
-  d3.timer(pulse)
+  function pulse() {
+    d3.selectAll('line').each(function (d, i) {
+      if (! d.target || window.freeze) return
+      var dx = d.target.x - d.source.x
+        , dy = d.target.y - d.source.y
+        , theta = Math.atan2(dy, dx)
+        , r = d.source.radius * (d.target.class == 'output'? 1.6 : 1)
+
+      el.insert('circle', 'circle').attr('class', 'pulse')
+      .datum(d)
+      .attr('cx', d.source.x)
+      .attr('cy', d.source.y)
+      .attr('r', 5)
+      .attr('fill', 'aliceblue')
+      .attr('stroke', 'steelblue')
+      .transition().duration(1000).ease('ease-out')
+      .delay(function () { return i * 100 })
+      .attr('cx', d.target.x - r * Math.cos(theta))
+      .attr('cy', d.target.y - r * Math.sin(theta))
+      .each('end', function () { d.target.getNode().emit('pulse') })
+      .remove()
+    })
+  }
 
   function norm(doc) {
     var node = self().filter(function (d) { return d._id === (doc._id || doc) })
@@ -63,8 +65,9 @@ this.edges = function (el) {
   }
 
   function added(doc) {
-    doc.edges.map(norm).filter(_.identity)
-    .forEach(_.partial(build_routes, doc))
+    doc.edges &&
+      doc.edges.map(norm).filter(_.identity)
+      .forEach(_.partial(build_routes, doc))
   }
 
   function stroke_width(d) {

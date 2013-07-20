@@ -1,15 +1,23 @@
-/* CSS declarations go here */
-
 @blue :#2fa1d6;
 @background: #333;
+
 body {
     overflow: scroll;
 }
 
+.volume {
+    pointer-events: none;
+    background-image: ;
+}
 
 .node {
     stroke: @background;
     stroke-width: 3px;
+    cursor: url(https://mail.google.com/mail/images/2/openhand.cur), default; 
+}
+
+.grabbing {
+    cursor: url(https://mail.google.com/mail/images/2/closedhand.cur), default !important;
 }
 
 .pulse {
@@ -17,7 +25,7 @@ body {
 	-webkit-filter: blur(2px) opacity(0.8);
 } 
 
-svg {
+.main {
     background: @background;
     height: 100%;
     width: 100%;
@@ -81,15 +89,8 @@ svg {
 
 }
 
-
-
-
-.overlay {
+.glass {
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
     z-index: 9999;
     background: #000;
     background-image: -webkit-gradient(radial,50% 50%,0,50% 50%,100,color-stop(10%,rgba(0,0,0,0)),color-stop(100%,rgba(0,0,0,0.6)));
@@ -98,10 +99,20 @@ svg {
     background-image: -o-radial-gradient(rgba(0,0,0,0) 10%,rgba(0,0,0,0.6));
     background-image: radial-gradient(rgba(0,0,0,0) 10%,rgba(0,0,0,0.6));
     background-color: rgba(61,67,76,0.7);
-    opacity: 0;
     -webkit-transition: 250ms opacity linear;
     -moz-transition: 250ms opacity linear;
     -ms-transition: 250ms opacity linear;
     -o-transition: 250ms opacity linear;
     transition: 250ms opacity linear;
+    height: 90%;
+    width: 90%;
+    left: 5%;
+    top: 5%; 
+    opacity: 0;
+    display:none;
+}
+
+.show{
+    display: block;
+    opacity: 1;
 }

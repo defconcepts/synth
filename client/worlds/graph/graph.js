@@ -7,7 +7,7 @@ graph = function () {
 
   this.self = self
   body.call(self, d3.select(document.body))
-  gradients.call(self, d3.select('svg'))
+  gradients.call(self, d3.select('.graph'))
 
   brush.call(self, d3.select('.brush'))
 

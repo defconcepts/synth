@@ -5,8 +5,11 @@ this.nodes = function (el) {
                   , contextmenu
                   , dblclick
                   , mousedown
-                  , mouseup
                   ]
+
+  function mousedown() {
+    d3.select(this).classed('grabbing', true)
+  }
 
   var draggable =
     d3.behavior.drag()
@@ -23,7 +26,7 @@ this.nodes = function (el) {
 
   function changed (doc) {
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
-    update()
+      update()
   }
 
   function removed (doc) {
@@ -47,10 +50,6 @@ this.nodes = function (el) {
     .call(update)
   }
 
-  function dragstart(d) {
-    d3.select(this).classed('selected', d.selected = 1)
-  }
-
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
 
@@ -59,7 +58,7 @@ this.nodes = function (el) {
     .attr('cy', function(d) { return d.y += dy })
     .each(el.on('nudge'))
 
-    update_link(d)
+      update_link(d)
   }
 
   function update_link(source) {
@@ -92,34 +91,37 @@ this.nodes = function (el) {
     })
   }
 
-  function dragend(d) {
-    Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
-  }
-
   function dblclick(d) {
     d3.event.preventDefault()
 
     Session.set('world', d)
-    zoom_in(el, d).each('end', worlds.construct)
-    return d3.select(window).once('keydown', keydown)
+
+    worlds.construct()
+
+    d3.select(window).once('keydown', keydown)
 
     function keydown() {
       return d3.event.which === 27 ?
-        zoom_out(el, d).each('start', worlds.destruct) :
+        worlds.destruct() :
         d3.select(this).once('keydown', keydown)
     }
   }
 
-  function mousedown (d) {
+  function dragstart (d) {
     d3.select(this)
-    .classed('selected', d.selected = d3.event.shiftKey ? ! d.selected : 1)
-  }
+    .classed('selected', d.selected = ! (d3.event.shiftKey && d.selected))
 
-  function mouseup(d){
-    if (! d3.event.shiftKey) {
+    if (! d3.event.sourceEvent.shiftKey)
       self().filter(function (p) { return d._id !== p._id })
       .classed('selected', function(d) { return d.selected = false })
-    }
+  }
+
+  function dragend(d) {
+    d3.select(this).classed('grabbing', false)
+
+    self().filter(function (d) { return d.selected }).each(function (d) {
+      Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
+    })
   }
 
   function contextmenu(d) {

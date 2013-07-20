@@ -2,7 +2,8 @@ this.brush = function (el) {
   var self = this
     , shifted = []
 
- // add rotation
+  // add rotation
+  // dispatch a select event instead of actually selecting
 
   var brushable =
     d3.svg.brush()

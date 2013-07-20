@@ -1,16 +1,22 @@
-worlds = [bounce]
+var worlds = this.worlds = [bounce]
 
 worlds.construct = function () {
-  d3.selectAll('.graph , .brush')
-  .style('display', 'none')
-  this.current = worlds[0](d3.select('.worlds'), Session.get('world').state)
+  window.freeze = true
+  var main = d3.select('.main').selectAll('.emanating, .pulse').remove()
+  main.selectAll('*').attr('filter', 'url(#blur)')
+  this.el = d3.select('.glass').classed('show', 'true').style({
+    height: .9 * innerHeight
+  , width: .9 * innerWidth
+  })
+  this.current = worlds[0](this.el.append('svg'), Session.get('world').state)
+  return this.el
 }
 
 worlds.destruct = function () {
-  this.current()
-  d3.selectAll('.worlds *').remove()
-  d3.selectAll('.graph , .brush')
-  .style('display', 'block')
+  window.freeze = false
+  d3.select('.main').selectAll('*').attr('filter', '')
+  this.current && this.current()
+  this.el.classed('show', false).select('svg').remove()
 }
 
 Meteor.startup(function () {
