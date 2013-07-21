@@ -8,7 +8,7 @@ worlds.construct = function () {
     height: .9 * innerHeight
   , width: .9 * innerWidth
   })
-  this.current = worlds[0](this.el.append('svg'), Session.get('world').state)
+  this.current = worlds[0](this.el.append('svg'), Session.get('world').state || [])
   return this.el
 }
 

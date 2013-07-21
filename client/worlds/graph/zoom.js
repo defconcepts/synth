@@ -1,7 +1,7 @@
 center = [innerWidth >> 1, innerHeight >> 1]
 
 default_zoom = function () {
-  return center.concat(innerHeight) 
+  return center.concat(innerHeight)
 }
 
 zoom_in = function (el, d) {
@@ -27,6 +27,6 @@ function zoom(el, start, end) {
       , x = center[0] - p[0] * k
       , y = center[1] - p[1] * k
 
-    return "translate(" + x + ", " + y + ") scale(" + k + ")"
+    return 'translate(' + x + ', ' + y + ') scale(' + k + ')'
   }
 }

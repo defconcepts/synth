@@ -53,6 +53,9 @@ this.nodes = function (el) {
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
 
+    d.dragX += dx
+    d.dragY += dy
+
     self().filter(pluckWith('selected'))
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
@@ -70,23 +73,23 @@ this.nodes = function (el) {
       if (source._id === target._id) return
 
       if (connected === -1) {
-        if (distance < 350) return log('ret')
+        if (distance < max) return log('ret')
         //source.edges contains target and distance is greater than 350
         log('remove target from source')
         target.edges.remove(source._id)
-        el.on('remove')(target)
+        el.on('removed')(target, source._id)
       }
 
-      if (connected === 0 && distance < 350) {
+      if (connected === 0 && distance < max) {
         log('add target to source')
         source.edges.push(target._id)
         el.on('add')(source)
       }
 
-      if (connected === 1 && distance > 250) {
+      if (connected === 1 && distance > max) {
         log('remove source from target')
         source.edges.remove(target._id)
-        el.on('remove')(source)
+        el.on('removed')(source, target)
       }
     })
   }
@@ -108,18 +111,19 @@ this.nodes = function (el) {
   }
 
   function dragstart (d) {
+    d.dragX = d.dragY = 0
     d3.select(this)
-    .classed('selected', d.selected = ! (d3.event.shiftKey && d.selected))
-
-    if (! d3.event.sourceEvent.shiftKey)
-      self().filter(function (p) { return d._id !== p._id })
-      .classed('selected', function(d) { return d.selected = false })
+    .classed('selected', d.selected = ! (d3.event.sourceEvent.shiftKey && d.selected))
   }
 
   function dragend(d) {
     d3.select(this).classed('grabbing', false)
 
-    self().filter(function (d) { return d.selected }).each(function (d) {
+    if (! d3.event.sourceEvent.shiftKey && ! (d.dragX || d.dragY))
+      self().filter(function (p) { return d._id !== p._id })
+      .classed('selected', function(d) { return d.selected = false })
+
+    self().filter(pluckWith('selected')).each(function (d) {
       Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
     })
   }
@@ -146,5 +150,4 @@ this.nodes = function (el) {
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
   }
-
 }

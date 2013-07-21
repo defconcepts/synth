@@ -27,7 +27,7 @@ function dist(a, b) {
 }
 
 function mirror(f) {
-  if ("function" !== typeof f) f = d3.ease.apply(d3, arguments)
+  if ('function' !== typeof f) f = d3.ease.apply(d3, arguments)
 
   return function(t) {
     return t < .5 ? f(2 * t) : f(2 - 2 * t)

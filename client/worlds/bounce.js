@@ -1,54 +1,57 @@
-bounce = function bounce(el, data) {
+this.bounce = function b(el, data) {
   var gravity = [0, .5]
-    , bounds = { x: [0, innerWidth], y: [0, innerHeight - 50] }
+
+    , offsetX = innerWidth * .05, offsetY = innerHeight * .05
+
+    , bounds = { x: [0, innerWidth * .9]
+               , y: [0, innerHeight * .9] }
 
     , xscale = d3.scale.linear()
-               .range([0, innerWidth - 50])
+               .range([0, innerWidth * .9])
                .domain([0, 6])
 
     , axis = d3.svg.axis().scale(xscale).orient('bottom').ticks(6)
              .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
+
     , done = false
 
-  data &&
-    data.forEach(function(d) {
-      log(d)
-      el.append('circle').datum(d)
-      .attr('fill', rand_color)
-      .attr('class', 'ball')
-      .attr('r', pluckWith('r'))
-    })
+  el.selectAll('circle').data(data).enter()
+  .append('circle')
+  .attr('fill', rand_color)
+  .attr('class', 'ball')
+  .attr('r', pluckWith('r'))
 
-  el.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(25, " + bounds.y[1] + ")")
+  el.append('g')
+  .attr('class', 'x axis')
+  .attr('transform', 'translate(25, ' + bounds.y[1] + ')')
   .call(axis)
 
 	d3.timer(function () {
-    var inflate = el.select('.inflate')
-    inflate.empty() || inflate.attr('r', function (d) { return d.r += 2 })
-    el.selectAll('.ball').each(step)
-      return done
+    _.each(data, step)
+    el.select('.inflate').attr('r', function (d) { return ++d.r })
+    el.selectAll('.ball').attr('transform', translate)
+    return done
   })
 
   d3.select(document)
-  .on('mousedown', mousedown)
-  .on('mouseup', mouseup)
+  .on('mousedown.bounce', mousedown)
+  .on('mouseup.bounce', mouseup)
 
   return function () {
     done = true
     var state = _.map(el.selectAll('.ball').data(), omit)
+
     Graph.update({ _id: Session.get('world')._id },
                  { $set: { state: state } }
                 )
 
+    d3.select(document)
+    .on('mousedown.bounce', null)
+    .on('mouseup.bounce', null)
+
     function omit (d) {
       return _.omit(d, 'node')
     }
-
-    d3.select(document)
-    .on('mousedown', null)
-    .on('mouseup', null)
   }
 
   function mouseup(){
@@ -61,9 +64,9 @@ bounce = function bounce(el, data) {
   }
 
   function mousedown() {
-	  spawn_ball([ d3.event.pageX, d3.event.pageY ],
-               [ Math.random() * 15 * (Math.random() > .5 ? 1 : -1)
-               , Math.random() * 15 * (Math.random() > .5 ? 1 : -1)
+	  spawn_ball([ d3.event.pageX - offsetX, d3.event.pageY - offsetY],
+               [ Math.random() * 15 * r_invert()
+               , Math.random() * 15 * r_invert()
                ])
   }
 
@@ -78,16 +81,10 @@ bounce = function bounce(el, data) {
   }
 
   function step(d) {
-	  d.velocity = merge(d.velocity, scale(gravity, .0000001))
-
-    force(d)
-
-	  d3.select(this).attr('transform', translate)
-  }
-
-  function force(d) {
     var bot = d.position[1] + d.r > bounds.y[1]
       , top = d.position[1] - d.r < bounds.y[0]
+
+	  d.velocity = merge(d.velocity, scale(gravity, .0000001))
 
     if (top || bot) apply_friction(d)
     if (bot) play_sound(d.position[0])
@@ -103,15 +100,19 @@ bounce = function bounce(el, data) {
   }
 
   function play_sound(x) {
+    d3.selectAll('.edge')
+    .filter(function (d) { return d.source._id === Session.get('world')._id })
+    .each(pulse)
+
     sound_test(~~ xscale.invert(x))
   }
 
-  function rand_color() { return "hsl(" + Math.random() * 360 + ", 100%, 50%)" }
+  function rand_color() { return 'hsl(' + Math.random() * 360 + ', 100%, 50%)' }
 
   function vertical_friction (v) { v[1] = Math.abs(v[1]) > 100 ? 1 : v[1] *= -1.01 }
   function horizontal_friction (v) { v[0] *= Math.random() * 2 * r_invert() }
 
-  function r_invert() { return Math.random > .5 ? -1 : 1 }
+  function r_invert() { return Math.random() > .5 ? -1 : 1 }
 
   function scale(vec, coef) { return [coef * vec[0], coef * vec[1]] }
   function sum(arr) { return arr.reduce(function (a, b) { return a + b }) }

@@ -1,4 +1,6 @@
 this.edges = function (el) {
+  exports(pulse)
+
   var self = this
     , thickness = d3.scale.linear()
                   .domain([1, innerWidth / 4])
@@ -7,7 +9,7 @@ this.edges = function (el) {
   el
   .on('nudge', changed)
   .on('add', added)
-  .on('remove', removed)
+  .on('removed', removed)
 
   self().data().forEach(added)
 
@@ -17,30 +19,27 @@ this.edges = function (el) {
            , removed: removed
            })
 
-  d3.timer(_.throttle(pulse, 1500))
 
-  function pulse() {
-    d3.selectAll('line').each(function (d, i) {
-      if (! d.target || window.freeze) return
-      var dx = d.target.x - d.source.x
-        , dy = d.target.y - d.source.y
-        , theta = Math.atan2(dy, dx)
-        , r = d.source.radius * (d.target.class == 'output'? 1.6 : 1)
+  function pulse(d, i) {
+    if (! d.target || window.freeze) return
+    var dx = d.target.x - d.source.x
+      , dy = d.target.y - d.source.y
+      , theta = Math.atan2(dy, dx)
+      , r = d.source.radius * (d.target.class == 'output'? 1.6 : 1)
 
-      el.insert('circle', 'circle').attr('class', 'pulse')
-      .datum(d)
-      .attr('cx', d.source.x)
-      .attr('cy', d.source.y)
-      .attr('r', 5)
-      .attr('fill', 'aliceblue')
-      .attr('stroke', 'steelblue')
-      .transition().duration(1000).ease('ease-out')
-      .delay(function () { return i * 100 })
-      .attr('cx', d.target.x - r * Math.cos(theta))
-      .attr('cy', d.target.y - r * Math.sin(theta))
-      .each('end', function () { d.target.getNode().emit('pulse') })
-      .remove()
-    })
+    el.insert('circle', 'circle').attr('class', 'pulse')
+    .datum(d)
+    .attr('cx', d.source.x)
+    .attr('cy', d.source.y)
+    .attr('r', 5)
+    .attr('fill', 'aliceblue')
+    .attr('stroke', 'steelblue')
+    .transition().duration(1000).ease('ease-out')
+    .delay(function () { return i * 100 })
+    .attr('cx', d.target.x - r * Math.cos(theta))
+    .attr('cy', d.target.y - r * Math.sin(theta))
+    .each('end', function () { d.target.getNode().emit('pulse') })
+    .remove()
   }
 
   function norm(doc) {
@@ -89,14 +88,23 @@ this.edges = function (el) {
     }
   }
 
-  function removed(doc) {
+  function removed(doc, m) {
+    var filter = m
+               ? function (d) {
+                   return (match(doc, d.target) && match(m, d.source)) ||
+                     (match(doc, d.source) && match(m, d.target))
+                 }
+
+
+               : function (d) { return match(doc, d.target) || match(doc, d.source) }
+
     el.selectAll('.edge').filter(filter)
     .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))
     .attr('y1', pluckWith('target.y'))
     .attr('class', '').remove()
 
-    function filter (d) { return match(doc, d.target) || match(doc, d.source) }
+
   }
 
   function match (a, b) { return a._id === b._id }

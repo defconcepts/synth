@@ -11,7 +11,7 @@ function body(el) {
 
     var m = d3.mouse(this)
 
-    function filter(d) { return dist(d, m) < 150 }
+    function filter(d) { return dist(d, m) < 200 }
 
     Graph.insert({ fill: random_color()
                  , edges: _.pluck(self().data().filter(filter), '_id')
@@ -19,7 +19,6 @@ function body(el) {
                  , y: m[1]
                  })
   }
-
   function nudge (d) {
     var i = 100, $inc =
       { 38: [0, -i]

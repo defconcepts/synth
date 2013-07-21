@@ -36,10 +36,9 @@ this.brush = function (el) {
 
   function brush() {
     var extent = d3.event.target.extent()
-    self().classed('selected', function (d) {
+    d3.selectAll('.node').classed('selected', function (d) {
       return d.selected = _.contains(shifted, d._id) ^ d.within(extent)
     })
-
   }
 
   function brushend() {
