@@ -19,26 +19,36 @@ this.edges = function (el) {
            , removed: removed
            })
 
+  d3.timer(function () {
+    d3.selectAll('.node').each(function (d) {
+      var k =d3.select(this)
 
-  function pulse(d, i) {
+      d.state &&
+        d.state.map(step, d).filter(_.identity)
+        .forEach(function (x) {
+          k.emit('pow', x)
+        })
+    })
+  })
+
+  function pulse(d, i, x) {
     if (! d.target || window.freeze) return
     var dx = d.target.x - d.source.x
       , dy = d.target.y - d.source.y
       , theta = Math.atan2(dy, dx)
-      , r = d.source.radius * (d.target.class == 'output'? 1.6 : 1)
+      , r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
     el.insert('circle', 'circle').attr('class', 'pulse')
     .datum(d)
     .attr('cx', d.source.x)
     .attr('cy', d.source.y)
-    .attr('r', 5)
+    .attr('r', 2)
     .attr('fill', 'aliceblue')
-    .attr('stroke', 'steelblue')
     .transition().duration(1000).ease('ease-out')
     .delay(function () { return i * 100 })
     .attr('cx', d.target.x - r * Math.cos(theta))
     .attr('cy', d.target.y - r * Math.sin(theta))
-    .each('end', function () { d.target.getNode().emit('pulse') })
+    .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
     .remove()
   }
 
@@ -59,6 +69,7 @@ this.edges = function (el) {
           , stroke: doc.fill
           , 'stroke-width': stroke_width
           })
+    .listen_for([mouseover, mouseout, pulse])
     .transition().duration(500).ease('cubic-in-out')
     .attr({ x2: target.x, y2: target.y })
   }
@@ -73,6 +84,7 @@ this.edges = function (el) {
     return thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
                           _.values(_.pick(d.target, 'x', 'y'))))
   }
+
   function changed(doc) {
     el.selectAll('.edge')
     .each(fix)
@@ -94,17 +106,37 @@ this.edges = function (el) {
                    return (match(doc, d.target) && match(m, d.source)) ||
                      (match(doc, d.source) && match(m, d.target))
                  }
-
-
-               : function (d) { return match(doc, d.target) || match(doc, d.source) }
+               : f(doc)
 
     el.selectAll('.edge').filter(filter)
     .transition().duration(500).ease('cubic')
     .attr('x1', pluckWith('target.x'))
     .attr('y1', pluckWith('target.y'))
     .attr('class', '').remove()
+  }
+
+  function get_friends (edge) {
+    return function (node) {
+      return match(edge.target, node) ||
+        match(edge.source, node)
+    }
+  }
 
 
+  function f(node) {
+    return function (edge) {
+      return match(edge.target, node) ||
+        match(edge.source, node)
+    }
+  }
+
+  //todo highlight entire chain
+  function mouseover(edge) {
+    self().filter(get_friends(edge)).emit('mouseover')
+  }
+
+  function mouseout(edge) {
+    self().filter(get_friends(edge)).emit('mouseout')
   }
 
   function match (a, b) { return a._id === b._id }

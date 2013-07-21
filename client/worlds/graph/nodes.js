@@ -5,7 +5,15 @@ this.nodes = function (el) {
                   , contextmenu
                   , dblclick
                   , mousedown
+                  , pow
                   ]
+
+  function pow(doc, i,  x) {
+    d3.selectAll('.edge').filter(function (d) {
+      return doc._id === d.target._id ||
+        doc._id === d.source._id
+    }).emit('pulse', x)
+  }
 
   function mousedown() {
     d3.select(this).classed('grabbing', true)
@@ -32,6 +40,7 @@ this.nodes = function (el) {
   function removed (doc) {
     self()
     .filter(function (d) { return d._id === doc._id })
+    .datum({}).attr('class', '')
     .transition().duration(500)
     .attr('r', 0)
     .remove()
@@ -80,7 +89,7 @@ this.nodes = function (el) {
         el.on('removed')(target, source._id)
       }
 
-      if (connected === 0 && distance < max) {
+      if (connected === 0 && distance < max - 50) {
         log('add target to source')
         source.edges.push(target._id)
         el.on('add')(source)

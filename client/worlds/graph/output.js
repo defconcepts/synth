@@ -20,25 +20,25 @@ output = function (el) {
 
   var output = el.append('circle')
                .call(circle, datum)
-               .attr('fill', 'url(#ocean_fill)')
+               .attr('fill', function (d) { return d.fill = 'url(#ocean_fill)'})
                .classed('output', true)
                .on('pulse', pulse)
 
   el.append('circle')
   .call(circle, datum)
-  .attr('fill', 'url(#globe_highlight)')
+  .attr('fill', function (d) { return d.fill = 'url(#globe_highlight)'})
 
   el.append('circle')
   .call(circle, datum)
-  .attr('fill', 'url(#globe_shading)')
+  .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
   .on('click', function () {
-    b.attr('width', function (d) { return d.radius * ((d.t = ! d.t) ? 1 : .6) })
+    volume.attr('width', function (d) { return d.radius * ((d.toggled = ! d.toggled) ? 1 : .6) })
   })
-  coef =  0.7714285714285715
-  var b = el.append('image')
+
+  var volume = el.append('image')
           .attr('xlink:href', volume_icon)
           .attr('preserveAspectRatio', 'xMinYMin slice')
-          .attr('class', 'volume').datum(_.extend(Object.create(datum), { t: 1 }))
+          .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
           .attr('height', function (d) { return d.radius * .77})
           .attr('width', function (d) { return d.radius })
 
@@ -50,22 +50,23 @@ output = function (el) {
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
 
-    b.attr({ x: datum.x - 15, y: datum.y - 15 })
+    volume.attr({ x: datum.x - 15, y: datum.y - 15 })
   })
 
   function dasharray() {
     return d3.range(3).map(function () { return 1 + (Math.random() * 20) })
   }
 
-  function pulse () {
-    if (window.freeze || ! b.datum().t) return
+  function pulse (_, _, d, x) {
+    if (window.freeze || ! volume.datum().toggled) return
+    sound_test(x)
     el.insert('circle', '.pulse')
     .call(circle, datum)
     .attr('r', 35)
     .attr('opacity', 1)
     .classed('emanating', 1)
-    .attr('fill', 'url(#globe_shading)')
-    .attr('stroke', 'steelblue')
+    .attr('fill', 'none')
+    .attr('stroke', d.fill)
     .attr('stroke-width', 1)
     .attr('stroke-dasharray', dasharray)
     .transition().duration(3000).ease('ease-out')

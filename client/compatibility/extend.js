@@ -8,7 +8,11 @@ _.extend(Number.prototype,
          })
 
 _.extend(Array.prototype,
-         { append: function () {
+         { prepend: function () {
+             this.unshift.apply(this, arguments)
+             return this
+           }
+         , append: function () {
              this.push.apply(this, arguments)
              return this
            }
@@ -21,10 +25,11 @@ _.extend(Array.prototype,
 
 _.extend(d3.selection.prototype, {
   emit: function (event) {
-    //make safe
-
-    var args = [].slice.call(arguments, 1), fn = this.node() && this.on(event)
-    return fn && fn.apply(this, args)
+    var args = [].slice.call(arguments, 1)
+    return this.each(function (d, i) {
+             var fn = d3.select(this).on(event)
+             fn && fn.apply(this, [d, i].concat(args))
+           })
   },
 
   invoke: function (method) {
