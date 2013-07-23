@@ -3,12 +3,12 @@ this.edges = function (el) {
 
   var self = this
     , thickness = d3.scale.linear()
-                  .domain([1, innerWidth / 4])
-                  .range([10, 0])
+                  .domain([0, innerWidth / 3])
+                  .range([15, 1])
 
   el
-  .on('nudge', changed)
-  .on('add', added)
+  .on('changed', changed)
+  .on('added', added)
   .on('removed', removed)
 
   self().data().forEach(added)
@@ -19,35 +19,35 @@ this.edges = function (el) {
            , removed: removed
            })
 
+  var pow =
+    _.throttle(function (x) {
+      this.emit('pow', x)
+    }, 10)
+
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      var k =d3.select(this)
-
-      d.state &&
-        d.state.map(step, d).filter(_.identity)
-        .forEach(function (x) {
-          k.emit('pow', x)
-        })
+      d.state.map(step, d)
+      .filter(_.identity)
+      .forEach(pow, d3.select(this))
     })
   })
 
   function pulse(d, i, x) {
     if (! d.target || window.freeze) return
-    var dx = d.target.x - d.source.x
-      , dy = d.target.y - d.source.y
-      , theta = Math.atan2(dy, dx)
-      , r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
-    el.insert('circle', 'circle').attr('class', 'pulse')
-    .datum(d)
-    .attr('cx', d.source.x)
-    .attr('cy', d.source.y)
-    .attr('r', 2)
+    var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
+
+
+    el.insert('circle', 'circle')
+    .attr('class', 'pulse')
+    .attr('r', (d.stroke_width / 2) + 2)
+    .attr('cx', ex1(d))
+    .attr('cy', why1(d))
     .attr('fill', 'aliceblue')
     .transition().duration(1000).ease('ease-out')
-    .delay(function () { return i * 100 })
-    .attr('cx', d.target.x - r * Math.cos(theta))
-    .attr('cy', d.target.y - r * Math.sin(theta))
+    .delay(i * 100)
+    .attr('cx', ex2(d))
+    .attr('cy', why2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
     .remove()
   }
@@ -69,20 +69,20 @@ this.edges = function (el) {
           , stroke: doc.fill
           , 'stroke-width': stroke_width
           })
-    .listen_for([mouseover, mouseout, pulse])
+    .listen_for([ mouseover, mouseout, pulse ])
     .transition().duration(500).ease('cubic-in-out')
     .attr({ x2: target.x, y2: target.y })
   }
 
   function added(doc) {
-    doc.edges &&
-      doc.edges.map(norm).filter(_.identity)
-      .forEach(_.partial(build_routes, doc))
+    doc.edges.map(norm).filter(_.identity)
+    .forEach(_.partial(build_routes, doc))
   }
 
   function stroke_width(d) {
-    return thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
-                          _.values(_.pick(d.target, 'x', 'y'))))
+    return d.stroke_width = +
+      thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
+                     _.values(_.pick(d.target, 'x', 'y'))))
   }
 
   function changed(doc) {
@@ -122,7 +122,6 @@ this.edges = function (el) {
     }
   }
 
-
   function f(node) {
     return function (edge) {
       return match(edge.target, node) ||
@@ -139,5 +138,31 @@ this.edges = function (el) {
     self().filter(get_friends(edge)).emit('mouseout')
   }
 
-  function match (a, b) { return a._id === b._id }
+}
+
+function match (a, b) { return a._id === b._id }
+
+function angle(source, target) {
+  var dx = target.x - source.x
+    , dy = target.y - source.y
+
+  return Math.atan2(dy, dx)
+}
+
+
+var rad = 20
+function ex1(d) {
+  return d.source.x - 20 * Math.cos(angle(d.target, d.source))
+}
+
+function ex2(d) {
+  return d.target.x - 20 * Math.cos(angle(d.source, d.target))
+}
+
+function why1(d) {
+  return d.source.y - 20 * Math.cos(angle(d.target, d.source))
+}
+
+function why2(d) {
+  return d.target.y - 20 * Math.cos(angle(d.source, d.target))
 }

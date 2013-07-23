@@ -1,9 +1,8 @@
 var worlds = this.worlds = [bounce]
 
 worlds.construct = function () {
-  window.freeze = true
-  var main = d3.select('.main').selectAll('.emanating, .pulse').remove()
-  main.selectAll('*').attr('filter', 'url(#blur)')
+  //freeze()
+
   this.el = d3.select('.glass').classed('show', 'true').style({
     height: .9 * innerHeight
   , width: .9 * innerWidth
@@ -23,3 +22,9 @@ Meteor.startup(function () {
   _.find(worlds, function (w) { return location.href.match(w.name) }) &&
     worlds.construct()
 })
+
+function freeze () {
+  window.freeze = true
+  var main = d3.select('.main').selectAll('.emanating, .pulse').remove()
+  main.selectAll('*').attr('filter', 'url(#blur)')
+}

@@ -46,6 +46,8 @@ output = function (el) {
     datum.x = Session.get('width') / 2
     datum.y  = Session.get('height') / 2
 
+    ;(el.on('changed') || log)({})
+
     el.selectAll('.center')
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
@@ -63,14 +65,13 @@ output = function (el) {
     el.insert('circle', '.pulse')
     .call(circle, datum)
     .attr('r', 35)
-    .attr('opacity', 1)
     .classed('emanating', 1)
     .attr('fill', 'none')
     .attr('stroke', d.fill)
-    .attr('stroke-width', 1)
+    .attr('stroke-width', 3)
     .attr('stroke-dasharray', dasharray)
     .transition().duration(3000).ease('ease-out')
-    .attr('opacity', 0)
+    .attr('stroke-width', 0)
     .attr('r', 100)
     .remove()
   }

@@ -17,8 +17,10 @@ function body(el) {
                  , edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]
                  , y: m[1]
+                 , state: dummy()
                  })
   }
+
   function nudge (d) {
     var i = 100, $inc =
       { 38: [0, -i]
@@ -35,6 +37,13 @@ function body(el) {
 
   function keydown() {
     el.selectAll('.selected').each(nudge)
+  }
+
+  function dummy() {
+    return [{ "r": 14
+            , "position": [ 150, 150 ]
+            ,"velocity": [ 1, 8 ]
+            }]
   }
 
 }

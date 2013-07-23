@@ -34,7 +34,7 @@ this.nodes = function (el) {
 
   function changed (doc) {
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
-      update()
+      update_position()
   }
 
   function removed (doc) {
@@ -56,7 +56,7 @@ this.nodes = function (el) {
           })
     .listen_for(listeners)
     .call(draggable)
-    .call(update)
+    .call(update_position)
   }
 
   function drag(d) {
@@ -68,9 +68,9 @@ this.nodes = function (el) {
     self().filter(pluckWith('selected'))
     .attr('cx', function(d) { return d.x += dx })
     .attr('cy', function(d) { return d.y += dy })
-    .each(el.on('nudge'))
+    .each(el.on('changed'))
 
-      update_link(d)
+    update_link(d)
   }
 
   function update_link(source) {
@@ -83,22 +83,21 @@ this.nodes = function (el) {
 
       if (connected === -1) {
         if (distance < max) return log('ret')
-        //source.edges contains target and distance is greater than 350
-        log('remove target from source')
         target.edges.remove(source._id)
-        el.on('removed')(target, source._id)
+        el.on('removed')(target, source)
+        target.save()
       }
 
       if (connected === 0 && distance < max - 50) {
-        log('add target to source')
         source.edges.push(target._id)
-        el.on('add')(source)
+        el.on('added')(source)
+        source.save()
       }
 
       if (connected === 1 && distance > max) {
-        log('remove source from target')
         source.edges.remove(target._id)
         el.on('removed')(source, target)
+        source.save()
       }
     })
   }
@@ -151,7 +150,7 @@ this.nodes = function (el) {
     d3.transition(d3.select(this)).attr('fill', d3.rgb(d.fill).brighter())
   }
 
-  function update() {
+  function update_position() {
     self()
     .transition()
     .duration(250)
