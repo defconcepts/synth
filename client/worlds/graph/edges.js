@@ -37,7 +37,6 @@ this.edges = function (el) {
 
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
-
     el.insert('circle', 'circle')
     .attr('class', 'pulse')
     .attr('r', (d.stroke_width / 2) + 2)
@@ -110,8 +109,8 @@ this.edges = function (el) {
 
     el.selectAll('.edge').filter(filter)
     .transition().duration(500).ease('cubic')
-    .attr('x1', pluckWith('target.x'))
-    .attr('y1', pluckWith('target.y'))
+    .attr('x1', ex1)
+    .attr('y1', why1)
     .attr('class', '').remove()
   }
 
@@ -150,9 +149,8 @@ function angle(source, target) {
 }
 
 
-var rad = 20
 function ex1(d) {
-  return d.source.x - 20 * Math.cos(angle(d.target, d.source))
+  return d.source.x + 20 * Math.cos(angle(d.target, d.source))
 }
 
 function ex2(d) {
@@ -160,7 +158,7 @@ function ex2(d) {
 }
 
 function why1(d) {
-  return d.source.y - 20 * Math.cos(angle(d.target, d.source))
+  return d.source.y + 20 * Math.cos(angle(d.target, d.source))
 }
 
 function why2(d) {
