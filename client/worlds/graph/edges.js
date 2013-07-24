@@ -43,8 +43,7 @@ this.edges = function (el) {
     .attr('cx', ex1(d))
     .attr('cy', why1(d))
     .attr('fill', 'aliceblue')
-    .transition().duration(1000).ease('ease-out')
-    .delay(i * 100)
+    .transition().duration(1000)
     .attr('cx', ex2(d))
     .attr('cy', why2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
@@ -148,19 +147,18 @@ function angle(source, target) {
   return Math.atan2(dy, dx)
 }
 
-
 function ex1(d) {
-  return d.source.x + 20 * Math.cos(angle(d.target, d.source))
+  return d.source.x - 15 * Math.cos(angle(d.target, d.source))
 }
 
 function ex2(d) {
-  return d.target.x - 20 * Math.cos(angle(d.source, d.target))
+  return d.target.x - 15 * Math.cos(angle(d.source, d.target))
 }
 
 function why1(d) {
-  return d.source.y + 20 * Math.cos(angle(d.target, d.source))
+  return d.source.y - 15 * Math.sin(angle(d.target, d.source))
 }
 
 function why2(d) {
-  return d.target.y - 20 * Math.cos(angle(d.source, d.target))
+  return d.target.y - 15 * Math.sin(angle(d.source, d.target))
 }
