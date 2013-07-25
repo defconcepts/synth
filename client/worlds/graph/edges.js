@@ -6,6 +6,8 @@ this.edges = function (el) {
                   .domain([0, innerWidth / 3])
                   .range([15, 1])
 
+  //add edge holder box
+
   el
   .on('changed', changed)
   .on('added', added)
@@ -34,6 +36,7 @@ this.edges = function (el) {
 
   function pulse(d, i, x) {
     if (! d.target || window.freeze) return
+    //TODO recalculate pulse path when node is moved
 
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
@@ -43,7 +46,7 @@ this.edges = function (el) {
     .attr('cx', ex1(d))
     .attr('cy', why1(d))
     .attr('fill', 'aliceblue')
-    .transition().duration(1000)
+    .transition().duration(1000).ease('cubic')
     .attr('cx', ex2(d))
     .attr('cy', why2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
@@ -78,13 +81,13 @@ this.edges = function (el) {
   }
 
   function stroke_width(d) {
-    return d.stroke_width = +
-      thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
-                     _.values(_.pick(d.target, 'x', 'y'))))
+    return d.stroke_width =
+      Math.abs(thickness(dist(_.values(_.pick(d.source, 'x', 'y')),
+                              _.values(_.pick(d.target, 'x', 'y')))))
   }
 
   function changed(doc) {
-    el.selectAll('.edge')
+    var edge = el.selectAll('.edge')
     .each(fix)
     .attr('stroke-width', stroke_width)
     .attr('x1', pluckWith('source.x'))
@@ -98,29 +101,30 @@ this.edges = function (el) {
     }
   }
 
-  function removed(doc, m) {
-    var filter = m
+  function removed(doc, from) {
+
+    var filter = from
                ? function (d) {
-                   return (match(doc, d.target) && match(m, d.source)) ||
-                     (match(doc, d.source) && match(m, d.target))
+                   return (match(doc, d.target) && match(from, d.source)) ||
+                     (match(doc, d.source) && match(from, d.target))
                  }
-               : f(doc)
+               : match_edge(doc)
 
     el.selectAll('.edge').filter(filter)
-    .transition().duration(500).ease('cubic')
+    .transition().duration(500).ease('ease-in')
     .attr('x1', ex1)
     .attr('y1', why1)
     .attr('class', '').remove()
   }
 
-  function get_friends (edge) {
+  function match_node(edge) {
     return function (node) {
       return match(edge.target, node) ||
         match(edge.source, node)
     }
   }
 
-  function f(node) {
+  function match_edge(node) {
     return function (edge) {
       return match(edge.target, node) ||
         match(edge.source, node)
@@ -129,11 +133,11 @@ this.edges = function (el) {
 
   //todo highlight entire chain
   function mouseover(edge) {
-    self().filter(get_friends(edge)).emit('mouseover')
+    self().filter(match_node(edge)).emit('mouseover')
   }
 
   function mouseout(edge) {
-    self().filter(get_friends(edge)).emit('mouseout')
+    self().filter(match_node(edge)).emit('mouseout')
   }
 
 }
@@ -148,17 +152,17 @@ function angle(source, target) {
 }
 
 function ex1(d) {
-  return d.source.x - 15 * Math.cos(angle(d.target, d.source))
+  return d.source.x - d.source.radius * Math.cos(angle(d.target, d.source))
 }
 
 function ex2(d) {
-  return d.target.x - 15 * Math.cos(angle(d.source, d.target))
+  return d.target.x - d.target.radius * Math.cos(angle(d.source, d.target))
 }
 
 function why1(d) {
-  return d.source.y - 15 * Math.sin(angle(d.target, d.source))
+  return d.source.y - d.source.radius * Math.sin(angle(d.target, d.source))
 }
 
 function why2(d) {
-  return d.target.y - 15 * Math.sin(angle(d.source, d.target))
+  return d.target.y - d.target.radius * Math.sin(angle(d.source, d.target))
 }

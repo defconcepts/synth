@@ -46,7 +46,7 @@ output = function (el) {
     datum.x = Session.get('width') / 2
     datum.y  = Session.get('height') / 2
 
-    ;(el.on('changed') || log)({})
+    ;(el.on('changed') || _.identity)({})
 
     el.selectAll('.center')
     .attr('cx', pluckWith('x'))

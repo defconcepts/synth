@@ -32,7 +32,16 @@ this.nodes = function (el) {
            , removed: removed
            })
 
+  function diff(a, b) {
+    var k  = _.difference(a, b)
+  }
+
   function changed (doc) {
+    var b = self().filter(function (d) { return doc._id === d._id }).datum()
+    var len = doc.edges - b.edges
+    if (len > 0) diff(doc, b)
+    if (len < 0) diff(b, doc)
+
     self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
       update_position()
   }
@@ -74,11 +83,12 @@ this.nodes = function (el) {
   }
 
   function update_link(source) {
-    //todo add queue for inflight links so they can rejoin
+    //rejoin inflight links by doing a join with key
     self().data().forEach(function (target) {
       var max = 350
       var distance = dist(source, target)
       var connected = source.connected(target)
+
       if (source._id === target._id) return
 
       if (connected === -1) {
@@ -91,13 +101,11 @@ this.nodes = function (el) {
       if (connected === 0 && distance < max - 50) {
         source.edges.push(target._id)
         el.on('added')(source)
-        source.save()
       }
 
       if (connected === 1 && distance > max) {
         source.edges.remove(target._id)
         el.on('removed')(source, target)
-        source.save()
       }
     })
   }
@@ -131,9 +139,7 @@ this.nodes = function (el) {
       self().filter(function (p) { return d._id !== p._id })
       .classed('selected', function(d) { return d.selected = false })
 
-    self().filter(pluckWith('selected')).each(function (d) {
-      Graph.update({ _id: d._id }, { $set: { x: d.x, y: d.y } })
-    })
+    self().filter(pluckWith('selected')).invoke('save')
   }
 
   function contextmenu(d) {
