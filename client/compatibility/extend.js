@@ -23,6 +23,14 @@ _.extend(Array.prototype,
            }
          })
 
+_.extend(d3.transition.prototype, {
+  size: function () {
+    var i = 0
+    this.each(function () { i++ })
+      return i
+  }
+});
+
 _.extend(d3.selection.prototype, {
   emit: function (event) {
     var args = [].slice.call(arguments, 1)

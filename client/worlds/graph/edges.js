@@ -3,7 +3,7 @@ this.edges = function (el) {
 
   var self = this
     , thickness = d3.scale.linear()
-                  .domain([0, innerWidth / 3])
+                  .domain([0, 400])
                   .range([15, 1])
 
   //add edge holder box
@@ -58,7 +58,18 @@ this.edges = function (el) {
     if (! node.empty()) return node.datum()
   }
 
-  function build_routes(doc, target) {
+  function join_existing_route(source, target) {
+    return d3.selectAll('line').filter(function (d) {
+             return match(d.target, target) && match(source, d.source)
+           })
+           .attr('class', 'edge')
+           .transition().duration(500).delay(250).ease('cubic-in-out')
+           .attr({ x1: pluckWith('source.x'), y1: pluckWith('source.y') })
+           .size()
+  }
+
+  function build_route(doc, target) {
+    if (join_existing_route(doc, target)) return
     el.insert('line', '*')
     .datum({ source: doc, target: target })
     .attr({ class: 'edge'
@@ -69,15 +80,14 @@ this.edges = function (el) {
           , opacity: .75
           , stroke: doc.fill
           , 'stroke-width': stroke_width
-          })
-    .listen_for([ mouseover, mouseout, pulse ])
+          }).listen_for([ mouseover, mouseout, pulse ])
     .transition().duration(500).ease('cubic-in-out')
-    .attr({ x2: target.x, y2: target.y })
+    .attr({ x2: pluckWith('target.x'), y2: pluckWith('target.y') })
   }
 
   function added(doc) {
     doc.edges.map(norm).filter(_.identity)
-    .forEach(_.partial(build_routes, doc))
+    .forEach(_.partial(build_route, doc))
   }
 
   function stroke_width(d) {
@@ -102,7 +112,6 @@ this.edges = function (el) {
   }
 
   function removed(doc, from) {
-
     var filter = from
                ? function (d) {
                    return (match(doc, d.target) && match(from, d.source)) ||
@@ -111,9 +120,9 @@ this.edges = function (el) {
                : match_edge(doc)
 
     el.selectAll('.edge').filter(filter)
-    .transition().duration(500).ease('ease-in')
-    .attr('x1', ex1)
-    .attr('y1', why1)
+    .transition().duration(500)//.ease('ease-out')
+    .attr('x1', pluckWith('target.x'))
+    .attr('y1', pluckWith('target.y'))
     .attr('class', '').remove()
   }
 
