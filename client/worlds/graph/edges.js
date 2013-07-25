@@ -63,9 +63,17 @@ this.edges = function (el) {
              return match(d.target, target) && match(source, d.source)
            })
            .attr('class', 'edge')
-           .transition().duration(500).delay(250).ease('cubic-in-out')
-           .attr({ x1: pluckWith('source.x'), y1: pluckWith('source.y') })
+           .transition().duration(100).ease('cubic-in-out')
+           .call(draw_line)
            .size()
+  }
+
+  function draw_line(el) {
+    el.attr({ x1: pluckWith('source.x')
+            , y1: pluckWith('source.y')
+            , x2: pluckWith('target.x')
+            , y2: pluckWith('target.y')
+            })
   }
 
   function build_route(doc, target) {
