@@ -24,12 +24,11 @@ this.edges = function (el) {
   var pow =
     _.throttle(function (x) {
       this.emit('pow', x)
-    }, 10)
+    }, 100)
 
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      d.state.map(step, d)
-      .filter(_.identity)
+      d.state.map(step, d).filter(_.identity)
       .forEach(pow, d3.select(this))
     })
   })
@@ -63,7 +62,6 @@ this.edges = function (el) {
              return match(d.target, target) && match(source, d.source)
            })
            .attr('class', 'edge')
-           .transition().duration(100).ease('cubic-in-out')
            .call(draw_line)
            .size()
   }
@@ -105,7 +103,7 @@ this.edges = function (el) {
   }
 
   function changed(doc) {
-    var edge = el.selectAll('.edge')
+    el.selectAll('.edge')
     .each(fix)
     .attr('stroke-width', stroke_width)
     .attr('x1', pluckWith('source.x'))
@@ -156,7 +154,6 @@ this.edges = function (el) {
   function mouseout(edge) {
     self().filter(match_node(edge)).emit('mouseout')
   }
-
 }
 
 function match (a, b) { return a._id === b._id }

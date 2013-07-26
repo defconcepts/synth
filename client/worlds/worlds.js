@@ -2,11 +2,9 @@ var worlds = this.worlds = [bounce]
 
 worlds.construct = function () {
   //freeze()
-
-  this.el = d3.select('.glass').classed('show', 'true').style({
-    height: .9 * innerHeight
-  , width: .9 * innerWidth
-  })
+  //todo fix transition
+  //isolate path
+  this.el = d3.select('.glass').classed('show', 'true')
   this.current = worlds[0](this.el.append('svg'), Session.get('world').state || [])
   return this.el
 }

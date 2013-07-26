@@ -1,9 +1,11 @@
 this.Graph = new Meteor.Collection('graph', { transform: transform });
 
+
+
 this.Node =
   { radius: 20
-  , save: function (update) {
-      Graph.update({ _id: this._id }, _.extend(this, update))
+  , save: function (update, cb) {
+      Graph.update({ _id: this._id }, _.extend(this, update), cb)
     }
   , clone: function () {
       return transform(_.clone(this))
@@ -24,12 +26,10 @@ this.Node =
     }
   , getNode: function () {
       var _id = this._id
-      return Meteor.isClient && d3.selectAll('.node')
-                                .filter(function (d) { return d._id === _id })
+      return Meteor.isClient &&
+        d3.selectAll('.node').filter(function (d) { return d._id === _id })
     }
   }
-
-
 
 function transform(doc) {
   return _.extend(Object.create(Node),

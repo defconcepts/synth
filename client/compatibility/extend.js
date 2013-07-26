@@ -38,16 +38,15 @@ _.extend(d3.selection.prototype, {
              var fn = d3.select(this).on(event)
              fn && fn.apply(this, [d, i].concat(args))
            })
-  },
+  }
 
-  invoke: function (method) {
+, invoke: function (method) {
     var args = [].slice.call(arguments, 1)
     return this.each(function (d) { d[method].apply(d, args)  })
   }
 
 , listen_for: function (fn){
     //TODO switch to delegation
-
     (_.isArray(fn) ? fn : [fn])
     .forEach(function (fn) {
       this.on(fn.name, fn)

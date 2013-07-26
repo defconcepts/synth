@@ -32,17 +32,20 @@ this.nodes = function (el) {
            , removed: removed
            })
 
-  function diff(a, b) {
-    var k  = _.difference(a, b)
+  function find (id) {
+    return function (doc) {
+      return doc._id === id
+    }
   }
 
   function changed (doc) {
-    var b = self().filter(function (d) { return doc._id === d._id }).datum()
-    var len = doc.edges - b.edges
-    if (len > 0) diff(doc, b)
-    if (len < 0) diff(b, doc)
-
-    self().each(function (d) { doc && doc._id === d._id && _.extend(d, doc) })
+    self().filter(function (d) { return doc._id === d._id })
+    .each(function (d) {
+      var e = d.edges
+      _.extend(d, doc)
+      var f = _.extend({}, d, { edges: e })
+      update_link(f)
+    })
       update_position()
   }
 
@@ -83,8 +86,7 @@ this.nodes = function (el) {
   }
 
   function update_link(source) {
-    //rejoin inflight links by doing a join with key
-    self().data().forEach(function (target) {
+    self().each(function (target) {
       var max = 350
       var distance = dist(source, target)
       var connected = source.connected(target)
@@ -95,7 +97,9 @@ this.nodes = function (el) {
         if (distance < max) return log('ret')
         target.edges.remove(source._id)
         el.on('removed')(target, source)
-        target.save()
+        source.ondragend = function () {
+          // self().filter(find(target._id)).invoke('save')
+        }
       }
 
       if (connected === 0 && distance < max - 50) {
@@ -127,7 +131,7 @@ this.nodes = function (el) {
   }
 
   function dragstart (d) {
-    d.dragX = d.dragY = 0
+    d.dragX = d.dragY = d.dragend = 0
     d3.select(this)
     .classed('selected', d.selected = ! (d3.event.sourceEvent.shiftKey && d.selected))
   }
@@ -138,7 +142,7 @@ this.nodes = function (el) {
     if (! d3.event.sourceEvent.shiftKey && ! (d.dragX || d.dragY))
       self().filter(function (p) { return d._id !== p._id })
       .classed('selected', function(d) { return d.selected = false })
-
+    d.dragend && d.dragend()
     self().filter(pluckWith('selected')).invoke('save')
   }
 
