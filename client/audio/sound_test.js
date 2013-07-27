@@ -1,4 +1,4 @@
-exports(sound_test)
+this.sound_test = sound_test
 
 var i
   , sink = Sink()

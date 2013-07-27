@@ -1,6 +1,4 @@
 this.edges = function (el) {
-  exports(pulse)
-
   var self = this
     , thickness = d3.scale.linear()
                   .domain([0, 400])

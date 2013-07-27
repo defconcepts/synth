@@ -4,8 +4,9 @@ worlds.construct = function () {
   //freeze()
   //todo fix transition
   //isolate path
+  var w = Session.get('world')
   this.el = d3.select('.glass').classed('show', 'true')
-  this.current = worlds[0](this.el.append('svg'), Session.get('world').state || [])
+  this.current = worlds[0](this.el.append('svg'), w && w.state || [])
   return this.el
 }
 

@@ -1,4 +1,4 @@
-exports(body)
+this.body = body
 
 function body(el) {
   var self = this

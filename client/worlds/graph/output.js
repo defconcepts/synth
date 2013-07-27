@@ -1,4 +1,4 @@
-output = function (el) {
+this.output = function (el) {
   var self = this
 
   var filter = d3.select('.graph').append("defs")

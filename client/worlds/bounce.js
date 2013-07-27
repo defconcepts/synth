@@ -1,3 +1,6 @@
+this.bounce = bounce
+this.step = step
+
 var gravity = [0, .5]
 
   , offsetX = innerWidth * .05, offsetY = innerHeight * .05
@@ -12,7 +15,6 @@ var gravity = [0, .5]
   , axis = d3.svg.axis().scale(xscale).orient('bottom').ticks(6)
            .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
 
-exports(bounce, step)
 function bounce(el, data) {
   var done = false
 
