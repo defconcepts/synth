@@ -16,7 +16,8 @@ this.nodes = function (el) {
   }
 
   function mousedown() {
-    d3.select(this).classed('grabbing', true)
+    var m = d3.select(this)
+    d3.event.metaKey ? m.each(menu) : m.classed('grabbing', true)
   }
 
   var draggable =
@@ -168,4 +169,46 @@ this.nodes = function (el) {
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
   }
+}
+
+
+function menu (node) {
+  var arc = d3.svg.arc()
+            .innerRadius(node.radius + 10)
+            .outerRadius(node.radius + 25)
+    , l = 360..toRad() / COLORS.length
+    , data = COLORS.map(function (d, i) {
+               return {
+                 fill: d
+               , startAngle: i * l
+               , endAngle: (i + 1) * l
+               , i: i
+               }
+             })
+    , self = d3.select(this)
+
+  var a = d3.select('svg').selectAll('.arc').data(data, pluckWith('i'))
+
+  a.enter()
+  .append('path')
+  .attr('class', 'arc')
+  .attr('fill', pluckWith('fill'))
+  .attr('d', arc)
+  .on('mouseover', function (d) {
+    self.transition().attr('fill', d.fill)
+  })
+  .on('mouseout', function (d) {
+    self.transition().attr('fill', pluckWith('fill'))
+  })
+  .on('click', function (d) {
+    node.save({ fill: d.fill })
+    self.attr('fill', d.fill)
+    a.remove()
+  })
+
+  a.attr('transform', translate(node.x, node.y))
+}
+
+function translate(x, y) {
+  return 'translate(' + [x, y].toString() + ')'
 }
