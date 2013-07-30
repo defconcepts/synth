@@ -33,7 +33,6 @@ this.edges = function (el) {
 
   function pulse(d, i, x) {
     if (! d.target || window.freeze) return
-    //TODO recalculate pulse path when node is moved
 
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 

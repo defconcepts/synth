@@ -174,8 +174,8 @@ this.nodes = function (el) {
 
 function menu (node) {
   var arc = d3.svg.arc()
-            .innerRadius(node.radius + 10)
-            .outerRadius(node.radius + 25)
+            .innerRadius(node.radius + 20)
+            .outerRadius(node.radius + 45)
     , l = 360..toRad() / COLORS.length
     , data = COLORS.map(function (d, i) {
                return {

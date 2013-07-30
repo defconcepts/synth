@@ -52,7 +52,6 @@ _.extend(d3.selection.prototype, {
   }
 
 , listen_for: function (fn){
-    //TODO switch to delegation
     (_.isArray(fn) ? fn : [fn])
     .forEach(function (fn) {
       this.on(fn.name, fn)
