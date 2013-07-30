@@ -1,5 +1,5 @@
 exports(exports, sine, clear_db, mirror, pluckWith, matchWith, swap,
-        circle, is_mobile, dist, random_color)
+        circle, is_mobile, dist, random_color, toCoord)
 
 this.log = console.log.bind(console)
 

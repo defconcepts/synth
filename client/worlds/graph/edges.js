@@ -1,8 +1,8 @@
 this.edges = function (el) {
   var self = this
     , thickness = d3.scale.linear()
-                  .domain([0, 300])
-                  .range([15, 0])
+                  .domain([0, 350])
+                  .range([15, 1])
 
   //add edge holder box
 
