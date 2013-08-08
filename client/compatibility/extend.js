@@ -1,9 +1,24 @@
-if (Meteor.isServer) return
-d3.selection.prototype.size = function () {
-  var n = 0;
-  this.each(function () { n++ })
-  return n
-}
+_.extend(d3.selection.prototype,
+         { size: function () {
+             var n = 0
+             this.each(function () { n++ })
+               return n
+           }
+
+         , replace: function () {
+
+           }
+         , parent: function () {
+             var self = this
+             return this.each(function (_, i) {
+                      self[0][i] = this.parentElement
+                    })
+           }
+         , at: function (i) {
+             return d3.select(this[0][i])
+           }
+
+})
 _.extend(Number.prototype,
          { toRad: function () {
              return this * Math.PI / 180

@@ -8,6 +8,7 @@ var types = this.node_types =
     // , heat: '#542437'
   }
 
+this.rand_type = rand_type
 this.node_fill = _.compose(function (type) { return types[type] },
                            pluckWith('type'))
 
@@ -48,7 +49,6 @@ this.Node =
 
 function transform(doc) {
   return _.extend(Object.create(Node),
-                  _.omit(doc, 'selected'),
-                  { type: rand_type() }
+                  _.omit(doc, 'selected')
                  )
 }

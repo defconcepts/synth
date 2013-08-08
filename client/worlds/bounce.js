@@ -16,6 +16,7 @@ var gravity = [0, .5]
            .tickFormat(function (d) { return 'abcdefg'.split('')[~~d] })
 
 function bounce(el, data) {
+  el = el.append('svg')
   var done = false
 
   el.selectAll('circle').data(data).enter()
@@ -101,7 +102,7 @@ function step(d) {
     d.position[0] > bounds.x[1] ? bounds.x[0] : d.position[0]
 
   if (top || bot) apply_friction(d)
-  if (bot) return this.state ? send(this, d.position[0]) : play_sound(d.position[0])
+  if (bot) return this.name === 'bounce' ? send(this, d.position[0]) : play_sound(d.position[0])
 }
 
 function send (datum, x) {
@@ -112,7 +113,7 @@ function play_sound(x) {
   var selected = Session.get('world') || {}
   d3.selectAll('.edge')
   .filter(function (d) { return d.source._id === selected._id })
-  .each(pulse)
+  .each(window.pulse || _.identity)
 
     sound_test(~~ xscale.invert(x))
 }

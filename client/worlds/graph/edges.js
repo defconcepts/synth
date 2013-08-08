@@ -24,7 +24,7 @@ this.edges = function (el) {
 
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      d.state.map(function (item) { return this[d.type].step(item, d) })
+      d.state.map(function (item) { return window[d.type].step(item, d) })
       .filter(_.identity)
       .forEach(pow, d3.select(this))
     })
@@ -102,7 +102,7 @@ this.edges = function (el) {
     el.selectAll('.edge')
     .each(fix)
     .attr('stroke-width', stroke_width)
-    .attr('stroke', _.compose(node_fill, pluckWith('source.fill')))
+    .attr('stroke', _.compose(node_fill, pluckWith('source')))
     .attr('x1', pluckWith('source.x'))
     .attr('y1', pluckWith('source.y'))
     .attr('x2', pluckWith('target.x'))

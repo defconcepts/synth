@@ -11,9 +11,10 @@ function body(el) {
 
     var m = d3.mouse(this)
 
-    function filter(d) { return dist(d, m) < 200 }
+    function filter(d) { return dist(d, m) < 250 }
 
-    Graph.insert({ edges: _.pluck(self().data().filter(filter), '_id')
+    Graph.insert({ type: rand_type()
+                 , edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]
                  , y: m[1]
                  , state: dummy()
@@ -41,7 +42,7 @@ function body(el) {
   function dummy() {
     return [{ "r": 14
             , "position": [ 150, 150 ]
-            ,"velocity": [ 1, 8 ]
+            , "velocity": [ 1, 8 ]
             }]
   }
 
