@@ -1,12 +1,12 @@
-var worlds = this.worlds = [bounce]
+var worlds = this.worlds = [bounce, wind]
 
-worlds.construct = function () {
+worlds.construct = function (i) {
   //freeze()
   //todo fix transition
   //isolate path
   var w = Session.get('world')
   this.el = d3.select('.glass').classed('show', 'true')
-  this.current = worlds[0](this.el.append('svg'), w && w.state || [])
+  this.current = worlds[this.indexOf(i)](this.el.append('svg'), w && w.state || [])
   return this.el
 }
 

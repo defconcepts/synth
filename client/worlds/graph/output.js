@@ -1,3 +1,4 @@
+
 this.output = function (el) {
   var self = this
 
@@ -32,7 +33,7 @@ this.output = function (el) {
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
   .on('click', function () {
-    volume.attr('width', function (d) { return d.radius * ((d.toggled = ! d.toggled) ? 1 : .6) })
+    volume.attr('width', function (d) { return d.radius * (d.toggled = ! d.toggled ? 1 : .6) })
   })
 
   var volume = el.append('image')
@@ -61,13 +62,15 @@ this.output = function (el) {
 
   function pulse (_, _, d, x) {
     if (window.freeze || ! volume.datum().toggled) return
+
     sound_test(x)
-    el.insert('circle', '.pulse')
+
+    el.insert('circle', '*')
     .call(circle, datum)
     .attr('r', 35)
     .classed('emanating', 1)
     .attr('fill', 'none')
-    .attr('stroke', d.fill)
+    .attr('stroke', node_fill(d))
     .attr('stroke-width', 3)
     .attr('stroke-dasharray', dasharray)
     .transition().duration(3000).ease('ease-out')

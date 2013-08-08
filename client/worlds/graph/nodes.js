@@ -63,7 +63,7 @@ this.nodes = function (el) {
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
           , cy: Math.random() * innerHeight + (innerHeight * .25)
-          , fill: pluckWith('fill')
+          , fill: node_fill
           , r: 20
           , class: 'node'
           })
@@ -120,7 +120,7 @@ this.nodes = function (el) {
 
     Session.set('world', d)
 
-    worlds.construct()
+    worlds.construct(d.type)
 
     d3.select(window).once('keydown', keydown)
 
@@ -154,11 +154,11 @@ this.nodes = function (el) {
   }
 
   function mouseout(d) {
-    d3.transition(d3.select(this)).attr('fill', pluckWith('fill'))
+    d3.transition(d3.select(this)).attr('fill', node_fill)
   }
 
   function mouseover(d) {
-    d3.transition(d3.select(this)).attr('fill', d3.rgb(d.fill).brighter())
+    d3.transition(d3.select(this)).attr('fill', d3.rgb(node_fill(d)).brighter())
   }
 
   function update_position() {
@@ -170,7 +170,6 @@ this.nodes = function (el) {
     .attr('cy', pluckWith('y'))
   }
 }
-
 
 function menu (node) {
   var arc = d3.svg.arc()
@@ -195,10 +194,10 @@ function menu (node) {
   .attr('fill', pluckWith('fill'))
   .attr('d', arc)
   .on('mouseover', function (d) {
-    self.transition().attr('fill', d.fill)
+    self.transition().attr('fill', node_fill(d))
   })
   .on('mouseout', function (d) {
-    self.transition().attr('fill', pluckWith('fill'))
+    self.transition().attr('fill', node_fill(d))
   })
   .on('click', function (d) {
     node.save({ fill: d.fill })

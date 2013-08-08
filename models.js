@@ -1,9 +1,24 @@
 this.Graph = new Meteor.Collection('graph', { transform: transform });
 
+var types = this.node_types =
+  { bounce:'#C02942'
+  , wind: '#53777A'
+    // , lightning: '#D95B43'
+    // , water: '#ECD078'
+    // , heat: '#542437'
+  }
 
+this.node_fill = _.compose(function (type) { return types[type] },
+                           pluckWith('type'))
+
+function rand_type () {
+  var k = _.keys(types), l = k.length
+  return k[~~ (Math.random() * l)]
+}
 
 this.Node =
   { radius: 20
+
   , save: function (update, cb) {
       Graph.update({ _id: this._id }, _.extend(this, update), cb)
     }
@@ -33,5 +48,7 @@ this.Node =
 
 function transform(doc) {
   return _.extend(Object.create(Node),
-                  _.omit(doc, 'selected'))
+                  _.omit(doc, 'selected'),
+                  { type: rand_type() }
+                 )
 }

@@ -1,5 +1,5 @@
 this.bounce = bounce
-this.step = step
+bounce.step = step
 
 var gravity = [0, .5]
 
@@ -109,8 +109,9 @@ function send (datum, x) {
 }
 
 function play_sound(x) {
+  var selected = Session.get('world') || {}
   d3.selectAll('.edge')
-  .filter(function (d) { return d.source._id === Session.get('world')._id })
+  .filter(function (d) { return d.source._id === selected._id })
   .each(pulse)
 
     sound_test(~~ xscale.invert(x))

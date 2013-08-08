@@ -13,8 +13,7 @@ function body(el) {
 
     function filter(d) { return dist(d, m) < 200 }
 
-    Graph.insert({ fill: random_color()
-                 , edges: _.pluck(self().data().filter(filter), '_id')
+    Graph.insert({ edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]
                  , y: m[1]
                  , state: dummy()

@@ -4,8 +4,6 @@ this.edges = function (el) {
                   .domain([0, 350])
                   .range([15, 1])
 
-  //add edge holder box
-
   el
   .on('changed', changed)
   .on('added', added)
@@ -26,7 +24,8 @@ this.edges = function (el) {
 
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      d.state.map(step, d).filter(_.identity)
+      d.state.map(function (item) { return this[d.type].step(item, d) })
+      .filter(_.identity)
       .forEach(pow, d3.select(this))
     })
   })
@@ -36,7 +35,7 @@ this.edges = function (el) {
 
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
-    el.insert('circle', 'circle')
+    el.insert('circle', '.node')
     .attr('class', 'pulse')
     .attr('r', (d.stroke_width / 2) + 2)
     .attr('cx', ex1(d))
@@ -81,7 +80,7 @@ this.edges = function (el) {
           , x2: doc.x
           , y2: doc.y
           , opacity: .75
-          , stroke: doc.fill
+          , stroke: node_fill(doc)
           , 'stroke-width': stroke_width
           }).listen_for([ mouseover, mouseout, pulse ])
     .transition().duration(500).ease('cubic-in-out')
@@ -103,6 +102,7 @@ this.edges = function (el) {
     el.selectAll('.edge')
     .each(fix)
     .attr('stroke-width', stroke_width)
+    .attr('stroke', _.compose(node_fill, pluckWith('source.fill')))
     .attr('x1', pluckWith('source.x'))
     .attr('y1', pluckWith('source.y'))
     .attr('x2', pluckWith('target.x'))
