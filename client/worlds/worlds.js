@@ -19,8 +19,8 @@ worlds.destruct = function () {
 }
 
 Meteor.startup(function () {
-  _.find(worlds, function (w) { return location.href.match(w.name) }) &&
-    worlds.construct()
+  window.location.pathname.length > 1 &&
+    worlds.construct(window.location.pathname.slice(1))
 })
 
 function freeze () {
