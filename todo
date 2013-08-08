@@ -1,0 +1,15 @@
+* change fills to world types for different simulations
+* wind world
+* collision
+* reverse graph links: edges come from target, data flows across
+* recalculate pulse path when node is moved
+* event delegation for nodes
+* switch to observe changes
+* make rendering faster
+* decouple clock from animation loop
+* add glossary
+
+* login system and ownership
+* undo/redo
+* export to mp3, live, osc
+* expose api so that anyone can add worlds
