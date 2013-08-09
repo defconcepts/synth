@@ -33,14 +33,14 @@ this.output = function (el) {
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
   .on('click', function () {
-    volume.attr('width', function (d) { return d.radius * (d.toggled = ! d.toggled ? 1 : .6) })
+    volume.attr('width', function (d) { return d.radius * ((d.toggled = !d.toggled) ? 1 : .6) })
   })
 
   var volume = el.append('image')
           .attr('xlink:href', volume_icon)
           .attr('preserveAspectRatio', 'xMinYMin slice')
           .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
-          .attr('height', function (d) { return d.radius * .77})
+          .attr('height', function (d) { return d.radius * .77 })
           .attr('width', function (d) { return d.radius })
 
   Deps.autorun(function () {

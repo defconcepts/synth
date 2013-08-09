@@ -4,7 +4,7 @@ wind.step = step
 function wind (el, data) {
   d3.timer(loop)
 
-  var num_streams = 1e3
+  var num_streams = 3e3
     , max_age = 30
     , fade_rate = 0.05
     , border = 100
@@ -27,6 +27,13 @@ function wind (el, data) {
   cx.strokeStyle = "rgba(0, 255, 255, .5)"
   cx.fillStyle = "rgba(255, 0, 255, .5)"
   cx.fillRect(0, 0, w, h)
+  setInterval(function () {
+    jules *= -1
+  }, 250)
+
+  return function () {
+    done = true
+  }
 
   function fadeCanvas(alpha) {
     cx.save()
@@ -48,6 +55,14 @@ function wind (el, data) {
 
   function frame(t) {
     fadeCanvas(1 - fade_rate)
+    cx.strokeStyle = "rgba("
+                   + ~~ (Math.random() * 255)
+                   + ", "
+                   + ~~ (Math.random() * 255)
+                   + ", "
+                   + ~~ (Math.random() * 255)
+                   + ", "
+                   + "1)"
 
     cx.save()
     cx.setTransform(1, 0, 0, 1, 0, 0)
@@ -67,11 +82,13 @@ function wind (el, data) {
         cx.moveTo(stream[0], stream[1])
         cx.lineTo(stream[0] += v[0], stream[1] += v[1])
         cx.stroke()
+
       }
       stream[2]--
     }
     cx.restore()
   }
+
 
   function loop(timestamp) {
     if (! first_timestamp) first_timestamp = timestamp
@@ -79,8 +96,6 @@ function wind (el, data) {
     return done
   }
 
-  // * Vector field transformers
-  // Transform a vector field from origin-centred coordinates to pixel coords
   function to_px(n, f) {
     return function(x_px, y_px, t) {
       var divisor = Math.min(canvas.width, canvas.height) / n
@@ -93,11 +108,11 @@ function wind (el, data) {
 
 function step () {}
 
-// * Primitive vector fields
+var jules = -4
 function julia(dx, dy) {
   return function(x, y, t) {
     return [ x*x - y*y + dx - x
-           , 2*x*y + dy - y
+           , jules*x*y + dy - y
            ]
   }
 }

@@ -1,8 +1,11 @@
 this.edges = function (el) {
   var self = this
+
     , thickness = d3.scale.linear()
                   .domain([0, 350])
                   .range([15, 1])
+
+    , pow = _.throttle(function (x) { this.emit('pow', x) }, 100)
 
   el
   .on('changed', changed)
@@ -17,16 +20,10 @@ this.edges = function (el) {
            , removed: removed
            })
 
-  var pow =
-    _.throttle(function (x) {
-      this.emit('pow', x)
-    }, 100)
-
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
       d.state.map(function (item) { return window[d.type].step(item, d) })
-      .filter(_.identity)
-      .forEach(pow, d3.select(this))
+      .filter(_.identity).forEach(pow, d3.select(this))
     })
   })
 
@@ -41,6 +38,7 @@ this.edges = function (el) {
     .attr('cx', ex1(d))
     .attr('cy', why1(d))
     .attr('fill', 'aliceblue')
+    .attr('stroke', '#333')
     .transition().duration(1000).ease('cubic')
     .attr('cx', ex2(d))
     .attr('cy', why2(d))

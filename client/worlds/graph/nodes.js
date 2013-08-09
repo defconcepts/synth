@@ -121,14 +121,6 @@ this.nodes = function (el) {
     Session.set('world', d)
 
     worlds.construct(d.type)
-
-    d3.select(window).once('keydown', keydown)
-
-    function keydown() {
-      return d3.event.which === 27 ?
-        worlds.destruct() :
-        d3.select(this).once('keydown', keydown)
-    }
   }
 
   function dragstart (d) {
