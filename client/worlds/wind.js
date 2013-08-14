@@ -27,9 +27,9 @@ function wind (el, data) {
   cx.strokeStyle = "rgba(0, 255, 255, .5)"
   cx.fillStyle = "rgba(255, 0, 255, .5)"
   cx.fillRect(0, 0, w, h)
-  setInterval(function () {
+  d3.select(canvas).on('click', function () {
     jules *= -1
-  }, 250)
+  })
 
   return function () {
     done = true
@@ -55,14 +55,6 @@ function wind (el, data) {
 
   function frame(t) {
     fadeCanvas(1 - fade_rate)
-    cx.strokeStyle = "rgba("
-                   + ~~ (Math.random() * 255)
-                   + ", "
-                   + ~~ (Math.random() * 255)
-                   + ", "
-                   + ~~ (Math.random() * 255)
-                   + ", "
-                   + "1)"
 
     cx.save()
     cx.setTransform(1, 0, 0, 1, 0, 0)

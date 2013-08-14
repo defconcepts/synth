@@ -86,3 +86,10 @@ _.extend(d3.selection.prototype, {
     }
   }
 })
+_.mixin({
+  partition: function (arr, fn) {
+    var result = [[], []]
+    arr.forEach(function (d, i) { result[+ fn(d, i, arr)].push(d) })
+    return result
+  }
+})
