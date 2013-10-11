@@ -167,14 +167,14 @@ function menu (node) {
   var arc = d3.svg.arc()
             .innerRadius(node.radius + 20)
             .outerRadius(node.radius + 45)
-    , l = 360..toRad() / COLORS.length
-    , data = COLORS.map(function (d, i) {
-               return {
-                 fill: d
-               , startAngle: i * l
-               , endAngle: (i + 1) * l
-               , i: i
-               }
+    , types = _.keys(node_types)
+    , l = 360..toRad() / types.length
+    , data = _.map(types, function (name, i) {
+               return { type: name
+                      , startAngle: i * l
+                      , endAngle: (i + 1) * l
+                      , i: i
+                      }
              })
     , self = d3.select(this)
 
@@ -183,7 +183,7 @@ function menu (node) {
   a.enter()
   .append('path')
   .attr('class', 'arc')
-  .attr('fill', pluckWith('fill'))
+  .attr('fill', node_fill)
   .attr('d', arc)
   .on('mouseover', function (d) {
     self.transition().attr('fill', node_fill(d))
@@ -192,9 +192,9 @@ function menu (node) {
     self.transition().attr('fill', node_fill(d))
   })
   .on('click', function (d) {
-    node.save({ fill: d.fill })
-    self.attr('fill', d.fill)
-    a.remove()
+    node.save({type: d.type })
+    self.attr('type', d.type)
+    a.attr('fill-opacity', 1).transition().attr('fill-opacity', 0).remove()
   })
 
   a.attr('transform', translate(node.x, node.y))

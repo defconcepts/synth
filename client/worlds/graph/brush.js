@@ -3,7 +3,7 @@ this.brush = function (el) {
     , shifted = []
 
   // add rotation
-  // dispatch a select event instead of actually selecting
+  // dispatch a select event instead of adding selected class
 
   var brushable =
     d3.svg.brush()
@@ -20,11 +20,10 @@ this.brush = function (el) {
   el.datum({ selected: false , previouslySelected: false })
   .call(brushable)
 
-
   function selected (d) {
     shifted.push(d._id)
-    d3.select(this).classed('selected', d.selected =
-                            d3.event.sourceEvent.shiftKey ? ! d.selected : true)
+    d3.select(this).classed('selected',
+                            d.selected = d3.event.sourceEvent.shiftKey ? ! d.selected : true)
   }
 
 
