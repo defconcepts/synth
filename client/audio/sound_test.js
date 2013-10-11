@@ -16,7 +16,7 @@ var i
 
 function sound_test(i) {
   var frequency = scale[~~(scale.length * sine(i * 3.172 * Math.sin(i * 0.2)))]
-  voices.push(audioLib.generators.Voice(sink.sampleRate, frequency, sine(i * 4.23)))
+  voices.push(audioLib.generators.Noise(sink.sampleRate, frequency, sine(i * 4.23)))
 }
 
 audioLib.generators('Voice', Voice)

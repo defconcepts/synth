@@ -29,7 +29,10 @@ _.extend(Number.prototype,
          })
 
 _.extend(Array.prototype,
-         { prepend: function () {
+         { contains: function (item) {
+             return ~ this.indexOf(item)
+           },
+           prepend: function () {
              this.unshift.apply(this, arguments)
              return this
            }
@@ -92,4 +95,9 @@ _.mixin({
     arr.forEach(function (d, i) { result[+ fn(d, i, arr)].push(d) })
     return result
   }
+, merge: function (a, b) {
+    _.each(b, function (v, k) { if (a[k]) a[k] = v })
+    return a
+  }
+
 })
