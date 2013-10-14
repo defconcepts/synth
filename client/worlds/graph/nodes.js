@@ -168,7 +168,7 @@ function menu (node) {
             .innerRadius(node.radius + 20)
             .outerRadius(node.radius + 45)
     , types = _.keys(node_types)
-    , l = 360..toRad() / types.length
+    , l = 360 .toRad() / types.length
     , data = _.map(types, function (name, i) {
                return { type: name
                       , startAngle: i * l
