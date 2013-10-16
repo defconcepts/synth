@@ -1,11 +1,11 @@
 this.table = table
 table.step = step
+table.bpm =  100
 function table (el, data) {
   var w = 1280
     , h = innerHeight * .9
     , rows = 16
     , size = ~~ (h / rows)
-    , bpm = 50
     , i  = 0
     , svg = el.append('svg').attr('width', w).attr('height', h)
     , done, int
@@ -31,7 +31,8 @@ function table (el, data) {
              .attr('stroke', 'aliceblue')
              .on('click', clicked)
 
-  int = setInterval(voice, bpm, data)
+  int = setInterval(voice, table.bpm, data)
+  voice(data)
 
   return function () {
     clearInterval(int)
@@ -54,8 +55,17 @@ function table (el, data) {
   }
 }
 
+//request animation frame is called once every ~16 ms
+//so we store the last time of update in a map keyed by _id of node
+//todo master sequencer which is independent of rendering loop
+var _stepCooldown = {}
+
 function step(data, item) {
-  if (! item || data.length < 256) return
+  if (data.length < 256 ||
+      new Date() - _stepCooldown[item._id] < table.bpm) return
+
+  _stepCooldown[item._id] = + new Date()
+
   var i = (++item.index) % 16
   return data.filter(function (d) { return d.i % 16 == i && d.selected })
 }
