@@ -15,6 +15,7 @@ worlds.construct = function (name) {
 worlds.destruct = function () {
   window.freeze = false
   d3.select('.main').selectAll('*').attr('filter', '')
+  Session.set('world', {})
   this.current && this.current()
   this.el.classed('show', false).select('*').remove()
 }

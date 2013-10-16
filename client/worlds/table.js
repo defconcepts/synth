@@ -37,11 +37,7 @@ function table (el, data) {
 
   return function () {
     clearInterval(int)
-    Graph.update({ _id: Session.get('world')._id },
-                 { $set: { state: d3.selectAll('.table').data()
-                         , index: item.index
-                         }
-                 })
+    saveTable()
   }
 
   function translate (d, i) {
@@ -62,8 +58,8 @@ function table (el, data) {
 var _stepCooldown = {}
 
 function step(data, item) {
-  if (data.length < 256 ||
-      new Date() - _stepCooldown[item._id] < table.bpm) return
+  // if (data.length < 256 ||
+  //     new Date() - _stepCooldown[item._id] < table.bpm) return
   _stepCooldown[item._id] = + new Date()
   var col = (item.index = (1 + item.index || 0) % 16)
   return data.filter(function (d, i) { return i % 16 == col && d })
@@ -79,9 +75,7 @@ function fill (d) {
 
 function mousedown(d) {
   d3.select(this).attr('fill', fill).datum(! d)
-  Graph.update({ _id: Session.get('world')._id },
-               { $set: { state: d3.selectAll('.table').data() }
-               })
+  saveTable()
 }
 
 d3.behavior.slide = function () {
@@ -94,7 +88,16 @@ d3.behavior.slide = function () {
     })
     .on('mousemove.slide', function (d, i) {
       if (clicking && ! this.__prevSelected)
-        (this.__prevSelected = true) + d3.select(this).attr('fill', fill).datum(init)
+        (this.__prevSelected = true) +
+        d3.select(this).attr('fill', fill).datum(init) +
+        saveTable()
     })
   }
+}
+
+
+function saveTable() {
+  Graph.update({ _id: Session.get('world')._id },
+               { $set: { state: d3.selectAll('.table').data() }
+               })
 }
