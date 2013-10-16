@@ -16,11 +16,11 @@ function table (el, data) {
       return { i: d }
     })
 
-  var shit = function () {
+  var valueOf = function () {
     return this.i
   }
 
-  data.forEach(function (d) { d.valueOf = shit })
+  data.forEach(function (d) { d.valueOf = valueOf })
 
   var rect = svg.selectAll('rect').data(data)
              .enter().append('rect')
@@ -39,8 +39,7 @@ function table (el, data) {
                  { $set: { state: data
                          , index: i
                          }
-                 }
-                )
+                 })
   }
 
   function translate (d) {

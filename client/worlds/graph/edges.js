@@ -20,7 +20,7 @@ this.edges = function (el) {
 
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      ;(window[d.type].step(d.state, d) || [])
+      (window[d.type].step(d.state, d) || [])
       .forEach(pow, d3.select(this))
     })
   })

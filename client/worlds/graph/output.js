@@ -29,12 +29,10 @@ this.output = function (el) {
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_highlight)'})
 
-  el.append('circle')
+  var orb = el.append('circle')
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
-  .on('click', function () {
-    volume.attr('width', function (d) { return d.radius * ((d.toggled = !d.toggled) ? 1 : .6) })
-  })
+  .on('click', click)
 
   var volume = el.append('image')
           .attr('xlink:href', volume_icon)
@@ -42,6 +40,12 @@ this.output = function (el) {
           .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
           .attr('height', function (d) { return d.radius * .77 })
           .attr('width', function (d) { return d.radius })
+
+  orb.call(click)
+
+  function click(selection) {
+    volume.attr('width', function (d) { return d.radius * ((d.toggled = !d.toggled) ? 1 : .6) })
+  }
 
   Deps.autorun(function () {
     datum.x = Session.get('width') / 2
