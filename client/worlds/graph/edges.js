@@ -3,7 +3,7 @@ this.edges = function (el) {
     , thickness = d3.scale.linear()
                   .domain([0, 350])
                   .range([15, 1])
-    , pow = _.throttle(function (x) { this.emit('pow', x) }, 0)
+    , pow = function (x) { this.emit('pow', x) }
 
   el
   .on('changed', changed)
@@ -26,20 +26,19 @@ this.edges = function (el) {
   })
 
   function pulse(d, i, x) {
-    if (! d.target || window.freeze) return
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
     el.insert('circle', '.node')
     .attr('class', 'pulse')
     .attr('r', (d.stroke_width / 2) + 2)
-    .attr('cx', ex1(d))
-    .attr('cy', why1(d))
+    .attr('cx', x1(d))
+    .attr('cy', y1(d))
     .attr('fill', '#333')
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 2)
-    .transition().duration(1000).ease('cubic')
-    .attr('cx', ex2(d))
-    .attr('cy', why2(d))
+    .transition().duration(1000).ease('linear')
+    .attr('cx', x2(d))
+    .attr('cy', y2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
     .remove()
   }
@@ -119,7 +118,7 @@ this.edges = function (el) {
                : match_edge(doc)
 
     el.selectAll('.edge').filter(filter)
-    .transition().duration(500)//.ease('ease-out')
+    .transition().duration(500)
     .attr('x1', pluckWith('target.x'))
     .attr('y1', pluckWith('target.y'))
     .attr('class', '').remove()
@@ -158,18 +157,18 @@ function angle(source, target) {
   return Math.atan2(dy, dx)
 }
 
-function ex1(d) {
+function x1(d) {
   return d.source.x - d.source.radius * Math.cos(angle(d.target, d.source))
 }
 
-function ex2(d) {
+function x2(d) {
   return d.target.x - d.target.radius * Math.cos(angle(d.source, d.target))
 }
 
-function why1(d) {
+function y1(d) {
   return d.source.y - d.source.radius * Math.sin(angle(d.target, d.source))
 }
 
-function why2(d) {
+function y2(d) {
   return d.target.y - d.target.radius * Math.sin(angle(d.source, d.target))
 }

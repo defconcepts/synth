@@ -3,9 +3,9 @@ this.Graph = new Meteor.Collection('graph', { transform: transform });
 var types = this.node_types =
   { bounce:'#C02942'
   , wind: '#53777A'
-  , table: '#D95B43'
-    // , water: '#ECD078'
-    // , heat: '#542437'
+  , table: 'royalblue'
+    // , water: '#D95B43'
+    // , heat: '#ECD078'
   }
 
 this.rand_type = rand_type

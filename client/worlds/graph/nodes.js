@@ -10,8 +10,7 @@ this.nodes = function (el) {
 
   function pow(doc, i,  x) {
     d3.selectAll('.edge').filter(function (d) {
-      return doc._id === d.target._id ||
-        doc._id === d.source._id
+      return doc._id === d.source._id
     }).emit('pulse', x)
   }
 
