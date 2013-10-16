@@ -7,3 +7,5 @@ function resize() {
   Session.set('width', innerWidth)
   Session.set('height', innerHeight)
 }
+
+Session.setDefault('world', {})

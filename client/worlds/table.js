@@ -8,13 +8,14 @@ function table (el, data) {
     , size = ~~ (h / rows)
     , svg = el.append('svg').attr('width', w).attr('height', h)
     , item = { _id: Session.get('world')._id, index: 0 }
+    , clicking = false
     , done, int
 
   data =
     256 == data.length ? data :
     d3.range(rows * rows).map(d3.functor(false))
 
-  var rect = svg.selectAll('rect').data(data)
+  var rect = svg.selectAll('.table').data(data)
              .enter().append('rect')
              .attr('class', 'table')
              .attr('transform', translate)
@@ -22,7 +23,8 @@ function table (el, data) {
              .attr('height', size)
              .attr('fill', 'steelblue')
              .attr('stroke', 'aliceblue')
-             .on('click', clicked)
+             .on('click', mousedown)
+             .call(d3.behavior.slide())
 
   int = setInterval(voice, table.bpm, data)
   voice(data)
@@ -60,8 +62,8 @@ function table (el, data) {
 var _stepCooldown = {}
 
 function step(data, item) {
-  // if (data.length < 256 ||
-  //     new Date() - _stepCooldown[item._id] < (table.bpm / 2)) return
+  if (data.length < 256 ||
+      new Date() - _stepCooldown[item._id] < table.bpm) return
   _stepCooldown[item._id] = + new Date()
   var col = (item.index = (1 + item.index || 0) % 16)
   return data.filter(function (d, i) { return i % 16 == col && d })
@@ -75,9 +77,24 @@ function fill (d) {
   return d ? 'pink' : 'steelblue'
 }
 
-function clicked(d) {
+function mousedown(d) {
   d3.select(this).attr('fill', fill).datum(! d)
   Graph.update({ _id: Session.get('world')._id },
                { $set: { state: d3.selectAll('.table').data() }
                })
+}
+
+d3.behavior.slide = function () {
+  var clicking = false, init
+  return function (selection) {
+    selection
+    .on('mousedown.slide', function (d) { this.__prevSelected = true, clicking = true, init = ! d })
+    .on('mouseup.slide', function () {
+      clicking = false,  d3.selectAll('.table').each(function () { this.__prevSelected = false })
+    })
+    .on('mousemove.slide', function (d, i) {
+      if (clicking && ! this.__prevSelected)
+        (this.__prevSelected = true) + d3.select(this).attr('fill', fill).datum(init)
+    })
+  }
 }
