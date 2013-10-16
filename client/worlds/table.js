@@ -6,24 +6,17 @@ function table (el, data) {
     , h = innerHeight * .9
     , rows = 16
     , size = ~~ (h / rows)
-    , i  = 0
     , svg = el.append('svg').attr('width', w).attr('height', h)
+    , item = { _id: Session.get('world')._id, index: 0 }
     , done, int
 
   data =
     256 == data.length ? data :
-    d3.range(256).map(function (d){
-      return { i: d }
-    })
-
-  var valueOf = function () {
-    return this.i
-  }
-
-  data.forEach(function (d) { d.valueOf = valueOf })
+    d3.range(rows * rows).map(d3.functor(false))
 
   var rect = svg.selectAll('rect').data(data)
              .enter().append('rect')
+             .attr('class', 'table')
              .attr('transform', translate)
              .attr('width', size)
              .attr('height', size)
@@ -34,24 +27,30 @@ function table (el, data) {
   int = setInterval(voice, table.bpm, data)
   voice(data)
 
+  Graph.find({ _id: Session.get('world')._id }).observe({
+    changed: function (doc) {
+      d3.selectAll('.table').data(doc.state).attr('fill')
+    }
+  })
+
   return function () {
     clearInterval(int)
     Graph.update({ _id: Session.get('world')._id },
-                 { $set: { state: data
-                         , index: i
+                 { $set: { state: d3.selectAll('.table').data()
+                         , index: item.index
                          }
                  })
   }
 
-  function translate (d) {
-    return "translate(" + [250 + (d % rows) * size,
-                           Math.floor(d / rows) * size] + ")";
+  function translate (d, i) {
+    return "translate(" + [250 + (i % rows) * size,
+                           Math.floor(i / rows) * size] + ")";
   }
 
   function voice(d) {
-    i = (i + 1) % rows
-    d3.selectAll('rect').attr('fill', fill)
-    d3.selectAll('rect:nth-child(16n + ' + ~~ i + ')').attr('fill', fillVoice)
+    d3.selectAll('.table').attr('fill', fill)
+    step(data, item)
+    d3.selectAll('.table:nth-child(16n + ' + ~~ item.index + ')').attr('fill', fillVoice)
   }
 }
 
@@ -61,24 +60,24 @@ function table (el, data) {
 var _stepCooldown = {}
 
 function step(data, item) {
-  if (data.length < 256 ||
-      new Date() - _stepCooldown[item._id] < table.bpm) return
-
+  // if (data.length < 256 ||
+  //     new Date() - _stepCooldown[item._id] < (table.bpm / 2)) return
   _stepCooldown[item._id] = + new Date()
-
-  var i = (++item.index) % 16
-  return data.filter(function (d) { return d.i % 16 == i && d.selected })
+  var col = (item.index = (1 + item.index || 0) % 16)
+  return data.filter(function (d, i) { return i % 16 == col && d })
 }
 
 function fillVoice(d) {
-  return d.selected ? 'pink' : 'red'
+  return d ? 'pink' : 'red'
 }
 
 function fill (d) {
-  return d.selected ? 'pink' : 'steelblue'
+  return d ? 'pink' : 'steelblue'
 }
 
 function clicked(d) {
-  d.selected = ! d.selected
-  d3.select(this).attr('fill', fill)
+  d3.select(this).attr('fill', fill).datum(! d)
+  Graph.update({ _id: Session.get('world')._id },
+               { $set: { state: d3.selectAll('.table').data() }
+               })
 }
