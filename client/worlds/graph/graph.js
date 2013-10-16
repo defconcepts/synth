@@ -1,4 +1,4 @@
-graph = function () {
+this.graph = function () {
   var el = d3.select('.graph')
 
   function self(fn) {

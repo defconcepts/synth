@@ -1,4 +1,3 @@
-* change fills to world types for different simulations
 * wind world
 * collision
 * reverse graph links: edges come from target, data flows across

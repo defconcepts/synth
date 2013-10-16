@@ -39,8 +39,8 @@ function Voice (sampleRate, frequency, pan) {
            },
            { samplesLeft: this.length * sampleRate
            , osc:  audioLib.Oscillator(sampleRate, frequency * 2)
-           , lfo: _.extend(audioLib.Oscillator(sampleRate, frequency * 2.8),
-                           { waveShape: 'triangle' })
+           , lfo: _.extend(audioLib.Oscillator(sampleRate, frequency * 10.8),
+                           { waveShape: 'sawtooth' })
            , envelope: audioLib.ADSREnvelope(sampleRate, 10, 300, 0.6, 4000,
                                              20, this.length * 1000)
            }

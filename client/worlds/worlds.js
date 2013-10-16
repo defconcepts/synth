@@ -1,4 +1,4 @@
-var worlds = this.worlds = [bounce, wind]
+this.worlds = [bounce, wind, table]
 
 worlds.construct = function (name) {
   //freeze()

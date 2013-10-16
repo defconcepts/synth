@@ -3,7 +3,7 @@ this.Graph = new Meteor.Collection('graph', { transform: transform });
 var types = this.node_types =
   { bounce:'#C02942'
   , wind: '#53777A'
-    // , lightning: '#D95B43'
+  , table: '#D95B43'
     // , water: '#ECD078'
     // , heat: '#542437'
   }

@@ -101,6 +101,7 @@ function wind (el, data) {
 function step () {}
 
 var jules = -4
+
 function julia(dx, dy) {
   return function(x, y, t) {
     return [ x*x - y*y + dx - x
