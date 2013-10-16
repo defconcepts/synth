@@ -98,7 +98,9 @@ function wind (el, data) {
   }
 }
 
-function step () {}
+function step () {
+  return []
+}
 
 var jules = -4
 

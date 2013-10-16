@@ -1,8 +1,8 @@
 _.extend(d3.selection.prototype,
-         { size: function () {
-             var n = 0
-             this.each(function () { n++ })
-               return n
+         {
+           pAttr: function (obj) {
+             _.each(obj, function (v, k) { this[k] = pluckWith(v) })
+             return athis.attr(obj)
            }
 
          , replace: function () {

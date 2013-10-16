@@ -1,11 +1,9 @@
 this.edges = function (el) {
   var self = this
-
     , thickness = d3.scale.linear()
                   .domain([0, 350])
                   .range([15, 1])
-
-    , pow = _.throttle(function (x) { this.emit('pow', x) }, 100)
+    , pow = _.throttle(function (x) { this.emit('pow', x) }, 0)
 
   el
   .on('changed', changed)
@@ -22,14 +20,13 @@ this.edges = function (el) {
 
   d3.timer(function () {
     d3.selectAll('.node').each(function (d) {
-      d.state.map(function (item) { return window[d.type].step(item, d) })
-      .filter(_.identity).forEach(pow, d3.select(this))
+      ;(window[d.type].step(d.state, d) || [])
+      .forEach(pow, d3.select(this))
     })
   })
 
   function pulse(d, i, x) {
     if (! d.target || window.freeze) return
-
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
     el.insert('circle', '.node')
@@ -37,8 +34,9 @@ this.edges = function (el) {
     .attr('r', (d.stroke_width / 2) + 2)
     .attr('cx', ex1(d))
     .attr('cy', why1(d))
-    .attr('fill', 'aliceblue')
-    .attr('stroke', '#333')
+    .attr('fill', '#333')
+    .attr('stroke', node_fill(d.source))
+    .attr('stroke-width', 2)
     .transition().duration(1000).ease('cubic')
     .attr('cx', ex2(d))
     .attr('cy', why2(d))

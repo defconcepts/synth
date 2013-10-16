@@ -35,7 +35,7 @@ function bounce(el, data) {
   .on('mouseup.bounce', mouseup)
 
 	d3.timer(function () {
-    _.each(data, step)
+    step(data)
     el.select('.inflate').attr('r', function (d) { return ++d.r })
     el.selectAll('.ball').attr('transform', translate)
     return done
@@ -86,11 +86,15 @@ function bounce(el, data) {
     .attr('stroke', 'white')
     .attr('transform', translate)
   }
-
-
 }
 
-function step(d) {
+function step(data) {
+  var record = []
+  data.forEach(tick, record)
+  return record
+}
+
+function tick(d) {
 	d.velocity = merge(d.velocity, scale(gravity, .0000001))
   translate(d)
 
@@ -102,20 +106,11 @@ function step(d) {
     d.position[0] > bounds.x[1] ? bounds.x[0] : d.position[0]
 
   if (top || bot) apply_friction(d)
-  if (bot) return this.name === 'bounce' ? send(this, d.position[0]) : play_sound(d.position[0])
-}
-
-function send (datum, x) {
-  return x
+  if (bot) this.push(d.position[0])
 }
 
 function play_sound(x) {
-  var selected = Session.get('world') || {}
-  d3.selectAll('.edge')
-  .filter(function (d) { return d.source._id === selected._id })
-  .each(window.pulse || _.identity)
-
-    sound_test(~~ xscale.invert(x))
+  sound_test(~~ xscale.invert(x))
 }
 
 function translate(d) {
