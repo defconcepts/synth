@@ -25,6 +25,10 @@ this.edges = function (el) {
     })
   })
 
+  function line(d) {
+    return 'm ' + [d.source.x, d.source.y] + ' l' + [d.target.x, d.target.y]
+  }
+
   function pulse(d, i, x) {
     var r = d.source.radius * (d.target.class == 'output' ? 1.6 : 1)
 
@@ -36,7 +40,7 @@ this.edges = function (el) {
     .attr('fill', '#333')
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 2)
-    .transition().duration(1000).ease('linear')
+    .transition().duration(1000).ease('bounce')
     .attr('cx', x2(d))
     .attr('cy', y2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
@@ -49,9 +53,8 @@ this.edges = function (el) {
   }
 
   function join_existing_route(source, target) {
-    return d3.selectAll('line').filter(function (d) {
-             return match(d.target, target) && match(source, d.source)
-           })
+    return d3.selectAll('line')
+           .filter(function (d) { return match(d.target, target) && match(source, d.source) })
            .attr('class', 'edge')
            .call(draw_line)
            .size()
@@ -79,7 +82,8 @@ this.edges = function (el) {
           , 'stroke-width': stroke_width
           }).listen_for([ mouseover, mouseout, pulse ])
     .transition().duration(500).ease('cubic-in-out')
-    .attr({ x2: pluckWith('target.x'), y2: pluckWith('target.y') })
+    .attr('x2', pluckWith('target.x'))
+    .attr('y2', pluckWith('target.y'))
   }
 
   function added(doc) {
