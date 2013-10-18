@@ -6,10 +6,10 @@ gradients = function (svg) {
       def = svg.append('defs');
       globe_highlight = def.append('radialGradient').attr('id', 'globe_highlight').attr('cx', '75%').attr('cy', '25%');
       globe_highlight.append('stop').attr('offset', '5%').attr('stop-color', '#ffd').attr('stop-opacity', '0.6');
-      globe_highlight.append('stop').attr('offset', '100%').attr('stop-color', '#ba9').attr('stop-opacity', '0.2');
+      globe_highlight.append('stop').attr('offset', '100%').attr('stop-color', '#faa').attr('stop-opacity', '0.2');
       globe_shading = def.append('radialGradient').attr('id', 'globe_shading').attr('cx', '50%').attr('cy', '40%');
-      globe_shading.append('stop').attr('offset', '50%').attr('stop-color', '#9ab').attr('stop-opacity', '0');
-      globe_shading.append('stop').attr('offset', '100%').attr('stop-color', '#3e6184').attr('stop-opacity', '0.3');
+      globe_shading.append('stop').attr('offset', '50%').attr('stop-color', '#666').attr('stop-opacity', '0');
+      globe_shading.append('stop').attr('offset', '100%').attr('stop-color', '#ff3331').attr('stop-opacity', '0.3');
       grad = def.append('linearGradient').attr({
         id: 'brush',
         x1: '0%',

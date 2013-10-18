@@ -9,6 +9,7 @@ function body(el) {
   function contextmenu() {
     d3.event.preventDefault()
 
+    console.log('123')
     var m = d3.mouse(this)
 
     function filter(d) { return dist(d, m) < 250 }

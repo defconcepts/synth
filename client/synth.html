@@ -1,5 +1,6 @@
 <body>
-  
+
+  <header>{{> header}}</header>
   <div class="glass"></div>
   <svg class="main">
     <defs>
@@ -22,3 +23,12 @@
     <g class="graph"></g>
   </svg>
 </body>
+
+
+<template name="header">
+  <div class="center">
+  <button class="browse">Browse</button>
+  <input type="text" name="search" placeholder="Search" class="search"/>
+  <h1 class="logo">Synth</h1>
+  </div>
+</template>
