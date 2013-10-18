@@ -40,7 +40,7 @@ this.edges = function (el) {
     .attr('fill', '#333')
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 2)
-    .transition().duration(1000).ease('bounce')
+    .transition().duration(1000).ease('linear')
     .attr('cx', x2(d))
     .attr('cy', y2(d))
     .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })

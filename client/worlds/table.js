@@ -1,6 +1,7 @@
 this.table = table
 table.step = step
 table.bpm =  100
+
 function table (el, data) {
   var w = 1280
     , h = innerHeight * .9
@@ -10,6 +11,7 @@ function table (el, data) {
     , item = { _id: Session.get('world')._id, index: 0 }
     , clicking = false
     , done, int
+
 
   data =
     256 == data.length ? data :
@@ -29,7 +31,7 @@ function table (el, data) {
   int = setInterval(voice, table.bpm, data)
   voice(data)
 
-  Graph.find({ _id: Session.get('world')._id }).observe({
+  var live = Graph.find({ _id: Session.get('world')._id }).observe({
     changed: function (doc) {
       d3.selectAll('.table').data(doc.state).attr('fill')
     }
@@ -38,6 +40,7 @@ function table (el, data) {
   return function () {
     clearInterval(int)
     saveTable()
+    live.stop()
   }
 
   function translate (d, i) {
@@ -52,15 +55,7 @@ function table (el, data) {
   }
 }
 
-//request animation frame is called once every ~16 ms
-//so we store the last time of update in a map keyed by _id of node
-//todo master sequencer which is independent of rendering loop
-var _stepCooldown = {}
-
 function step(data, item) {
-  // if (data.length < 256 ||
-  //     new Date() - _stepCooldown[item._id] < table.bpm) return
-  _stepCooldown[item._id] = + new Date()
   var col = (item.index = (1 + item.index || 0) % 16)
   return data.filter(function (d, i) { return i % 16 == col && d })
 }
