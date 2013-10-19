@@ -37,7 +37,7 @@ this.edges = function (el) {
     .attr('r', (d.stroke_width / 2) + 2)
     .attr('cx', x1(d))
     .attr('cy', y1(d))
-    .attr('fill', '#333')
+    .attr('fill', '#e3e3e3')
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 2)
     .transition().duration(1000).ease('linear')

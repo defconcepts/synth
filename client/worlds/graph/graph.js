@@ -5,7 +5,7 @@ this.graph = function () {
     return el.selectAll('.node, .output')
   }
 
-
+  body.call(self, d3.select('body'))
   brush.call(self, d3.select('.brush'))
 
   gradients.call(self, d3.select('.graph'))

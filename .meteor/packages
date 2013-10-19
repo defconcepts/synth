@@ -10,3 +10,5 @@ less
 d3
 underscore
 standard-app-packages
+accounts-ui
+accounts-password

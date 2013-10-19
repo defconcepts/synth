@@ -89,8 +89,8 @@ this.nodes = function (el) {
   function update_link(source) {
     self().each(function (target) {
       var max = 350
-      var distance = dist(source, target)
-      var connected = source.connected(target)
+        , distance = dist(source, target)
+        , connected = source.connected(target)
 
       if (source._id === target._id) return
 
@@ -98,9 +98,6 @@ this.nodes = function (el) {
         if (distance < max) return log('ret')
         target.edges.remove(source._id)
         el.on('removed')(target, source)
-        source.ondragend = function () {
-          // self().filter(find(target._id)).invoke('save')
-        }
       }
 
       if (connected === 0 && distance < max - 50) {
