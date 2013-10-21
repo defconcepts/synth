@@ -40,7 +40,6 @@ this.nodes = function (el) {
   }
 
   function added (doc) {
-    console.log('added')
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
           , cy: Math.random() * innerHeight + (innerHeight * .25)
@@ -54,7 +53,6 @@ this.nodes = function (el) {
   }
 
   function changed (doc) {
-    console.log('changed')
     self().filter(function (d) { return doc._id === d._id })
     .each(function (d) {
       _.extend(d, doc)
@@ -65,7 +63,6 @@ this.nodes = function (el) {
   }
 
   function removed (doc) {
-    console.log('removed')
     self()
     .filter(function (d) { return d._id === doc._id })
     .datum({}).attr('class', '')
