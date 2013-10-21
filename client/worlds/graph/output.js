@@ -74,7 +74,7 @@ this.output = function (el) {
     .attr('r', 35)
     .classed('emanating', 1)
     .attr('fill', 'none')
-    .attr('stroke', node_fill(d))
+    .attr('stroke', '#333')
     .attr('stroke-width', 3)
     .attr('stroke-dasharray', dasharray)
     .transition().duration(3000).ease('ease-out')

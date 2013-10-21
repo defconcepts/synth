@@ -1,4 +1,7 @@
+Meteor.isClient && Meteor.subscribe('allGraph')
+                && Meteor.subscribe('allTracks')
 this.Graph = new Meteor.Collection('graph', { transform: transform })
+this.Tracks = new Meteor.Collection('tracks')
 
 var types = this.node_types =
   { bounce:'#C02942'
