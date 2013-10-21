@@ -1,12 +1,13 @@
-setTimeout(function () {
-  Session.set('currentTrack', (Tracks.findOne() || {})._id)
-}, 500)
-
+Meteor.startup(function () {
+  var handle = Tracks.find().observe({
+    added: function (doc) {
+      Session.set('currentTrack', doc._id)
+    }
+  })
+})
 
 Template.trackList.events({
-  'mouseover .track': function () {
-    switchTracks(this._id)
-  }
+  'mouseover .track': _.compose(switchTracks, pluckThis('_id'))
 
 , 'click .track': function () {
     d3.select('.dropdown').classed('hidden', true)
@@ -16,13 +17,14 @@ Template.trackList.events({
   }
 })
 
-Template.trackList.selected = function () {
-  return Session.get('currentTrack') == this._id ? 'selected' : ''
-}
-
-Template.trackList.track = function () {
-  return Tracks.find()
-}
+Template.trackList.helpers({
+  track: function () {
+    return Tracks.find()
+  }
+, selected: function () {
+    return Session.get('currentTrack') == this._id ? 'selected' : ''
+  }
+})
 
 Template.header.events({
   'click .browse': function () {
@@ -47,6 +49,7 @@ Template.header.currentTitle = function () {
 
 function switchTracks(id) {
   var old = Session.get('currentTrack')
+  console.log(123)
   if (old == id) return console.log(456)
   window.k && k.stop()
   k = Meteor.subscribe('allGraph', id, old)
