@@ -2,11 +2,11 @@ this.Graph = new Meteor.Collection('graph', { transform: transform })
 this.Tracks = new Meteor.Collection('tracks')
 
 Meteor.isClient
-                && (window.k = Meteor.subscribe('allTracks'))
+                && Meteor.subscribe('allTracks')
                 && + function () {
                        var live = Tracks.find().observe({
                          added: function (doc) {
-                           Meteor.subscribe('allGraph', doc._id)
+                           window.k = Meteor.subscribe('allGraph', doc._id)
                            console.log(doc._id)
                            live.stop()
                          }

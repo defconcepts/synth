@@ -39,26 +39,8 @@ this.nodes = function (el) {
     }
   }
 
-  function changed (doc) {
-    self().filter(function (d) { return doc._id === d._id })
-    .each(function (d) {
-      _.extend(d, doc)
-      var f = _.extend({}, d, { edges: d.edges })
-      update_link(f)
-    })
-      update_position()
-  }
-
-  function removed (doc) {
-    self()
-    .filter(function (d) { return d._id === doc._id })
-    .datum({}).attr('class', '')
-    .transition().duration(500)
-    .attr('r', 0)
-    .remove()
-  }
-
   function added (doc) {
+    console.log('added')
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
           , cy: Math.random() * innerHeight + (innerHeight * .25)
@@ -69,6 +51,27 @@ this.nodes = function (el) {
     .listen_for(listeners)
     .call(draggable)
     .call(update_position)
+  }
+
+  function changed (doc) {
+    console.log('changed')
+    self().filter(function (d) { return doc._id === d._id })
+    .each(function (d) {
+      _.extend(d, doc)
+      var f = _.extend({}, d, { edges: d.edges })
+      update_link(f)
+    })
+      update_position()
+  }
+
+  function removed (doc) {
+    console.log('removed')
+    self()
+    .filter(function (d) { return d._id === doc._id })
+    .datum({}).attr('class', '')
+    .transition().duration(500)
+    .attr('r', 0)
+    .remove()
   }
 
   function drag(d) {

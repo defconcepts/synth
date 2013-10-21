@@ -16,10 +16,5 @@ Meteor.publish('allTracks', function () {
 })
 
 Meteor.publish('allGraph', function (trackId, old) {
-  var self = this
-  // old && Graph.find({ belongsTo: old }).forEach(function (doc) {
-  //          console.log(doc._id)
-  //          self.removed('graph', doc._id)
-  // })
   return Graph.find({ belongsTo: trackId })
 })

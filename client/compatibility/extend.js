@@ -49,7 +49,7 @@ var arrayProto = {
 
 _.each(arrayProto, function (val, key) {
   Object.defineProperty(Array.prototype, key, {
-    value: key
+    value: val
   , enumerable: false
   })
 })
