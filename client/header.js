@@ -2,12 +2,13 @@ Meteor.startup(function () {
   var handle = Tracks.find().observe({
     added: function (doc) {
       Session.set('currentTrack', doc._id)
+      handle.stop()
     }
   })
 })
 
 Template.trackList.events({
-  'mouseover .track': _.compose(switchTracks, pluckThis('_id'))
+  'mouseover .track': _.compose(switchTracks, pluckWith('_id', true))
 
 , 'click .track': function () {
     d3.select('.dropdown').classed('hidden', true)
@@ -49,7 +50,6 @@ Template.header.currentTitle = function () {
 
 function switchTracks(id) {
   var old = Session.get('currentTrack')
-  console.log(123)
   if (old == id) return console.log(456)
   window.k && k.stop()
   k = Meteor.subscribe('allGraph', id, old)
