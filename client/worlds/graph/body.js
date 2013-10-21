@@ -19,6 +19,7 @@ function body(el) {
                  , x: m[0]
                  , y: m[1]
                  , state: dummy()
+                 , belongsTo: Session.get('currentTrack')
                  })
   }
 

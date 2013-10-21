@@ -33,7 +33,7 @@ this.edges = function (el) {
     .attr('fill', '#e3e3e3')
     .attr('stroke-opacity', opacity)
     .attr('stroke', node_fill(d.source))
-    .attr('stroke-width', 2)
+    .attr('stroke-width', 1.5)
     .transition().duration(1000).ease('linear')
     .attr('cx', x2(d))
     .attr('cy', y2(d))
