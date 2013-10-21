@@ -1,45 +1,31 @@
 <body>
-
-  <header>{{> header}}</header>
+  {{> header}}
+  {{> trackList}}
   <div class="glass"></div>
   <svg class="main">
-    <defs>
-      <filter id="dropGlow" width="1.5" height="1.5" x="-.25" y="-.25">
-        <feGaussianBlur id="feGaussianBlur5384" in="SourceAlpha" stdDeviation="15.000000" result="blur"/>
-        <feColorMatrix id="feColorMatrix5386" result="bluralpha" type="matrix" values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 0.800000 0 "/>
-        <feOffset id="feOffset5388" in="bluralpha" dx="0.000000" dy="0.000000" result="offsetBlur"/>
-        <feMerge id="feMerge5390">
-          <feMergeNode id="feMergeNode5392" in="offsetBlur"/>
-          <feMergeNode id="feMergeNode5394" in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-
-    <filter xmlns="http://www.w3.org/2000/svg" id="b2" filterUnits="userSpaceOnUse">
-      <feGaussianBlur stdDeviation="10 0.1"/>
-    </filter>
-
     <g class="brush"></g>
     <g class="graph"></g>
   </svg>
 </body>
 
-
-<template name="header">
+<template name="trackList">
   <div class="dropdown hidden">
     <ul>
-      {{#isolate}}}
-        {{#each track}}
-          <li class="track {{selected}}">{{ _id }}</li>
-        {{/each}}
-      {{/isolate}}}
-    <li class="add"> Add new Track
+      {{#each track}}
+      <li class="track {{selected}}">{{ title }}</li>
+      {{/each}}
+      <li class="add track"> Add new Track
     </ul>
   </div>
-  <div class="center">
-    <button class="browse">Browse</button>
-    <input type="text" name="search" placeholder="Search" class="search"/>
-    <h1 class="logo">Synth</h1>
-    <div class="login">{{loginButtons align="right"}}</div>
-  </div>
+</template>
+
+<template name="header">
+  <header>
+    <div class="center">
+      <button class="browse">Browse</button>
+      <input type="text" name="search" placeholder="Search" class="search"/>
+      <h7 class="title" contenteditable="true">{{ currentTitle }}</h7>
+      <div class="login">{{loginButtons align="right"}}</div>
+    </div>
+  </header>
 </template>

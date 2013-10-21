@@ -1,6 +1,6 @@
 Meteor.startup(function () {
   if (! Tracks.find().count())
-    Tracks.insert({})
+    Tracks.insert({ title: 'Monkey brains' })
 
   if (! Graph.find().count())
     Graph.insert({ type: 'wind'

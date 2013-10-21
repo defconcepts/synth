@@ -25,7 +25,7 @@ function body(el) {
 
   function nudge (d) {
     var e = d3.event
-      , i = (d3.event.metaKey ? 10 : 100)
+      , i = (e.metaKey ? 100 : 10)
       , $inc = { 39: [+i, 0]
                , 37: [-i, 0]
                , 40: [0, +i]
@@ -42,7 +42,8 @@ function body(el) {
   }
 
   function keydown() {
-    el.selectAll('.selected').each(nudge)
+    if (this == document.body)
+      self().filter('.selected').each(nudge)
   }
 
   function dummy() {
@@ -51,5 +52,4 @@ function body(el) {
             , velocity: [ 1, 8 ]
             }]
   }
-
 }
