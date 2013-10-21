@@ -42,9 +42,8 @@ this.nodes = function (el) {
   function changed (doc) {
     self().filter(function (d) { return doc._id === d._id })
     .each(function (d) {
-      var e = d.edges
       _.extend(d, doc)
-      var f = _.extend({}, d, { edges: e })
+      var f = _.extend({}, d, { edges: d.edges })
       update_link(f)
     })
       update_position()

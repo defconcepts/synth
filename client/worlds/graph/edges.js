@@ -3,7 +3,7 @@ this.edges = function (el) {
     , thickness = d3.scale.linear()
                   .domain([0, 350])
                   .range([15, 1])
-    , pow = function (x) { this.emit('pow', x) }
+    , opacity = .9
 
   el
   .on('changed', changed)
@@ -18,13 +18,6 @@ this.edges = function (el) {
            , removed: removed
            })
 
-  d3.timer(function () {
-    d3.selectAll('.node').each(function (d) {
-      (window[d.type].step(d.state, d) || [])
-      .forEach(pow, d3.select(this))
-    })
-  })
-
   function line(d) {
     return 'm ' + [d.source.x, d.source.y] + ' l' + [d.target.x, d.target.y]
   }
@@ -38,6 +31,7 @@ this.edges = function (el) {
     .attr('cx', x1(d))
     .attr('cy', y1(d))
     .attr('fill', '#e3e3e3')
+    .attr('stroke-opacity', opacity)
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 2)
     .transition().duration(1000).ease('linear')
@@ -77,7 +71,7 @@ this.edges = function (el) {
           , y1: doc.y
           , x2: doc.x
           , y2: doc.y
-          , opacity: .75
+          , opacity: opacity
           , stroke: node_fill(doc)
           , 'stroke-width': stroke_width
           }).listen_for([ mouseover, mouseout, pulse ])

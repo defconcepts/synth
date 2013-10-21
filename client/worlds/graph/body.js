@@ -3,13 +3,13 @@ this.body = body
 function body(el) {
   var self = this
 
-  el.on('keydown', keydown)
+  el
+  .on('keydown', keydown)
   .on('contextmenu', contextmenu)
+
 
   function contextmenu() {
     d3.event.preventDefault()
-
-    console.log('123')
     var m = d3.mouse(this)
 
     function filter(d) { return dist(d, m) < 250 }
@@ -23,17 +23,21 @@ function body(el) {
   }
 
   function nudge (d) {
-    var i = 100, $inc =
-      { 38: [0, -i]
-      , 37: [-i, 0]
-      , 40: [0, +i]
-      , 39: [+i, 0]
-      }[d3.event.keyCode]
+    var e = d3.event
+      , i = (d3.event.metaKey ? 10 : 100)
+      , $inc = { 39: [+i, 0]
+               , 37: [-i, 0]
+               , 40: [0, +i]
+               , 38: [0, -i]
+               }[e.keyCode]
 
-    if (d3.event.keyCode === 8)
-      d3.event.preventDefault(), Graph.remove({_id: d._id })
+    if (e.keyCode === 8)
+      e.preventDefault() +
+      Graph.remove({_id: d._id })
 
-    $inc && Graph.update({ _id: d._id }, { $inc: toCoord($inc) })
+    $inc &&
+      e.preventDefault() +
+      Graph.update({ _id: d._id }, { $inc: toCoord($inc) })
   }
 
   function keydown() {
@@ -41,9 +45,9 @@ function body(el) {
   }
 
   function dummy() {
-    return [{ "r": 14
-            , "position": [ 150, 150 ]
-            , "velocity": [ 1, 8 ]
+    return [{ r: 14
+            , position: [ 150, 150 ]
+            , velocity: [ 1, 8 ]
             }]
   }
 

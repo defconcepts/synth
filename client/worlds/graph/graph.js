@@ -12,4 +12,5 @@ this.graph = function () {
   nodes.call(self, d3.select('.graph'))
   output.call(self, d3.select('.graph'))
   edges.call(self, d3.select('.graph'))
+  sequencer.call(self, d3.select('.graph'))
 }

@@ -1,4 +1,4 @@
-this.Graph = new Meteor.Collection('graph', { transform: transform });
+this.Graph = new Meteor.Collection('graph', { transform: transform })
 
 var types = this.node_types =
   { bounce:'#C02942'
@@ -42,7 +42,7 @@ this.Node =
   , connected: function (target) {
       return _.contains(this.edges, target._id) ? 1 :
         _.contains(target.edges, this._id) ? -1 :
-        0;
+        0
     }
   , getNode: function () {
       var _id = this._id
