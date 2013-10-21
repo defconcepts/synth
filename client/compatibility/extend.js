@@ -28,31 +28,33 @@ _.extend(Number.prototype,
            }
          })
 
-_.extend(Array.prototype,
-         { contains: function (item) {
-             return ~ this.indexOf(item)
-           },
-           prepend: function () {
-             this.unshift.apply(this, arguments)
-             return this
-           }
-         , append: function () {
-             this.push.apply(this, arguments)
-             return this
-           }
-         , remove: function () {
-             var args = _.toArray(arguments), i = 0
-             while (i < args.length) this.splice(this.indexOf(args[i++]), 1)
-             return this
-           }
-         })
+var arrayProto = {
+  contains: function (item) {
+    return ~ this.indexOf(item)
+  },
+  prepend: function () {
+    this.unshift.apply(this, arguments)
+    return this
+  }
+, append: function () {
+    this.push.apply(this, arguments)
+    return this
+  }
+, remove: function () {
+    var args = _.toArray(arguments), i = 0
+    while (i < args.length) this.splice(this.indexOf(args[i++]), 1)
+    return this
+  }
+}
+
+_.each(arrayProto, function (val, key) {
+  Object.defineProperty(Array.prototype, key, {
+    value: key
+  , enumerable: false
+  })
+})
 
 _.extend(d3.transition.prototype, {
-  size: function () {
-    var i = 0
-    this.each(function () { i++ })
-      return i
-  }
 });
 
 _.extend(d3.selection.prototype, {
