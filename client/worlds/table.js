@@ -4,7 +4,7 @@ table.bpm =  100
 
 function table (el, data) {
   var w = 1280
-    , h = innerHeight * .9
+    , h = Session.get('height') * .9
     , rows = 16
     , size = ~~ (h / rows)
     , svg = el.append('svg').attr('width', w).attr('height', h)

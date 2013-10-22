@@ -9,7 +9,7 @@ gradients = function (svg) {
       globe_highlight.append('stop').attr('offset', '100%').attr('stop-color', '#faa').attr('stop-opacity', '0.2');
       globe_shading = def.append('radialGradient').attr('id', 'globe_shading').attr('cx', '50%').attr('cy', '40%');
       globe_shading.append('stop').attr('offset', '50%').attr('stop-color', '#666').attr('stop-opacity', '0');
-      globe_shading.append('stop').attr('offset', '100%').attr('stop-color', '#ff3331').attr('stop-opacity', '0.3');
+      globe_shading.append('stop').attr('offset', '100%').attr('stop-color', 'royalblue').attr('stop-opacity', '0.3');
       grad = def.append('linearGradient').attr({
         id: 'brush',
         x1: '0%',

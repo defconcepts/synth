@@ -35,11 +35,11 @@ this.output = function (el) {
   .on('click', click)
 
   var volume = el.append('image')
-          .attr('xlink:href', volume_icon)
-          .attr('preserveAspectRatio', 'xMinYMin slice')
-          .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
-          .attr('height', function (d) { return d.radius * .77 })
-          .attr('width', function (d) { return d.radius })
+               .attr('xlink:href', volume_icon)
+               .attr('preserveAspectRatio', 'xMinYMin slice')
+               .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
+               .attr('height', function (d) { return d.radius * .77 })
+               .attr('width', function (d) { return d.radius })
 
   orb.call(click)
 
@@ -49,7 +49,7 @@ this.output = function (el) {
 
   Deps.autorun(function () {
     datum.x = Session.get('width') / 2
-    datum.y  = Session.get('height') / 2
+    datum.y = Session.get('height') / 2
 
     ;(el.on('changed') || _.identity)({})
 

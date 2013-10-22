@@ -1,21 +1,21 @@
 this.sequencer = function () {
+  var shit = {}
 
-  d3.timer(function (d) {
-    d3.selectAll('.node').each(function (d) {
-      var sim = window[d.type]
-      sim && (sim.step(d.state, d) || [])
-             .forEach(pow, d3.select(this))
-    })
+  Graph.find().observe({
+    added: added
+  , removed: removed
+  , changed: _.compose(removed, added)
   })
 
-  d3.selectAll('.node').each(function (d) {
-    var sim = window[d.type]
-    sim.bpm &&
-      setInterval(function () {
-        sim && (sim.step(d.state, d) || []).forEach(pow, d3.select(this))
-      }, sim.bpm)
-  })
-
+  function added(doc) {
+    var sim = window[doc.type]
+    shit[doc._id]= setInterval(function () {
+                     (sim.step(doc.state, doc) || []).forEach(pow, doc.getNode())
+                   }, sim.bpm)
+  }
+  function removed(doc) {
+    clearInterval(shit[doc._id])
+  }
 }
 
 function pow(x) { this.emit('pow', x) }
