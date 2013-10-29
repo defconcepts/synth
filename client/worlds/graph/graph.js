@@ -13,5 +13,5 @@ this.graph = function () {
   output.call(self, d3.select('.graph'))
   edges.call(self, d3.select('.graph'))
   sequencer.call(self, d3.select('.graph'))
-  sound_init();
+  // sound_init();
 }

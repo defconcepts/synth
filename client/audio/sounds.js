@@ -1,107 +1,145 @@
-// (function() {
+(function() {
 
-this.sound_init = sound_init;
+var soundBuffer = null;
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var context = new AudioContext();
 
-function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
-  this.loadCount = 0;
-}
-
-BufferLoader.prototype.loadBuffer = function(url, index) {
-  // Load buffer asynchronously
+function loadSound(url) {
   var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  request.responseType = "arraybuffer";
-
-  var loader = this;
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
 
   request.onload = function() {
-    // Asynchronously decode the audio file data in request.response
-    loader.context.decodeAudioData(
-      request.response,
-      function(buffer) {
-        if (!buffer) {
-          alert('error decoding file data: ' + url);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        // export the buffer list to window - trying for buffer persistence
-        window.bufferList = loader.bufferList;
-        if (++loader.loadCount == loader.urlList.length) loader.onload(loader.bufferList);
-      },
-      function(error) {
-        // console.error('decodeAudioData error', error);
-      }
-    );
+    context.decodeAudioData(request.response, function(buffer) {
+      console.log("request.onload buffer = " + buffer)
+      soundBuffer = buffer;
+    }); 
   }
-
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
-
   request.send();
 }
 
-BufferLoader.prototype.load = function() {
-  console.log("in BufferLoader.load")
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
+function playSound(buffer) {
+  var source = context.createBufferSource(); 
+  console.log("source = " + source)
+  source.buffer = buffer;    
+  console.log("playsound  buffer = " + buffer)
+  source.connect(context.destination);       
+  source.start(0);                          
 }
 
-// window.onload = sound_init;
-window.context;
-var bufferLoader;
+self.loadSound = loadSound;
 
-function sound_init() {
-  console.log("sound_init called")
-  var contextClass;
-  // from http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_2
-  contextClass = (window.AudioContext || 
-    window.webkitAudioContext || 
-    window.mozAudioContext || 
-    window.oAudioContext || 
-    window.msAudioContext);
-  if (contextClass) {
-    // Web Audio API is available.
-    window.AudioContext = contextClass;
-  } else {
-    console.log("Web Audio API is not available. Ask the user to use a supported browser.");
-  }
+setTimeout(function() {
+  loadSound("soundfiles/808ish-Kick-1.wav");
+}, 100)
 
-  context = new AudioContext();
+var startOffset = 0;
+var startTime = 0;
 
-  bufferLoader = new BufferLoader(
-    context,
-    [
-      '../sounds/808ish-Kick-1.wav',
-      '../sounds/HH_606_PEQ1.wav',
-    ],
-    finishedLoading
-    );
+setTimeout(function() {
 
-  bufferLoader.load();
-}
+  playSound(soundBuffer);
 
-function finishedLoading(bufferList) {
-  console.log("finishedLoading called")
-  // Create two sources and play them both together.
-  window.source1 = context.createBufferSource();
-  window.source2 = context.createBufferSource();
-  source1.buffer = bufferList[0];
-  source2.buffer = bufferList[1];
+  // var eighthNoteTime = 1;
+  // var snare;
+  // var hihat;
 
-  source1.connect(context.destination);
-  source2.connect(context.destination);
-  source1.start(context.currentTime + 1);
-  source2.start(0);
-}
+  // for (var bar = 0; bar < 2; bar++) {
+  //   console.log("startTime = " + startTime)
+  //   var time = startTime + bar * 8 * eighthNoteTime;
+  //   // Play the bass (kick) drum on beats 1, 5
+  //   playSound(soundBuffer, time);
+  //   playSound(soundBuffer, time + 4 * eighthNoteTime);
 
-$('.play').click(function() {
-  playSound(kickBuffer);
-})
+  //   // Play the snare drum on beats 3, 7
+  //   playSound(snare, time + 2 * eighthNoteTime);
+  //   playSound(snare, time + 6 * eighthNoteTime);
 
-// })();
+  //   // Play the hihat every eighth note.
+  //   for (var i = 0; i < 8; ++i) {
+  //     playSound(hihat, time + i * eighthNoteTime);
+  //   }
+  // }  
+}, 200)
+
+})();
+
+//
+
+
+// function pause() {
+//   source.stop();
+//   // Measure how much time passed since the last pause.
+//   startOffset += context.currentTime - startTime;
+// }
+
+// function play() {
+//   startTime = context.currentTime;
+//   var source = context.createBufferSource();
+//   // Connect graph
+//   source.buffer = this.buffer;
+//   source.loop = true;
+//   source.connect(context.destination);
+//   // Start playback, but make sure we stay in bound of the buffer.
+//   source.start(0, startOffset % buffer.duration);
+// }
+
+
+
+
+// // window.onload = init;
+// window.context;
+// var bufferLoader;
+
+// function sound_init() {
+//   var contextClass;
+//   // from http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_2
+//   contextClass = (window.AudioContext || 
+//     window.webkitAudioContext || 
+//     window.mozAudioContext || 
+//     window.oAudioContext || 
+//     window.msAudioContext);
+//   if (contextClass) {
+//     // Web Audio API is available.
+//     window.AudioContext = contextClass;
+//   } else {
+//     console.log("Web Audio API is not available. Ask the user to use a supported browser.");
+//   }
+
+//   context = new AudioContext();
+
+//   bufferLoader = new BufferLoader(
+//     context,
+//     [
+//       'soundfiles/808ish-Kick-1.wav',
+//       'soundfiles/HH_606_PEQ1.wav',
+//     ],
+//     finishedLoading
+//     );
+//   window.bloader = bufferLoader;
+
+//   bufferLoader.load();
+// }
+
+// function finishedLoading(bufferList) {
+//   console.log("finishedLoading called")
+//   // Create two sources and play them both together.
+//   window.source1 = context.createBufferSource();
+//   window.source2 = context.createBufferSource();
+//   source1.buffer = bufferList[0];
+//   source2.buffer = bufferList[1];
+
+//   source1.connect(context.destination);
+//   source2.connect(context.destination);
+//   source1.start(context.currentTime + 1);
+//   source2.start(0);
+// }
+
+// this.sound_init = sound_init;
+// playSound(kickBuffer);
+
+
+
+
+
 
