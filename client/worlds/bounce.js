@@ -1,5 +1,6 @@
 this.bounce = bounce
 bounce.step = step
+bounce.class = 'source'
 
 var gravity = [0, .5]
 

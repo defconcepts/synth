@@ -1,5 +1,5 @@
 this.sequencer = function () {
-  var shit = {}
+  var nodes = {}
 
   Graph.find().observe({
     added: added
@@ -9,13 +9,14 @@ this.sequencer = function () {
 
   function added(doc) {
     var sim = window[doc.type]
-    shit[doc._id]= setInterval(function () {
-                     (sim.step(doc.state, doc) || []).forEach(pow, doc.getNode())
-                   }, sim.bpm)
+    if (sim.class == 'source')
+      nodes[doc._id]= setInterval(function () {
+                        (sim.step(doc.state, doc) || []).forEach(send_signal, doc.getNode())
+                      }, sim.bpm)
   }
   function removed(doc) {
-    clearInterval(shit[doc._id])
+    clearInterval(nodes[doc._id])
   }
 }
 
-function pow(x) { this.emit('pow', x) }
+function send_signal(message) { this.emit('signal', message) }

@@ -16,14 +16,13 @@ this.output = function (el) {
                         , getNode: function () {
                             return output
                           }
-                        }
-                      )
+                        })
 
   var output = el.append('circle')
                .call(circle, datum)
                .attr('fill', function (d) { return d.fill = 'url(#ocean_fill)'})
                .classed('output', true)
-               .on('pulse', pulse)
+               .on('signal', signal)
 
   el.append('circle')
   .call(circle, datum)
@@ -64,8 +63,8 @@ this.output = function (el) {
     return d3.range(3).map(function () { return 1 + (Math.random() * 20) })
   }
 
-  function pulse (_, _, d, x) {
-    if (window.freeze || ! volume.datum().toggled) return
+  function signal(_, _, d, x) {
+    if (! volume.datum().toggled) return
 
     sound_test(x)
 

@@ -1,6 +1,7 @@
 this.table = table
 table.step = step
 table.bpm =  100
+table.class = 'source'
 
 function table (el, data) {
   var w = 1280

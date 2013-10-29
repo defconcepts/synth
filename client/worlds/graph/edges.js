@@ -10,8 +10,6 @@ this.edges = function (el) {
   .on('added', added)
   .on('removed', removed)
 
-  self().data().forEach(added)
-
   Graph.find()
   .observe({ changed: changed
            , added: added
@@ -34,10 +32,10 @@ this.edges = function (el) {
     .attr('stroke-opacity', opacity)
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 1.5)
-    .transition().duration(1000).ease('linear')
+    .transition().duration(500).ease('linear')
     .attr('cx', x2(d))
     .attr('cy', y2(d))
-    .each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
+    //.each('end', function () { d.target.getNode().emit('pulse', d.source, x) })
     .remove()
   }
 

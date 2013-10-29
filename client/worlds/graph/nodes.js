@@ -5,14 +5,18 @@ this.nodes = function (el) {
                   , contextmenu
                   , dblclick
                   , mousedown
-                  , pow
+                  , signal
                   ]
 
-  function pow(doc, i,  x) {
+  function signal(doc, message) {
     d3.selectAll('.edge').filter(function (d) {
       return doc._id === d.source._id &&
         d.source._id !== Session.get('world')._id
-    }).emit('pulse', x)
+    })
+    .emit('pulse', message)
+    .each(function (d) {
+      d.target.getNode().emit('signal', doc, message)//process message here
+    })
   }
 
   function mousedown() {

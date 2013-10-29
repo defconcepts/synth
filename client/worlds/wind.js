@@ -1,5 +1,6 @@
 this.wind = wind
 wind.step = step
+wind.class = 'processor'
 
 function wind (el, data) {
   d3.timer(loop)
