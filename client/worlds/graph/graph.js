@@ -1,7 +1,7 @@
 this.graph = function () {
   var el = d3.select('.graph')
 
-  function self(fn) {
+  function self() {
     return el.selectAll('.node, .output')
   }
 

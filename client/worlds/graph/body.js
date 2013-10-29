@@ -7,7 +7,6 @@ function body(el) {
   .on('keydown', keydown)
   .on('contextmenu', contextmenu)
 
-
   function contextmenu() {
     d3.event.preventDefault()
     var m = d3.mouse(this)
@@ -25,7 +24,7 @@ function body(el) {
 
   function nudge (d) {
     var e = d3.event
-      , i = (e.metaKey ? 100 : 10)
+      , i = e.metaKey ? 100 : 10
       , $inc = { 39: [+i, 0]
                , 37: [-i, 0]
                , 40: [0, +i]

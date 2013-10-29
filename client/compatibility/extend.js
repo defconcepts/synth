@@ -17,8 +17,8 @@ _.extend(d3.selection.prototype,
          , at: function (i) {
              return d3.select(this[0][i])
            }
-
 })
+
 _.extend(Number.prototype,
          { toRad: function () {
              return this * Math.PI / 180
@@ -91,6 +91,7 @@ _.extend(d3.selection.prototype, {
     }
   }
 })
+
 _.mixin({
   partition: function (arr, fn) {
     var result = [[], []]
