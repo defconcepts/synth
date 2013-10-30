@@ -15,7 +15,8 @@ this.nodes = function (el) {
     })
     .emit('pulse', message)
     .each(function (d) {
-      d.target.getNode().emit('signal', doc, message)//process message here
+      d.target.getNode().emit('signal', doc, message)
+      //process message here.
     })
   }
 
@@ -75,6 +76,21 @@ this.nodes = function (el) {
     .remove()
   }
 
+
+
+  function withinBoundsX(doc, dx) {
+    return doc.x + doc.radius + dx < innerWidth &&
+              doc.x - doc.radius + dx > 0
+  }
+
+  function withinBoundsY(doc, dx) {
+    return doc.y + doc.radius + dx < innerHeight - 37 &&
+      doc.y - doc.radius + dx > 10
+  }
+
+  //combine and add bounds later
+  //make resolution indepedent
+
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
 
@@ -82,8 +98,8 @@ this.nodes = function (el) {
     d.dragY += dy
 
     self().filter(pluckWith('selected'))
-    .attr('cx', function(d) { return d.x += dx })
-    .attr('cy', function(d) { return d.y += dy })
+    .attr('cx', function(d) { return d.x += (withinBoundsX(d, dx) && dx) })
+    .attr('cy', function(d) { return d.y += (withinBoundsY(d, dy) && dy) })
     .each(el.on('changed'))
 
     update_link(d)
