@@ -4,7 +4,7 @@ this.sequencer = function () {
   Graph.find().observe({
     added: added
   , removed: removed
-  , changed: _.compose(removed, added)
+  , changed: _.compose(added, removed)
   })
 
   function added(doc) {
@@ -16,6 +16,7 @@ this.sequencer = function () {
   }
   function removed(doc) {
     clearInterval(nodes[doc._id])
+    return doc
   }
 }
 
