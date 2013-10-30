@@ -64,9 +64,7 @@ this.output = function (el) {
   }
 
   function signal(_, _, d, x) {
-    if (! volume.datum().toggled) return
-
-    sound_test(x)
+    if (volume.datum().toggled) sound_test(x)
 
     el.insert('circle', '*')
     .call(circle, datum)
