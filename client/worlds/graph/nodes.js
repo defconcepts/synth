@@ -76,8 +76,6 @@ this.nodes = function (el) {
     .remove()
   }
 
-
-
   function withinBoundsX(doc, dx) {
     return doc.x + doc.radius + dx < innerWidth &&
               doc.x - doc.radius + dx > 0

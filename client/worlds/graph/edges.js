@@ -94,6 +94,7 @@ this.edges = function (el) {
     .each(fix)
     .attr('stroke-width', stroke_width)
     .attr('stroke', _.compose(node_fill, pluckWith('source')))
+    .attr('fill', 'none')
     .attr('x1', pluckWith('source.x'))
     .attr('y1', pluckWith('source.y'))
     .attr('x2', pluckWith('target.x'))
