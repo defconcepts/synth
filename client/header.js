@@ -1,4 +1,5 @@
 Meteor.startup(function () {
+  $('.dropdown').hide()
   var handle = Tracks.find().observe({
     added: function (doc) {
       Session.set('currentTrack', doc._id)
@@ -13,6 +14,7 @@ Template.trackList.events({
 , 'click .track': function () {
     d3.select('.dropdown').classed('hidden', true)
   }
+
 , 'click .add': function () {
     switchTracks(Tracks.insert({ title: 'No Title' }))
   }
@@ -20,7 +22,10 @@ Template.trackList.events({
 
 Template.trackList.helpers({
   track: function () {
-    return Tracks.find()
+    var re = new RegExp(Session.get('filter') || '', 'i')
+    return Tracks.find().fetch().filter(function (d) {
+             return re.test(d.title)
+           })
   }
 , selected: function () {
     return Session.get('currentTrack') == this._id ? 'selected' : ''
@@ -32,6 +37,22 @@ Template.header.events({
     var showDropdown = Session.get('showDropdown')
     Session.set('showDropdown', ! showDropdown)
     d3.select('.dropdown').classed('hidden', showDropdown)
+  }
+
+
+, 'keyup .search': function (e) {
+    Session.set('filter', e.target.value)
+  }
+
+, 'focus .search': function () {
+    Session.set('showDropdown', true)
+    d3.select('.dropdown').classed('hidden', false)
+  }
+
+, 'blur .search': function () {
+    Session.set('filter', '')
+    Session.set('showDropdown', false)
+    d3.select('.dropdown').classed('hidden', true)
   }
 
 , 'keypress .title': function (e) {
