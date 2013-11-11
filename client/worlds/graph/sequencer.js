@@ -11,7 +11,9 @@ this.sequencer = function () {
     var sim = window[doc.type]
     if (sim.class == 'source')
       nodes[doc._id]= setInterval(function () {
-                        (sim.step(doc.state, doc) || []).forEach(send_signal, doc.getNode())
+                        (sim.step(doc.state, doc) || [])
+                        .map(function (message) { return { message: message, origin: doc._id } })
+                        .forEach(send_signal, doc.getNode())
                       }, sim.bpm)
   }
   function removed(doc) {

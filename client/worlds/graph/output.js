@@ -63,8 +63,8 @@ this.output = function (el) {
     return d3.range(3).map(function () { return 1 + (Math.random() * 20) })
   }
 
-  function signal(_, _, d, x) {
-    //if (volume.datum().toggled) sound_test(x)
+  function signal(d, i, message) {
+    if (volume.datum().toggled) sound_test(x.message)
 
     el.insert('circle', '*')
     .call(circle, datum)

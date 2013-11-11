@@ -8,14 +8,17 @@ this.nodes = function (el) {
                   , signal
                   ]
 
-  function signal(doc, message) {
+  function signal(currentTarget, index, message) {
+    console.log(message)
     d3.selectAll('.edge').filter(function (d) {
-      return doc._id === d.source._id &&
+      return currentTarget._id === d.source._id &&
+        message.origin !== d.target._id &&
         d.source._id !== Session.get('world')._id
     })
     .emit('pulse', message)
     .each(function (d) {
-      d.target.getNode().emit('signal', doc, message)
+      if (message.origin !== d.target._id)
+        d.target.getNode().emit('signal', message)
       //process message here.
     })
   }
