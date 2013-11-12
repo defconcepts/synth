@@ -1,5 +1,4 @@
 Meteor.startup(function () {
-  $('.dropdown').hide()
   var handle = Tracks.find().observe({
     added: function (doc) {
       Session.set('currentTrack', doc._id)
@@ -7,6 +6,10 @@ Meteor.startup(function () {
     }
   })
 })
+
+Template.trackList.rendered = function () {
+  d3.select('.dropdown').classed('hidden', ! Session.get('showDropdown'))
+}
 
 Template.trackList.events({
   'mouseover .track': _.compose(switchTracks, pluckWith('_id', true))

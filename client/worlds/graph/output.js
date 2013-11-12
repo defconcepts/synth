@@ -1,4 +1,3 @@
-
 this.output = function (el) {
   var self = this
 
