@@ -14,6 +14,8 @@ Template.trackList.rendered = function () {
 Template.trackList.events({
   'mouseover .track': _.compose(switchTracks, pluckWith('_id', true))
 
+
+, 'click li': Session.set.bind(Session, 'showDropdown', false)
 , 'click .track': function () {
     d3.select('.dropdown').classed('hidden', true)
   }

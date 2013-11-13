@@ -9,7 +9,6 @@ this.nodes = function (el) {
                   ]
 
   function signal(currentTarget, index, message) {
-    console.log(message)
     d3.selectAll('.edge').filter(function (d) {
       return currentTarget._id === d.source._id &&
         message.origin !== d.target._id &&
