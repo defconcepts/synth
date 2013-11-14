@@ -13,18 +13,19 @@ function loadSound(url) {
     context.decodeAudioData(request.response, function(buffer) {
       console.log("request.onload buffer = " + buffer)
       soundBuffer = buffer;
-    }); 
+    });
   }
   request.send();
 }
 
 function playSound(buffer) {
-  var source = context.createBufferSource(); 
+  return
+  var source = context.createBufferSource();
   console.log("source = " + source)
-  source.buffer = buffer;    
+  source.buffer = buffer;
   console.log("playsound  buffer = " + buffer)
-  source.connect(context.destination);       
-  source.start(0);                          
+  source.connect(context.destination);
+  source.start(0);
 }
 
 self.loadSound = loadSound;
@@ -59,7 +60,7 @@ setTimeout(function() {
   //   for (var i = 0; i < 8; ++i) {
   //     playSound(hihat, time + i * eighthNoteTime);
   //   }
-  // }  
+  // }
 }, 200)
 
 })();
@@ -94,10 +95,10 @@ setTimeout(function() {
 // function sound_init() {
 //   var contextClass;
 //   // from http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_2
-//   contextClass = (window.AudioContext || 
-//     window.webkitAudioContext || 
-//     window.mozAudioContext || 
-//     window.oAudioContext || 
+//   contextClass = (window.AudioContext ||
+//     window.webkitAudioContext ||
+//     window.mozAudioContext ||
+//     window.oAudioContext ||
 //     window.msAudioContext);
 //   if (contextClass) {
 //     // Web Audio API is available.
@@ -137,9 +138,3 @@ setTimeout(function() {
 
 // this.sound_init = sound_init;
 // playSound(kickBuffer);
-
-
-
-
-
-

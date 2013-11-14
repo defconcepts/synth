@@ -82,7 +82,7 @@ this.nodes = function (el) {
   }
 
   function withinBoundsY(doc, dx) {
-    return doc.y + doc.radius + dx < innerHeight - 37 &&
+    return doc.y + doc.radius + dx < innerHeight - el.node().parentElement.offsetTop &&
       doc.y - doc.radius + dx > 10
   }
 

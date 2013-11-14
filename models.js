@@ -15,7 +15,7 @@ var types = this.node_types =
   { bounce:'#C02942'
   , wind: '#53777A'
   , table: 'royalblue'
-    // , water: '#D95B43'
+  , piano: '#D95B43'
     // , heat: '#ECD078'
   }
 

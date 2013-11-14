@@ -33,17 +33,17 @@ this.output = function (el) {
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
   .on('click', click)
 
-  var volume = el.append('image')
-               .attr('xlink:href', volume_icon)
-               .attr('preserveAspectRatio', 'xMinYMin slice')
-               .attr('class', 'volume').datum(_.extend(Object.create(datum), { toggled: 1 }))
-               .attr('height', function (d) { return d.radius * .77 })
-               .attr('width', function (d) { return d.radius })
+  var volume = buildIcon(icons.speaker, el)
+               .attr('class', 'volume')
+               .datum(function (d) { return _.extend(Object.create(datum), d, { toggled: 1 }) })
+               .on('click', click)
 
   orb.call(click)
 
   function click(selection) {
-    volume.attr('width', function (d) { return d.radius * ((d.toggled = !d.toggled) ? 1 : .6) })
+    volume.each(function (d, i) {
+      d3.select(this).attr(d.toggle = ! d.toggle ? d.hover : d)
+    })
   }
 
   Deps.autorun(function () {
@@ -56,7 +56,7 @@ this.output = function (el) {
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
 
-    volume.attr({ x: datum.x - 15, y: datum.y - 15 })
+    volume.attr('transform', 'translate(' + [datum.x - 15, datum.y - 15] + ')')
   })
 
   function dasharray() {
@@ -64,7 +64,7 @@ this.output = function (el) {
   }
 
   function signal(_, _, d, x) {
-    if (volume.datum().toggled) sound_test(x)
+    //if (volume.datum().toggled) sound_test(x)
 
     el.insert('circle', '*')
     .call(circle, datum)
@@ -87,8 +87,4 @@ function makeCircleDash(radius) {
     var i = d3.interpolateString('0,' + l, l + ',' + l);
     return function(t) { return i(t); };
   }
-}
-
-function volume_icon () {
-  return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAaCAMAAADlsH4wAAAABGdBTUEAALGPC/xhBQAAASZQTFRFaHV+aHV+aHV+ZnZ8aHV+aXN+Z3N8aXV+aHV9ZoCAaXV/Z3V+aHV+aHV/aHV+aHV+Y3GAanGAZmZmaHV+Z3V8aHR9aHZ+Z3R+Z3R9aXiAaHV+ZnV8YHCAamqAaHV+YICAZ3V+aHV+aHV+aXZ+aHV+aneAaXaAaHV+Z3R+aXV9aHV+aHZ+aHV9aHV8ZnOAaXV+ZnB6aHV+aHV+anWAZ3V/aHV+aHR8ZHaAaXR8aHZ+aHR+aXN+aHV+aHV+anJ7Z3J9aHZ+aHV+aHZ/ZHp6aHR+aXV+aHV/anZ8aHV+Z3V9aXZ+AAAAVYCAZnd9bW2AZHR8Z3R+VVVVgICAZ3Z9aHZ+aHZ+aHV+aHV+aHJ9Z3V+aHV+bW1taHV+aHV9Z3R+aHV+AAAAaHV+xhc15wAAAGF0Uk5T4tjqUKxfUlV2CoNt8IfE7RIkBe5IWFthciLXRhAMzQhv8evZkDo44WM/pM6/TCjeGYzpGK/SQBxE86JJrvIdL9DglRfFkp8px3y0AQYtDiF5AwRouJrk/THv/Af1eE/+AMY2NQMAAAElSURBVCjPdZNVcsNAEEQVZmZmZuY4YMcxM8u23v0vkVFiRWDtfKh7pFeaqp1ezVDVR6NlNM8H671RbhLK+CH1kuWegetMG1J7BMvfF4UpeJHPIDZi3N1IN+tGAu84EeP8DKbGnUjjARtJmY+dKow4kHoJG7nVT0z5guEBQ8NTv8gx+qnIRBN6/ZGUTMib5htCir+kxSyIDkJQgaxtwJxoD2gKxJwQEemCigrZgnmRPuhUIAkxS6JD0OGPJFdhs/Z3MN3+yHIF1kUnx6BfMShCNCYyI33YXkCu6kBWtuNmNhZh1LnGpxfcmzYupJ12haFcdCP7sqGoJ1Kvbw4kVhfi8sobzGTeRg4F13fb450t/CM5OfsD30uStkx87yjsf4/sSmRb5gfTNDi9XyWVFAAAAABJRU5ErkJggg=='
 }
