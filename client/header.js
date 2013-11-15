@@ -14,7 +14,6 @@ Template.trackList.rendered = function () {
 Template.trackList.events({
   'mouseover .track': _.compose(switchTracks, pluckWith('_id', true))
 
-
 , 'click li': Session.set.bind(Session, 'showDropdown', false)
 , 'click .track': function () {
     d3.select('.dropdown').classed('hidden', true)
@@ -43,7 +42,6 @@ Template.header.events({
     Session.set('showDropdown', ! showDropdown)
     d3.select('.dropdown').classed('hidden', showDropdown)
   }
-
 
 , 'keyup .search': function (e) {
     Session.set('filter', e.target.value)
@@ -75,14 +73,13 @@ Template.header.currentTitle = function () {
   return (Tracks.findOne({ _id: Session.get('currentTrack') })  || {}).title
 }
 
-
 Deps.autorun(function () {
-  d3.select('.browse').classed('active', Session.get('showDropdown') && Sesion.get('filter') == null)
+  d3.select('.browse').classed('active', Session.get('showDropdown') && Session.get('filter') == null)
 })
 
 function switchTracks(id) {
   var old = Session.get('currentTrack')
-  if (old == id) return console.log(456)
+  if (old == id) return
   window.k && k.stop()
   k = Meteor.subscribe('allGraph', id, old)
   Session.set('currentTrack', id)

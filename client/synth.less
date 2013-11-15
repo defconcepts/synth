@@ -226,16 +226,23 @@ body {
         }
 
         .zoomable {
-            transform: scaleY(1);    
-            transition: transform 1s ease;
+            -webkit-transform: scale(1);    
+            -webkit-transform-origin: top left;    
+            -webkit-transition: -webkit-transform .5s ease, min-height .5s ease;
+            min-height: 25px;
         }
 
         .zoomable:hover {
-            transform: scaleY(2);
+            min-height: 40px;
+            -webkit-transform: scale(2);
         }
 
         .add.track:hover {
             color: red;
+        }
+
+        ul {
+            padding-bottom: 10px;
         }
 
         .add.track {
@@ -248,5 +255,5 @@ body {
             left: 0;
             position: absolute;
             right: 0;
-            padding-left: 50px;
+            padding-left: 40px;
         }

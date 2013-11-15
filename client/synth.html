@@ -13,11 +13,12 @@
   <div class="dropdown">
     <ul>
       {{#each track}}
-      <li class="zoomText track {{selected}}">{{ title }}</li>
+      {{#constant}}
+      <li class="zoomable track {{selected}}">{{title}}</li>
+      {{/constant}}
       {{/each}}
-      <li class="track">
-      <li class="add track"> Add new Track
     </ul>
+    <div class="add track"> Add new Track</div>
   </div>
 </template>
 
@@ -28,7 +29,7 @@
       <button class="browse">Browse</button>
       {{/constant}}
       <input type="text" name="search" placeholder="Search" class="search"/>
-      <h7 class="title" contenteditable="true">{{ currentTitle }}</h7>
+      <h7 class="title" contenteditable="true">{{currentTitle}}</h7>
       <div class="login">{{loginButtons align="right"}}</div>
     </div>
   </header>
