@@ -8,8 +8,6 @@ this.nodes = function (el) {
                   , signal
                   ]
 
-  el.on('f', changed)
-
   function signal(currentTarget, index, message) {
     d3.selectAll('.edge').filter(function (d) {
       return currentTarget._id === d.source._id &&
@@ -64,9 +62,8 @@ this.nodes = function (el) {
   function changed (doc) {
     self().filter(function (d) { return doc._id === d._id })
     .each(function (d) {
-      _.extend(d, doc)
-      var f = _.extend({}, d, { edges: d.edges })
-      update_link(f)
+      console.log(d.edges, doc.edges)
+      update_link(_.extend(d, doc))
     })
       update_position()
   }
@@ -95,6 +92,8 @@ this.nodes = function (el) {
 
   function drag(d) {
     var dx = d3.event.dx, dy = d3.event.dy
+
+    if (! d.selected) return
 
     d.dragX += dx
     d.dragY += dy
@@ -142,18 +141,22 @@ this.nodes = function (el) {
   }
 
   function dragstart (d) {
-    d.dragX = d.dragY = d.dragend = 0
-    d3.select(this)
-    .classed('selected', d.selected = ! (d3.event.sourceEvent.shiftKey && d.selected))
+    d.previouslySelected = d.selected
+    d.dragX = d.dragY = 0
+
+    if (! d3.event.sourceEvent.shiftKey)
+      d3.selectAll('.node').classed('selected', function (d) { return d.selected = false})
+
+    d3.select(this).classed('selected', d.selected = true)
   }
 
   function dragend(d) {
     d3.select(this).classed('grabbing', false)
 
-    if (! d3.event.sourceEvent.shiftKey && ! (d.dragX || d.dragY))
-      self().filter(function (p) { return d._id !== p._id })
-      .classed('selected', function(d) { return d.selected = false })
-    d.dragend && d.dragend()
+    //toggle if hasnt moved
+    if (! (d.dragX || d.dragY))
+      d3.select(this).classed('selected', d.selected = (d.previouslySelected ^ d.selected))
+
     self().filter(pluckWith('selected')).invoke('save')
   }
 
