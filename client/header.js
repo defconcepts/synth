@@ -50,12 +50,13 @@ Template.header.events({
   }
 
 , 'focus .search': function () {
+    Session.set('filter', '')
     Session.set('showDropdown', true)
     d3.select('.dropdown').classed('hidden', false)
   }
 
 , 'blur .search': function () {
-    Session.set('filter', '')
+    Session.set('filter', null)
     Session.set('showDropdown', false)
     d3.select('.dropdown').classed('hidden', true)
   }
@@ -73,6 +74,11 @@ Template.header.events({
 Template.header.currentTitle = function () {
   return (Tracks.findOne({ _id: Session.get('currentTrack') })  || {}).title
 }
+
+
+Deps.autorun(function () {
+  d3.select('.browse').classed('active', Session.get('showDropdown') && Sesion.get('filter') == null)
+})
 
 function switchTracks(id) {
   var old = Session.get('currentTrack')

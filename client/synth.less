@@ -20,6 +20,7 @@ body {
     stroke-width: 3px;
     cursor: url(https://mail.google.com/mail/images/2/openhand.cur), default;
                }
+                
 
     .grabbing {
         cursor: url(https://mail.google.com/mail/images/2/closedhand.cur), default !important;
@@ -126,7 +127,6 @@ body {
             box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1),0 1px 0 0 rgba(0, 0, 0, 0.1);
         }
 
-
         button {
             border-radius: 3px;
             background: linear-gradient(#ffffff, #f0f0f0);
@@ -142,14 +142,23 @@ body {
             outline: -webkit-focus-ring-color auto 0px;
         }
 
-        button:active {
-            background: -webkit-linear-gradient( #f0f0f0, #ffffff);
-            background: linear-gradient( #f0f0f0, #ffffff);
-            background-color: #f7f7f7;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.33) inset;
-            border-color: #b8b8b8 #c2c2c2 #cccccc;
+        button:hover {
+            color: white;
+            background-image: -webkit-linear-gradient( #e63d45, #c11a22);
+            background-image: linear-gradient( #e63d45, #c11a22);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+            border: 1px solid #920c12;
         }
 
+        button.active {
+            color: white;
+            background-image: -webkit-linear-gradient( #bb1618, #e22123);
+            background-image: linear-gradient( #bb1618, #e22123);
+            box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.5) inset;
+            background-color: #e22123;
+            border-color: #99161b;
+        }
+        
         .center {
             margin: 0 auto;
             width: 1000px;
@@ -204,17 +213,40 @@ body {
         }
 
         .track {
+            font-size: 16px;
             list-style: none;
-            -webkit-transition: font-size .2s, height .2s;
-            height: 25px;
+            min-height: 25px;
+            cursor: pointer;
         }
 
-        .track:hover {
-            height: 40px;
-            font-size: 30px;
-            width: 350px;
+        
+        .selected {
+            text-decoration: underline;
+
         }
 
-.selected {
-    text-decoration: underline;
-}
+        .zoomable {
+            transform: scaleY(1);    
+            transition: transform 1s ease;
+        }
+
+        .zoomable:hover {
+            transform: scaleY(2);
+        }
+
+        .add.track:hover {
+            color: red;
+        }
+
+        .add.track {
+            border-radius: 0 0 3px 3px;
+            overflow: hidden;
+            background: #f5f5f5;
+            bottom: 0;
+            border-top: 1px solid #ebebeb;
+            clear: both;
+            left: 0;
+            position: absolute;
+            right: 0;
+            padding-left: 50px;
+        }
