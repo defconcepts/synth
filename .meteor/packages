@@ -5,8 +5,8 @@
 
 insecure
 preserve-inputs
-less
 underscore
 standard-app-packages
 accounts-ui
 accounts-password
+stylus
