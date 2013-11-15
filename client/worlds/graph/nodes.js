@@ -8,6 +8,8 @@ this.nodes = function (el) {
                   , signal
                   ]
 
+  el.on('f', changed)
+
   function signal(currentTarget, index, message) {
     d3.selectAll('.edge').filter(function (d) {
       return currentTarget._id === d.source._id &&

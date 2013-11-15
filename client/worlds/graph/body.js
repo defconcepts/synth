@@ -31,6 +31,13 @@ function body(el) {
                , 38: [0, -i]
                }[e.keyCode]
 
+    console.log(e.which)
+    if (e.which == 82)
+      return redo()
+
+    if (e.which == 90)
+      return undo()
+
     if (e.keyCode === 8)
       e.preventDefault() +
       Graph.remove({_id: d._id })
