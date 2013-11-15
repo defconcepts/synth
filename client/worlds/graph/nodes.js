@@ -62,8 +62,8 @@ this.nodes = function (el) {
   function changed (doc) {
     self().filter(function (d) { return doc._id === d._id })
     .each(function (d) {
-      console.log(d.edges, doc.edges)
-      update_link(_.extend(d, doc))
+      update_link(_.extend(d, doc, {edges: d.edges}))
+      //remove hack when screen coordinates become resolution independent
     })
       update_position()
   }
