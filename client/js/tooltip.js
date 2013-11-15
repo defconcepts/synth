@@ -1,9 +1,3 @@
-d3.selection.prototype.size = function () {
-  var n = 0;
-  this.each(function () { n++ })
-  return n
-}
-
 d3.selection.prototype.tooltip = function (options) {
   if (this.size() > 1)
     this.each(function () { d3.select(this).tooltip(options) })

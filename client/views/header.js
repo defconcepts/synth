@@ -2,7 +2,7 @@ Meteor.startup(function () {
   var handle = Tracks.find().observe({
     added: function (doc) {
       Session.set('currentTrack', doc._id)
-      handle.stop()
+      handle && handle.stop()
     }
   })
 })
@@ -80,7 +80,7 @@ Deps.autorun(function () {
 function switchTracks(id) {
   var old = Session.get('currentTrack')
   if (old == id) return
-  window.k && k.stop()
-  k = Meteor.subscribe('allGraph', id, old)
+  window.k && window.k.stop()
+  window.k = Meteor.subscribe('allGraph', id, old)
   Session.set('currentTrack', id)
 }
