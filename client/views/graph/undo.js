@@ -4,7 +4,7 @@ var history = []
 
 Meteor.startup(function () {
   Graph.find().observe({
-    changed: function (newDoc, oldDoc) {
+   changed: function (newDoc, oldDoc) {
       if (! reverting) history.push({newDoc: newDoc, oldDoc: oldDoc})
     }
   })

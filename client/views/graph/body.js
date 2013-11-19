@@ -31,11 +31,9 @@ function body(el) {
                , 38: [0, -i]
                }[e.keyCode]
 
-    if (e.which == 82)
-      return redo()
+    if (e.which == 82) redo()
 
-    if (e.which == 90)
-      return undo()
+    if (e.which == 90) undo()
 
     if (e.keyCode === 8)
       e.preventDefault() +

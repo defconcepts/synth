@@ -40,8 +40,10 @@ this.output = function (el) {
   orb.call(click)
 
   function click(selection) {
-    volume.each(function (d, i) {
-      d3.select(this).attr(d.toggle = ! d.toggle ? d.hover : d)
+    volume.selectAll('path').each(function (d, i) {
+      var transform = (d.toggle = ! d.toggle) ? 'matrix(1, 0, 0, 1, 0, 0)' : 'matrix(0, 0, 0, 0, 22, 32)'
+
+      d3.select(this).transition().duration(200).ease('cubic').attr('transform', transform)
     })
   }
 
@@ -55,7 +57,7 @@ this.output = function (el) {
     .attr('cx', pluckWith('x'))
     .attr('cy', pluckWith('y'))
 
-    volume.attr('transform', 'translate(' + [datum.x - 15, datum.y - 15] + ')')
+    volume.attr('transform', 'translate(' + [datum.x - 35, datum.y - 30] + ')')
   })
 
   function dasharray() {
