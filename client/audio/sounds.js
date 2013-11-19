@@ -30,7 +30,8 @@ function playSound() {
 self.loadSound = loadSound;
 
 setTimeout(function() {
-  loadSound("soundfiles/808ish-Kick-1.wav");
+ var drum = "soundfiles/808ish-Kick-1.wav"
+  loadSound(drum);
 }, 100)
 
 var startOffset = 0;

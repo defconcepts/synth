@@ -32,7 +32,7 @@ this.edges = function (el) {
     .attr('stroke-opacity', opacity)
     .attr('stroke', node_fill(d.source))
     .attr('stroke-width', 1.5)
-    .transition().duration(500).ease('linear')
+    .transition().duration(1000).ease('ease-out')
     .attr('cx', x2(d))
     .attr('cy', y2(d))
     //.each('end', function () { d.target.getNode().emit('pulse', d.source, x) })

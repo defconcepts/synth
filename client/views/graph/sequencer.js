@@ -7,6 +7,10 @@ this.sequencer = function () {
   , changed: _.compose(added, removed)
   })
 
+  setInterval(function () {
+    d3.selectAll('.edge').emit('pulse')
+  }, 3000)
+
   function added(doc) {
     var sim = window[doc.type]
     if (sim.class == 'source')
@@ -16,6 +20,7 @@ this.sequencer = function () {
                          .forEach(send_signal, doc.getNode())
                        }, sim.bpm)
   }
+
   function removed(doc) {
     clearInterval(nodes[doc._id])
     return doc

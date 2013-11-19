@@ -24,12 +24,14 @@ this.nodes = function (el) {
   return 'hello'
 
   function signal(currentTarget, index, message) {
-    d3.selectAll('.edge').filter(function (d) {
+    d3.selectAll('.edge')
+
+    .filter(function (d) {
       return currentTarget._id === d.source._id &&
         message.origin !== d.target._id &&
         d.source._id !== Session.get('world')._id
     })
-    //.emit('pulse', message)
+
     .each(function (d) {
       var step = _.findWhere(worlds, { name: d.source.type }).step
       if (message.origin !== d.target._id)
