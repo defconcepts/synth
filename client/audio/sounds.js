@@ -18,12 +18,11 @@ function loadSound(url) {
   request.send();
 }
 
-function playSound(buffer) {
-  return
+this.playSound = playSound
+function playSound() {
   var source = context.createBufferSource();
   console.log("source = " + source)
-  source.buffer = buffer;
-  console.log("playsound  buffer = " + buffer)
+  source.buffer = soundBuffer;
   source.connect(context.destination);
   source.start(0);
 }
@@ -37,9 +36,7 @@ setTimeout(function() {
 var startOffset = 0;
 var startTime = 0;
 
-setTimeout(function() {
-
-  playSound(soundBuffer);
+setInterval(function() {
 
   // var eighthNoteTime = 1;
   // var snare;

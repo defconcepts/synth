@@ -58,7 +58,7 @@ function table (el, data) {
 
 function step(data, item) {
   var col = (item.index = (1 + item.index || 0) % 16)
-  return data.filter(function (d, i) { return i % 16 == col && d })
+  return data.filter ? data.filter(function (d, i) { return i % 16 == col && d }) : data //oh god
 }
 
 function fillVoice(d) {

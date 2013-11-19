@@ -3,8 +3,8 @@ piano.step = step
 
 function piano () {}
 
-function step () {
-  return []
+function step (i) {
+  return [i]
 }
 
 //only source nodes need step

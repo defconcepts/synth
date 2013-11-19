@@ -1,3 +1,10 @@
+function Signal () {
+
+
+
+}
+
+
 this.nodes = function (el) {
   var self = this
     , listeners = [ mouseover
@@ -16,8 +23,9 @@ this.nodes = function (el) {
     })
     .emit('pulse', message)
     .each(function (d) {
+      var step = _.findWhere(worlds, { name: d.source.type }).step
       if (message.origin !== d.target._id)
-        d.target.getNode().emit('signal', message)
+        d.target.getNode().emit('signal', step(message, 0))
       //process message here.
     })
   }
@@ -79,7 +87,7 @@ this.nodes = function (el) {
 
   function withinBoundsX(doc, dx) {
     return doc.x + doc.radius + dx < innerWidth &&
-              doc.x - doc.radius + dx > 0
+      doc.x - doc.radius + dx > 0
   }
 
   function withinBoundsY(doc, dx) {
@@ -103,7 +111,7 @@ this.nodes = function (el) {
     .attr('cy', function(d) { return d.y += (withinBoundsY(d, dy) && dy) })
     .each(el.on('changed'))
 
-    update_link(d)
+      update_link(d)
   }
 
   function update_link(source) {
