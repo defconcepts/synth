@@ -1,11 +1,7 @@
 //Meteor.subscribe('history')
 Meteor.subscribe('allTracks')
 
-var old
-
 Deps.autorun(function () {
-  var current = Session.get('currentTrack')
-  Meteor.subscribe('allGraph', current)
-  Session.set('currentTrack', current)
-  old = current
+  console.log('change the track')
+  Meteor.subscribe('allGraph', Session.get('currentTrack'))
 })
