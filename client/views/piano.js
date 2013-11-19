@@ -2,6 +2,7 @@ this.piano = piano
 piano.step = step
 
 function piano () {}
+
 function step () {
   return []
 }
