@@ -21,7 +21,7 @@ function loadSound(url) {
 this.playSound = playSound
 function playSound() {
   var source = context.createBufferSource();
-  console.log("source = " + source)
+  //console.log("source = " + source)
   source.buffer = soundBuffer;
   source.connect(context.destination);
   source.start(0);

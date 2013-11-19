@@ -27,22 +27,21 @@ this.output = function (el) {
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_highlight)'})
 
-  var orb = el.append('circle')
+  el.append('circle')
   .call(circle, datum)
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
-  .on('click', click)
+  .on('click', function () { volume.emit('click') })
 
   var volume = buildIcon(icons.speaker, el)
                .attr('class', 'volume')
                .datum(function (d) { return _.extend(Object.create(datum), d, { toggled: 1 }) })
                .on('click', click)
 
-  orb.call(click)
+  volume.emit('click')
 
-  function click(selection) {
+  function click(d) {
+    var transform = (d.toggled = ! d.toggled) ? 'matrix(1, 0, 0, 1, 0, 0)' : 'matrix(0, 0, 0, 0, 22, 32)'
     volume.selectAll('path').each(function (d, i) {
-      var transform = (d.toggle = ! d.toggle) ? 'matrix(1, 0, 0, 1, 0, 0)' : 'matrix(0, 0, 0, 0, 22, 32)'
-
       d3.select(this).transition().duration(200).ease('cubic').attr('transform', transform)
     })
   }
@@ -65,8 +64,8 @@ this.output = function (el) {
   }
 
   function signal(d, i, message) {
-    //if (volume.datum().toggled) sound_test(message.message)
-    playSound()
+    if (volume.datum().toggled) playSound()
+
     el.insert('circle', '*')
     .call(circle, datum)
     .attr('r', 35)

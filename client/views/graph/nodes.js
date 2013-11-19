@@ -1,10 +1,3 @@
-function Signal () {
-
-
-
-}
-
-
 this.nodes = function (el) {
   var self = this
     , listeners = [ mouseover
@@ -14,26 +7,6 @@ this.nodes = function (el) {
                   , mousedown
                   , signal
                   ]
-
-  function signal(currentTarget, index, message) {
-    d3.selectAll('.edge').filter(function (d) {
-      return currentTarget._id === d.source._id &&
-        message.origin !== d.target._id &&
-        d.source._id !== Session.get('world')._id
-    })
-    .emit('pulse', message)
-    .each(function (d) {
-      var step = _.findWhere(worlds, { name: d.source.type }).step
-      if (message.origin !== d.target._id)
-        d.target.getNode().emit('signal', step(message, 0))
-      //process message here.
-    })
-  }
-
-  function mousedown() {
-    var m = d3.select(this)
-    d3.event.metaKey ? m.each(menu) : m.classed('grabbing', true)
-  }
 
   var draggable =
     d3.behavior.drag()
@@ -47,6 +20,28 @@ this.nodes = function (el) {
            , added: added
            , removed: removed
            })
+
+  return 'hello'
+
+  function signal(currentTarget, index, message) {
+    d3.selectAll('.edge').filter(function (d) {
+      return currentTarget._id === d.source._id &&
+        message.origin !== d.target._id &&
+        d.source._id !== Session.get('world')._id
+    })
+    //.emit('pulse', message)
+    .each(function (d) {
+      var step = _.findWhere(worlds, { name: d.source.type }).step
+      if (message.origin !== d.target._id)
+        d.target.getNode().emit('signal', message)
+      //process message here.
+    })
+  }
+
+  function mousedown() {
+    var m = d3.select(this)
+    d3.event.metaKey ? m.each(menu) : m.classed('grabbing', true)
+  }
 
   function find (id) {
     return function (doc) {

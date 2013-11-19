@@ -1,10 +1,10 @@
 this.table = table
 table.step = step
-table.bpm =  100
+table.bpm =  150
 table.class = 'source'
 
 function table (el, data) {
-  var w = 1280
+  var w = Session.get('width') * .9
     , h = Session.get('height') * .9
     , rows = 16
     , size = ~~ (h / rows)
