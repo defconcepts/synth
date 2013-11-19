@@ -61,7 +61,6 @@ this.edges = function (el) {
   }
 
   function build_route(doc, target, index) {
-    console.log(index)
     if (join_existing_route(doc, target)) return
     el.insert('line', '*')
     .datum({ source: doc, target: target })

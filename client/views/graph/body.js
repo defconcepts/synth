@@ -31,7 +31,6 @@ function body(el) {
                , 38: [0, -i]
                }[e.keyCode]
 
-    console.log(e.which)
     if (e.which == 82)
       return redo()
 

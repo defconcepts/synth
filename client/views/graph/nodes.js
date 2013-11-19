@@ -115,9 +115,9 @@ this.nodes = function (el) {
       if (source._id === target._id) return
 
       if (connected === -1) {
-        if (distance < max) return log('ret')
-        target.edges.remove(source._id)
-        el.on('removed')(target, source)
+        if (distance > max)
+          target.edges.remove(source._id) +
+          el.on('removed')(target, source)
       }
 
       if (connected === 0 && distance < max - 50) {
@@ -161,7 +161,6 @@ this.nodes = function (el) {
   }
 
   function contextmenu(d) {
-    console.log(123)
     d3.event.preventDefault()
     d3.event.stopPropagation()
     Graph.remove({ _id: d._id })
