@@ -13,6 +13,7 @@ function body(el) {
 
     function filter(d) { return dist(d, m) < 250 }
 
+    console.log(Session.get('currentTrack'))
     Graph.insert({ type: rand_type()
                  , edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]

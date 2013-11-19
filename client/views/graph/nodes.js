@@ -161,6 +161,7 @@ this.nodes = function (el) {
   }
 
   function contextmenu(d) {
+    console.log(123)
     d3.event.preventDefault()
     d3.event.stopPropagation()
     Graph.remove({ _id: d._id })

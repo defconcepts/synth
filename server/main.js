@@ -15,6 +15,6 @@ Meteor.publish('allTracks', function () {
   return Tracks.find()
 })
 
-Meteor.publish('allGraph', function (trackId, old) {
+Meteor.publish('allGraph', function (trackId) {
   return Graph.find({ belongsTo: trackId })
 })
