@@ -60,7 +60,8 @@ this.edges = function (el) {
             })
   }
 
-  function build_route(doc, target) {
+  function build_route(doc, target, index) {
+    console.log(index)
     if (join_existing_route(doc, target)) return
     el.insert('line', '*')
     .datum({ source: doc, target: target })
@@ -73,7 +74,8 @@ this.edges = function (el) {
           , stroke: node_fill(doc)
           , 'stroke-width': stroke_width
           }).listen_for([ mouseover, mouseout, pulse ])
-    .transition().duration(500).ease('cubic-in-out')
+    .transition().duration(1000).delay(index * 100)
+    .ease('cubic-in-out')
     .attr('x2', pluckWith('target.x'))
     .attr('y2', pluckWith('target.y'))
   }

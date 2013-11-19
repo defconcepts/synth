@@ -77,16 +77,6 @@ Deps.autorun(function () {
   d3.select('.browse').classed('active', Session.get('showDropdown') && Session.get('filter') == null)
 })
 
-var old
-
-Deps.autorun(function () {
-  var current = Session.get('currentTrack')
-  if (old == current) return
-  Meteor.subscribe('allGraph', current)
-  Session.set('currentTrack', current)
-  old = current
-})
-
 function switchTracks(id) {
   Session.set('currentTrack', id)
 }

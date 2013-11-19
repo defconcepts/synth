@@ -11,9 +11,8 @@ function body(el) {
     d3.event.preventDefault()
     var m = d3.mouse(this)
 
-    function filter(d) { return dist(d, m) < 250 }
+    function filter(d) { return dist(d, m) < 350 }
 
-    console.log(Session.get('currentTrack'))
     Graph.insert({ type: rand_type()
                  , edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]
