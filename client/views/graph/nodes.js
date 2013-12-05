@@ -40,8 +40,9 @@ this.nodes = function (el) {
     })
   }
 
-  function mousedown() {
+  function mousedown(d) {
     var m = d3.select(this)
+    Session.set('selected', d)
     d3.event.metaKey ? m.each(menu) : m.classed('grabbing', true)
   }
 

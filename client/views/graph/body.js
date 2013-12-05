@@ -5,9 +5,9 @@ function body(el) {
 
   el
   .on('keydown', keydown)
-  .on('contextmenu', contextmenu)
+  .on('dblclick', dblclick)
 
-  function contextmenu() {
+  function dblclick() {
     d3.event.preventDefault()
     var m = d3.mouse(this)
 
