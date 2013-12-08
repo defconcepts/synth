@@ -1,6 +1,7 @@
 this.table = table
 table.step = step
 table.bpm =  150
+table.msPerBeat = 60000 / table.bpm
 table.class = 'source'
 
 function table (el, data) {
@@ -29,7 +30,7 @@ function table (el, data) {
              .on('click', mousedown)
              .call(d3.behavior.slide())
 
-  int = setInterval(voice, table.bpm, data)
+  int = setInterval(voice, table.msPerBeat, data)
   voice(data)
 
   var live = Graph.find({ _id: Session.get('world')._id }).observe({
