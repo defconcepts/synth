@@ -2,7 +2,7 @@
 
 var soundBuffer = null;
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+this.context = new AudioContext();
 
 function loadSound(url) {
   var request = new XMLHttpRequest();
