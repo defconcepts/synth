@@ -76,3 +76,18 @@ ecmasynth
 super power awesome ultimate modular (spaum)
 
 
+
+
+
+C: red 
+C#: violet or purple
+D: yellow
+D#: flesh, steel blue
+E: sky blue
+F: deep red
+F#: bright blue or violet
+G: orange
+G#: violet or lilac
+A: green
+A#: rose or steel
+B: blue or pearly blue
