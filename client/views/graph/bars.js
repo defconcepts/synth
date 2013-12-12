@@ -9,10 +9,11 @@ this.bars = function (el) {
     return { value: 100, name: d }
   }
 
-  function pull() {
-    var x = d3.event.sourceEvent.clientX - 850
+  function pull(e) {
+    console.log(d3.event)
+    var x = d3.event.sourceEvent.clientX - (innerWidth - 302)
     var y = d3.event.sourceEvent.clientY
-    bars.at(Math.floor(y / 25) - 2).attr('width', x)
+    bars.at(Math.floor(y / 25) - 1).attr('width', x)
     .each(function (d) { d.value = x / 3 })
   }
 
@@ -20,12 +21,12 @@ this.bars = function (el) {
   el.call(draggable)
 
   el.append('rect').attr('width', 100 * 3)
-  .attr('fill', 'none')
+  .attr('fill', 'pink')
   .attr('stroke', 'grey')
   .attr('y', 24)
   .attr('height', 125).on('click', function () {
+    console.log(123)
     el.emit('dragstart', d3.event)
-
   })
 
   var bars = el.style('border', '1px solid black').style('background', 'red')

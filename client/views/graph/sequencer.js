@@ -1,5 +1,5 @@
 this.sequencer = function () {
-  var nodes = {}
+  var intervals = {}
 
   Graph.find().observe({
     added: added
@@ -8,21 +8,24 @@ this.sequencer = function () {
   })
 
   setInterval(function () {
-    d3.selectAll('.edge').emit('pulse')
+    //d3.selectAll('.edge').emit('pulse')
   }, 3000)
 
+  //every bpm, run the simulation in each node on the screen
+  //collect the results, if any, and send the source node the signal
   function added(doc) {
     var sim = window[doc.type]
     if (sim.class == 'source')
-      nodes[doc._id] = setInterval(function () {
-                         (sim.step(doc.state, doc) || [])
-                         .map(function (message) { return { message: message, origin: doc._id } })
-                         .forEach(send_signal, doc.getNode())
-                       }, sim.bpm)
+      intervals[doc._id] =
+      setInterval(function () {
+        (sim.step(doc.state, doc) || [])
+        .map(function (message) { return { message: message, origin: doc._id } })
+        .forEach(send_signal, doc.getNode())
+      }, sim.bpm)
   }
 
   function removed(doc) {
-    clearInterval(nodes[doc._id])
+    clearInterval(intervals[doc._id])
     return doc
   }
 }

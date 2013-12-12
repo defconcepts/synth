@@ -65,7 +65,7 @@ this.output = function (el) {
 
   function signal(d, i, message) {
     if (volume.datum().toggled) playSound()
-
+    console.log(message)
     el.insert('circle', '*')
     .call(circle, datum)
     .attr('r', 35)
