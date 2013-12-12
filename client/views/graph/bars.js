@@ -29,7 +29,7 @@ this.bars = function (el) {
   })
 
   var bars = el.style('border', '1px solid black').style('background', 'red')
-  .attr('transform', 'translate(850, 10)')
+  .attr('transform', 'translate(' + [ innerWidth - 302, -15] +  ')')
   .selectAll('rect').data('attack decay sustain release gain'.split(' ').map(stub)).enter()
   .append('rect')
   .attr('fill', 'steelblue')
@@ -44,6 +44,5 @@ this.bars = function (el) {
     .attr('fill', 'white')
     .attr('x', 5)
     .attr('y', i * 25 + 20)
-
   })
 }

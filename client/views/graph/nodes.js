@@ -46,12 +46,6 @@ this.nodes = function (el) {
     d3.event.metaKey ? m.each(menu) : m.classed('grabbing', true)
   }
 
-  function find (id) {
-    return function (doc) {
-      return doc._id === id
-    }
-  }
-
   function added (doc) {
     el.append('circle').datum(doc)
     .attr({ cx: Math.random() * innerWidth + (innerWidth * .25)
@@ -66,12 +60,9 @@ this.nodes = function (el) {
   }
 
   function changed (doc) {
-    self().filter(function (d) { return doc._id === d._id })
-    .each(function (d) {
-      update_link(_.extend(d, doc, {edges: d.edges}))
-      //remove hack when screen coordinates become resolution independent
-    })
-      update_position()
+    var node = self().filter(function (d) { return doc._id === d._id }), datum = node.datum()
+    update_link(_.extend(datum, doc, {edges: datum.edges}))
+    update_position(node)
   }
 
   function removed (doc) {
