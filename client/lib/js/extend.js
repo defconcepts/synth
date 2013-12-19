@@ -15,7 +15,7 @@ _.extend(d3.selection.prototype,
                     })
            }
          , at: function (i) {
-             return d3.select(this[0][i])
+             return this.filter(function (d, _) { return _ == i })
            }
 })
 

@@ -17,12 +17,11 @@ sn.graph.bars = function (el) {
     var e = d3.event
       , x = e.sourceEvent.clientX - (innerWidth - 302)
     if (e.type == 'dragstart') row = bars.at(Math.floor(e.sourceEvent.clientY / 25) - 1)
-    var datum
-    (datum = row.attr('width', x).datum())[1] = x / 3
-    console.log(datum)
+    if (! row.empty()) row.attr('width', x).datum()[1] = x / 3
   }
 
   function save () {
+    if (row.empty()) return
     var datum = row.datum()
       , update = {}
     row = void 0
