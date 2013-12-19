@@ -113,6 +113,6 @@ d3.behavior.slide = function () {
 
 function saveTable() {
   sn.Graph.update({ _id: Session.get('world')._id },
-               { $set: { state: d3.selectAll('.table').data() }
-               })
+                  { $set: { state: d3.selectAll('.table').data() }
+                  })
 }

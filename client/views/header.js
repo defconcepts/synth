@@ -1,5 +1,5 @@
 Meteor.startup(function () {
-  var handle = Tracks.find().observe({
+  var handle = sn.Tracks.find().observe({
     added: function (doc) {
       Session.set('currentTrack', doc._id)
       handle && handle.stop()
@@ -20,14 +20,14 @@ Template.trackList.events({
   }
 
 , 'click .add': function () {
-    switchTracks(Tracks.insert({ title: 'No Title' }))
+    switchTracks(sn.Tracks.insert({ title: 'No Title' }))
   }
 })
 
 Template.trackList.helpers({
   track: function () {
     var re = new RegExp(Session.get('filter') || '', 'i')
-    return Tracks.find().fetch().filter(function (d) {
+    return sn.Tracks.find().fetch().filter(function (d) {
              return re.test(d.title)
            })
   }
@@ -64,13 +64,13 @@ Template.header.events({
   }
 
 , 'blur .title': function (e) {
-    Tracks.update({ _id: Session.get('currentTrack') },
+    sn.Tracks.update({ _id: Session.get('currentTrack') },
                   { title: e.target.textContent })
   }
 })
 
 Template.header.currentTitle = function () {
-  return (Tracks.findOne({ _id: Session.get('currentTrack') })  || {}).title
+  return (sn.Tracks.findOne({ _id: Session.get('currentTrack') })  || {}).title
 }
 
 Deps.autorun(function () {

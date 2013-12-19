@@ -11,7 +11,7 @@ sn.graph.body = function (el) {
 
     function filter(d) { return dist(d, m) < 350 }
 
-    sn.Graph.insert(m, sn.Node(_.pluck(self().data().filter(filter), '_id')))
+    sn.Graph.insert(sn.newNode(m, _.pluck(self().data().filter(filter), '_id')))
   }
 
   function nudge (d) {

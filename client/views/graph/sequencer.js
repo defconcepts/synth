@@ -15,7 +15,7 @@ sn.graph.sequencer = function () {
   //collect the results, if any, and send the source node the signal
   function added(doc) {
     var sim = sn.worlds[doc.type]
-    if (!sim) debugger
+    return
     if (sim.class == 'source')
       intervals[doc._id] =
       setInterval(function () {

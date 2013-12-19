@@ -18,3 +18,12 @@ Meteor.publish('allTracks', function () {
 Meteor.publish('allGraph', function (trackId) {
   return sn.Graph.find({ belongsTo: trackId })
 })
+
+
+Meteor.methods({
+  clear_db: function() {
+    sn.Graph.find().forEach(function (model) {
+      sn.Graph.remove({_id: model._id})
+    })
+  }
+})
