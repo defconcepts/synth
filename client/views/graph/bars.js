@@ -22,7 +22,8 @@ sn.graph.bars = function (el) {
   el.call(d3.behavior.drag().on('dragstart', pull).on('drag', pull))
 
   el.append('rect').attr('width', 100 * 3)
-  .attr('fill', 'pink')
+  .attr('fill', '#333')
+  .attr('opacity', '.1')
   .attr('stroke', 'grey')
   .attr('y', 24)
   .attr('height', 125).on('click', function () {
