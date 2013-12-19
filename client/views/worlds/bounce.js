@@ -52,7 +52,7 @@ function bounce(el, data) {
 
     var state = _.map(el.selectAll('.ball').data(), omit)
 
-    Graph.update({ _id: Session.get('world')._id },
+    sn.Graph.update({ _id: Session.get('world')._id },
                  { $set: { state: state } }
                 )
 

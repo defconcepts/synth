@@ -6,7 +6,7 @@ sn.graph.bars = function (el) {
 
   'attack decay sustain release gain'.split(' ').map(stub)
 
-  function stub(d){
+  function stub(d) {
     return { value: 100, name: d }
   }
 
@@ -14,22 +14,25 @@ sn.graph.bars = function (el) {
 
   function pull() {
     var e = d3.event
-    , x = e.sourceEvent.clientX - (innerWidth - 302)
-    if (e.type == 'dragstart') row = Math.floor(e.sourceEvent.clientY / 25) - 1
-    bars.at(row).attr('width', x).datum.value = x / 3
+      , x = e.sourceEvent.clientX - (innerWidth - 302)
+    if (e.type == 'dragstart') row = bars.at(Math.floor(e.sourceEvent.clientY / 25) - 1)
+    row.attr('width', x).datum.value = x / 3
   }
 
-  el.call(d3.behavior.drag().on('dragstart', pull).on('drag', pull))
+  function save () {
+    var datum = row.datum()
+    row = void 0
+    sn.Graph.update({ _id: datum._id }, datum)
+  }
+
+  el.call(d3.behavior.drag().on('dragstart', pull).on('drag', pull)).on('dragend', save)
 
   el.append('rect').attr('width', 100 * 3)
   .attr('fill', '#333')
   .attr('opacity', '.1')
   .attr('stroke', 'grey')
   .attr('y', 24)
-  .attr('height', 125).on('click', function () {
-    console.log(123)
-    el.emit('dragstart', d3.event)
-  })
+  .attr('height', 125)
 
   var bars = el.style('border', '1px solid black').style('background', 'red')
   .attr('transform', 'translate(' + [ innerWidth - 302, -15] +  ')')

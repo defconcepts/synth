@@ -10,7 +10,7 @@ sn.graph.edges = function (el) {
   .on('added', added)
   .on('removed', removed)
 
-  Graph.find()
+  sn.Graph.find()
   .observe({ changed: changed
            , added: added
            , removed: removed

@@ -1,20 +1,20 @@
 Meteor.startup(function () {
-  if (! Tracks.find().count())
-    Tracks.insert({ title: 'Monkey brains' })
+  if (! sn.Tracks.find().count())
+    sn.Tracks.insert({ title: 'Monkey brains' })
 
-  if (! Graph.find().count())
-    Graph.insert({ type: 'wind'
+  if (! sn.Graph.find().count())
+    sn.Graph.insert({ type: 'wind'
                  , edges: []
                  , x: 300
                  , y: 300
-                 , belongsTo: Tracks.findOne()._id
+                 , belongsTo: sn.Tracks.findOne()._id
                  })
 })
 
 Meteor.publish('allTracks', function () {
-  return Tracks.find()
+  return sn.Tracks.find()
 })
 
 Meteor.publish('allGraph', function (trackId) {
-  return Graph.find({ belongsTo: trackId })
+  return sn.Graph.find({ belongsTo: trackId })
 })

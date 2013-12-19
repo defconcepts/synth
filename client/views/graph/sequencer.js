@@ -1,7 +1,7 @@
 sn.graph.sequencer = function () {
   var intervals = {}
 
-  Graph.find().observe({
+  sn.Graph.find().observe({
     added: added
   , removed: removed
   , changed: _.compose(added, removed)

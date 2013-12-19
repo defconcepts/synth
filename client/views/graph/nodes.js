@@ -15,7 +15,7 @@ sn.graph.nodes = function (el) {
     .on('drag', drag)
     .on('dragend', dragend)
 
-  Graph.find()
+  sn.Graph.find()
   .observe({ changed: changed
            , added: added
            , removed: removed
@@ -160,7 +160,7 @@ sn.graph.nodes = function (el) {
   function contextmenu(d) {
     d3.event.preventDefault()
     d3.event.stopPropagation()
-    Graph.remove({ _id: d._id })
+    sn.Graph.remove({ _id: d._id })
   }
 
   function mouseout(d) {

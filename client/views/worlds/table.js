@@ -49,7 +49,7 @@ function table (el, data) {
   int = setInterval(voice, table.msPerBeat, data)
   voice(data)
 
-  var live = Graph.find({ _id: Session.get('world')._id }).observe({
+  var live = sn.Graph.find({ _id: Session.get('world')._id }).observe({
     changed: function (doc) {
       d3.selectAll('.table').data(doc.state).attr('fill')
     }
@@ -112,7 +112,7 @@ d3.behavior.slide = function () {
 }
 
 function saveTable() {
-  Graph.update({ _id: Session.get('world')._id },
+  sn.Graph.update({ _id: Session.get('world')._id },
                { $set: { state: d3.selectAll('.table').data() }
                })
 }

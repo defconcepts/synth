@@ -11,14 +11,7 @@ sn.graph.body = function (el) {
 
     function filter(d) { return dist(d, m) < 350 }
 
-    var type = rand_type()
-    Graph.insert({ type: type
-                 , edges: _.pluck(self().data().filter(filter), '_id')
-                 , x: m[0]
-                 , y: m[1]
-                 , state: sn.worlds[type].schema
-                 , belongsTo: Session.get('currentTrack')
-                 })
+    sn.Graph.insert(m, sn.Node(_.pluck(self().data().filter(filter), '_id')))
   }
 
   function nudge (d) {
@@ -36,11 +29,11 @@ sn.graph.body = function (el) {
 
     if (e.keyCode === 8)
       e.preventDefault() +
-      Graph.remove({_id: d._id })
+      sn.Graph.remove({_id: d._id })
 
     $inc &&
       e.preventDefault() +
-      Graph.update({ _id: d._id }, { $inc: toCoord($inc) })
+      sn.Graph.update({ _id: d._id }, { $inc: toCoord($inc) })
   }
 
   function keydown() {
