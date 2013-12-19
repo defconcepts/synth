@@ -1,4 +1,4 @@
-this.piano = piano
+sn.worlds.piano = piano
 piano.step = step
 
 function piano () {}

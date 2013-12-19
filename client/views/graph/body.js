@@ -1,6 +1,5 @@
-this.body = body
-
-function body(el) {
+console.log(123)
+sn.graph.body = function (el) {
   var self = this
 
   el
@@ -31,9 +30,9 @@ function body(el) {
                , 38: [0, -i]
                }[e.keyCode]
 
-    if (e.which == 82) redo()
+    if (e.which == 82) sn.redo()
 
-    if (e.which == 90) undo()
+    if (e.which == 90) sn.undo()
 
     if (e.keyCode === 8)
       e.preventDefault() +
@@ -55,4 +54,31 @@ function body(el) {
             , velocity: [ 1, 8 ]
             }]
   }
+}
+
+
+function dragndrop () {
+  d3.select('body')
+      .on("dragenter", dragmisc)
+      .on("dragexit", dragmisc)
+      .on("dragover", dragmisc)
+      .on("drop", drop);
+}
+
+function dragmisc() {
+  d3.event.stopPropagation();
+  d3.event.preventDefault();
+}
+
+function drop() {
+  var e = d3.event
+    , fr = new FileReader()
+    , files = e.dataTransfer.files
+    , count = files.length
+
+  fr.onloadend = loadend
+}
+
+function loadend () {
+  var contents = this.result
 }

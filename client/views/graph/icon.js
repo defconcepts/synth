@@ -1,4 +1,4 @@
-this.buildIcon = function (json, container) {
+sn.buildIcon = function (json, container) {
   var g = container.append('g')
   json.forEach(function (obj) {
     g.append(obj.type).datum(obj).attr(_.omit(obj, 'type', 'hover'))
@@ -46,4 +46,4 @@ var speaker =
       }
     ]
 
-this.icons = {speaker: speaker}
+sn.icons = {speaker: speaker}

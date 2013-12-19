@@ -1,4 +1,4 @@
-this.wind = wind
+sn.worlds.wind = wind
 wind.step = step
 wind.class = 'processor'
 

@@ -1,4 +1,4 @@
-[resize, graph]
+[resize, sn.graph.init]
 .forEach(Meteor.startup)
 
 //debounce if this gets slow

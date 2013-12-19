@@ -1,18 +1,15 @@
-this.worlds = [bounce, wind, table, piano]
-
-worlds.construct = function (name) {
+sn.worlds.construct = function (name) {
   //freeze()
   //todo fix transition
   //isolate path
   var w = Session.get('world')
   this.el = d3.select('.glass').classed('show', 'true')
-  var i = this.indexOf(_.findWhere(this, { name: name }))
-  this.current = worlds[i](this.el, w && w.state || [])
+  this.current = this[name](this.el, w && w.state || [])
   d3.select(window).once('keydown', keydown)
   return this.el
 }
 
-worlds.destruct = function () {
+sn.worlds.destruct = function () {
   window.freeze = false
   d3.select('.main').selectAll('*').attr('filter', '')
   Session.set('world', {})
@@ -33,6 +30,6 @@ function freeze () {
 
 function keydown() {
   return d3.event.which === 27 ?
-    worlds.destruct() :
+    sn.worlds.destruct() :
     d3.select(this).once('keydown', keydown)
 }

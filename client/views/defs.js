@@ -1,4 +1,4 @@
-gradients = function (svg) {
+sn.gradients = function (svg) {
   var body, def, globe_highlight, globe_shading, grad, ocean_fill, svg;
       ocean_fill = svg.append('defs').append('radialGradient').attr('id', 'ocean_fill').attr('cx', '75%').attr('cy', '25%');
       ocean_fill.append('stop').attr('offset', '5%').attr('stop-color', '#ddf');

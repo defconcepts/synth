@@ -1,4 +1,4 @@
-this.output = function (el) {
+sn.graph.output = function (el) {
   var self = this
 
   var filter = d3.select('.graph').append("defs")
@@ -32,7 +32,7 @@ this.output = function (el) {
   .attr('fill', function (d) { return d.fill = 'url(#globe_shading)'})
   .on('click', function () { volume.emit('click') })
 
-  var volume = buildIcon(icons.speaker, el)
+  var volume = sn.buildIcon(sn.icons.speaker, el)
                .attr('class', 'volume')
                .datum(function (d) { return _.extend(Object.create(datum), d, { toggled: 1 }) })
                .on('click', click)
@@ -65,7 +65,6 @@ this.output = function (el) {
 
   function signal(d, i, message) {
     if (volume.datum().toggled) playSound()
-    console.log(message)
     el.insert('circle', '*')
     .call(circle, datum)
     .attr('r', 35)

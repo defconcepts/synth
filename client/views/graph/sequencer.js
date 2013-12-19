@@ -1,4 +1,4 @@
-this.sequencer = function () {
+sn.graph.sequencer = function () {
   var intervals = {}
 
   Graph.find().observe({
@@ -14,7 +14,8 @@ this.sequencer = function () {
   //every bpm, run the simulation in each node on the screen
   //collect the results, if any, and send the source node the signal
   function added(doc) {
-    var sim = window[doc.type]
+    var sim = sn.worlds[doc.type]
+    if (!sim) debugger
     if (sim.class == 'source')
       intervals[doc._id] =
       setInterval(function () {

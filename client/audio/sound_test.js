@@ -1,4 +1,4 @@
-this.sound_test = sound_test
+sn.sound_test = sound_test
 
 var i
   , sink = Sink()

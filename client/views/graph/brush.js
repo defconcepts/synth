@@ -1,4 +1,5 @@
-this.brush = function (el) {
+sn.graph.brush = brush
+function brush(el) {
   var self = this
     , shifted = []
 

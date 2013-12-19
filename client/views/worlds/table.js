@@ -1,4 +1,4 @@
-this.table = table
+sn.worlds.table = table
 table.step = step
 table.bpm =  150
 table.msPerBeat = 60000 / table.bpm

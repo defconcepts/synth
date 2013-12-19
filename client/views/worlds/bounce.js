@@ -1,4 +1,5 @@
-this.bounce = bounce
+sn.worlds = {}
+sn.worlds.bounce = bounce
 bounce.step = step
 bounce.class = 'source'
 

@@ -1,4 +1,4 @@
-this.edges = function (el) {
+sn.graph.edges = function (el) {
   var self = this
     , thickness = d3.scale.linear()
                   .domain([0, 350])

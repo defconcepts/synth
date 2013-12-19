@@ -10,7 +10,7 @@ Meteor.startup(function () {
   })
 })
 
-this.redo = function () {
+sn.redo = function () {
   if (! undone.length) return
   var k = undone.pop()
   history.push(k)
@@ -20,7 +20,7 @@ this.redo = function () {
   })
 }
 
-this.undo = function () {
+sn.undo = function () {
   if (! history.length) return
   var k = history.pop()
   undone.push(k)

@@ -104,3 +104,21 @@ _.mixin({
   }
 
 })
+
+
+d3.behavior.slide = function () {
+  var clicking = false, init
+  return function (selection) {
+    selection
+    .on('mousedown.slide', function (d) { this.__prevSelected = true, clicking = true, init = ! d })
+    .on('mouseup.slide', function () {
+      clicking = false,  d3.selectAll('.table').each(function () { this.__prevSelected = false })
+    })
+    .on('mousemove.slide', function (d, i) {
+      if (clicking && ! this.__prevSelected)
+        (this.__prevSelected = true) +
+        d3.select(this).attr('fill', fill).datum(init) +
+        saveTable()
+    })
+  }
+}

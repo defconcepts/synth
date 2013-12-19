@@ -1,4 +1,4 @@
-this.nodes = function (el) {
+sn.graph.nodes = function (el) {
   var self = this
     , listeners = [ mouseover
                   , mouseout
@@ -134,7 +134,7 @@ this.nodes = function (el) {
 
     Session.set('world', d)
 
-    worlds.construct(d.type)
+    sn.worlds.construct(d.type)
   }
 
   function dragstart (d) {

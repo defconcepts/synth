@@ -1,4 +1,5 @@
-this.bars = function (el) {
+sn.graph = {}
+sn.graph.bars = function (el) {
   Deps.autorun(function ( ){
     console.log(Session.get('selected'))
   })
