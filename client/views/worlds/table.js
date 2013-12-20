@@ -4,19 +4,36 @@ table.bpm =  150
 table.msPerBeat = 60000 / table.bpm
 table.class = 'source'
 
+var rows = 16
+  , size = ~~ (h / rows)
+  , w = Session.get('width') * .9
+  , h = Session.get('height') * .9
+
+table.schema = d3.range(rows * rows).map(d3.functor(false))
+
+d3.behavior.slide = function () {
+  var clicking = false, init
+  return function (selection) {
+    selection
+    .on('mousedown.slide', function (d) { this.__prevSelected = true, clicking = true, init = ! d })
+    .on('mouseup.slide', function () {
+      clicking = false,  d3.selectAll('.table').each(function () { this.__prevSelected = false })
+    })
+    .on('mousemove.slide', function (d, i) {
+      if (clicking && ! this.__prevSelected)
+        (this.__prevSelected = true) +
+        d3.select(this).attr('fill', fill).datum(init) +
+        saveTable()
+    })
+  }
+}
+
 function table (el, data) {
-  var w = Session.get('width') * .9
-    , h = Session.get('height') * .9
-    , rows = 16
-    , size = ~~ (h / rows)
-    , svg = el.append('svg').attr('width', w).attr('height', h)
+  var
+      svg = el.append('svg').attr('width', w).attr('height', h)
     , item = { _id: Session.get('world')._id, index: 0 }
     , clicking = false
     , done, int
-
-  data =
-    256 == data.length ? data :
-    d3.range(rows * rows).map(d3.functor(false))
 
   var rect = svg.selectAll('.table').data(data)
              .enter().append('rect')

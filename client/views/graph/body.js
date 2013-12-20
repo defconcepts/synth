@@ -1,10 +1,9 @@
-console.log(123)
 sn.graph.body = function (el) {
   var self = this
 
   el
   .on('keydown', keydown)
-  .on('dblclick', dblclick)
+  .on('contextmenu', dblclick)
 
   function dblclick() {
     d3.event.preventDefault()
@@ -12,11 +11,12 @@ sn.graph.body = function (el) {
 
     function filter(d) { return dist(d, m) < 350 }
 
-    Graph.insert({ type: rand_type()
+    var type = rand_type()
+    Graph.insert({ type: type
                  , edges: _.pluck(self().data().filter(filter), '_id')
                  , x: m[0]
                  , y: m[1]
-                 , state: dummy()
+                 , state: sn.worlds[type].schema
                  , belongsTo: Session.get('currentTrack')
                  })
   }
@@ -46,13 +46,6 @@ sn.graph.body = function (el) {
   function keydown() {
     if (this == document.body)
       self().filter('.selected').each(nudge)
-  }
-
-  function dummy() {
-    return [{ r: 14
-            , position: [ 150, 150 ]
-            , velocity: [ 1, 8 ]
-            }]
   }
 }
 

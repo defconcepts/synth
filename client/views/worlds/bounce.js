@@ -2,6 +2,10 @@ sn.worlds = {}
 sn.worlds.bounce = bounce
 bounce.step = step
 bounce.class = 'source'
+bounce.schema = [{ r: 14
+                 , position: [ 150, 150 ]
+                 , velocity: [ 1, 8 ]
+                 }]
 
 var gravity = [0, .5]
 

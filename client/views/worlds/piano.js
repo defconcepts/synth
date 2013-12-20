@@ -1,5 +1,6 @@
 sn.worlds.piano = piano
 piano.step = step
+piano.schema = []
 
 function piano () {}
 

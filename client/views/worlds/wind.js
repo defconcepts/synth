@@ -1,6 +1,7 @@
 sn.worlds.wind = wind
 wind.step = step
 wind.class = 'processor'
+wind.schema = []
 
 function wind (el, data) {
   d3.timer(loop)

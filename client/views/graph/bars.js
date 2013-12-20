@@ -10,16 +10,16 @@ sn.graph.bars = function (el) {
     return { value: 100, name: d }
   }
 
-  function pull(e) {
-    console.log(d3.event)
-    var x = d3.event.sourceEvent.clientX - (innerWidth - 302)
-    var y = d3.event.sourceEvent.clientY
-    bars.at(Math.floor(y / 25) - 1).attr('width', x)
-    .each(function (d) { d.value = x / 3 })
+  var row
+
+  function pull() {
+    var e = d3.event
+    , x = e.sourceEvent.clientX - (innerWidth - 302)
+    if (e.type == 'dragstart') row = Math.floor(e.sourceEvent.clientY / 25) - 1
+    bars.at(row).attr('width', x).datum.value = x / 3
   }
 
-  var draggable = d3.behavior.drag().on('dragstart', pull).on('drag', pull)
-  el.call(draggable)
+  el.call(d3.behavior.drag().on('dragstart', pull).on('drag', pull))
 
   el.append('rect').attr('width', 100 * 3)
   .attr('fill', 'pink')
